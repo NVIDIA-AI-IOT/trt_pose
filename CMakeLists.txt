@@ -6,14 +6,13 @@ set(CUDA_NVCC_FLASGS -std=c++11)
 
 find_package(CUDA REQUIRED)
 
-#add_library(trt_pose SHARED
-#src/TensorLayout.cpp
-#src/TensorLayout.h
-#)
+cuda_add_library(trt_pose SHARED
+  src/tensor.h
+)
 
 if (BUILD_TESTS)
   find_package(GTest REQUIRED)
 
-  cuda_add_executable(TestCudaFunction test/TestCudaFunction.cu)
-  target_link_libraries(TestCudaFunction gtest pthread)
+  add_executable(test_tensor test/test_tensor.cpp)
+  target_link_libraries(test_tensor gtest pthread trt_pose)
 endif()
