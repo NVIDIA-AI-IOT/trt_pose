@@ -13,6 +13,6 @@ struct TensorLayout
   TensorLayout(std::vector<uint64_t> sizes);
   TensorLayout(std::vector<uint64_t> sizes, std::vector<int64_t> strides);
 
-  uint32_t getNumDim();
-  uint64_t getSize();
+  uint64_t GetSize();
+  uint64_t GetCount(); // number of valid elements (exclude stride)
 };

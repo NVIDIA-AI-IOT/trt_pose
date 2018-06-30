@@ -16,12 +16,26 @@ std::vector<int64_t> DefaultStrides(std::vector<uint64_t> sizes)
   return strides;
 }
 
-TensorLayout::TensorLayout(std::vector<uint64_t> sizes)
+TensorLayout::TensorLayout(std::vector<uint64_t> sizes) : TensorLayout(sizes, DefaultStrides(sizes))
 {
-  sizes = sizes;
 }
 
 TensorLayout::TensorLayout(std::vector<uint64_t> sizes, std::vector<int64_t> strides)
 {
+  this->sizes = sizes; 
+  this->strides = strides;
 }
 
+uint64_t TensorLayout::GetSize()
+{
+  return sizes[0] * strides[0];
+}
+
+uint64_t TensorLayout::GetCount()
+{
+  uint64_t count = 1;
+  for (auto &s : sizes) {
+    count *= s;
+  }
+  return count;
+}
