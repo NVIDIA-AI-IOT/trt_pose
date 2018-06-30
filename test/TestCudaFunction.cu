@@ -6,12 +6,15 @@ struct Array
 {
   float *data;
   uint64_t size;
+
+  inline __host__ __device__ uint64_t GetSize() { return 1; };
 };
 
 __global__ void DoubleKernel(Array array)
 {
   size_t idx = blockIdx.x * blockDim.x + threadIdx.x;
   array.data[idx] *= 2.0f;
+  array.GetSize();
 }
 
 void Double(Array array) 
