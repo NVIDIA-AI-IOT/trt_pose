@@ -20,6 +20,41 @@ typedef struct tensor4 {
 
 // get size
 
+inline uint64_t tensor2_get_size(tensor2_t *t);
+inline uint64_t tensor3_get_size(tensor3_t *t);
+inline uint64_t tensor4_get_size(tensor4_t *t);
+
+// set sizes
+
+void tensor2_set_sizes(tensor2_t *t, uint32_t i, uint32_t j);
+void tensor3_set_sizes(tensor3_t *t, uint32_t i, uint32_t j, uint32_t m);
+void tensor4_set_sizes(tensor4_t *t, uint32_t i, uint32_t j, uint32_t m, uint32_t n);
+
+// set linear strides
+
+void tensor2_set_linear_strides(tensor2_t *t);
+void tensor3_set_linear_strides(tensor3_t *t);
+void tensor4_set_linear_strides(tensor4_t *t);
+
+// index
+
+inline uint64_t tensor2_index(tensor2_t *t, uint32_t i, uint32_t j);
+inline uint64_t tensor3_index(tensor3_t *t, uint32_t i, uint32_t j, uint32_t m);
+inline uint64_t tensor4_index(tensor4_t *t, uint32_t i, uint32_t j, uint32_t m, uint32_t n);
+
+// allocate
+
+void *tensor2_malloc_cuda(tensor2_t *t, uint8_t dsize);
+void *tensor3_malloc_cuda(tensor3_t *t, uint8_t dsize);
+void *tensor4_malloc_cuda(tensor4_t *t, uint8_t dsize);
+void *tensor2_malloc(tensor2_t *t, uint8_t dsize);
+void *tensor3_malloc(tensor3_t *t, uint8_t dsize);
+void *tensor4_malloc(tensor4_t *t, uint8_t dsize);
+
+// INLINE METHODS
+
+// get size
+
 inline uint64_t tensor2_get_size(tensor2_t *t)
 {
   return t->sizes[0] * t->strides[0];
@@ -33,52 +68,6 @@ inline uint64_t tensor3_get_size(tensor3_t *t)
 inline uint64_t tensor4_get_size(tensor4_t *t)
 {
   return t->sizes[0] * t->strides[0];
-}
-
-// set sizes
-
-void tensor2_set_sizes(tensor2_t *t, uint32_t i, uint32_t j)
-{
-  t->sizes[0] = i;
-  t->sizes[1] = j;
-}
-
-void tensor3_set_sizes(tensor3_t *t, uint32_t i, uint32_t j, uint32_t m)
-{
-  t->sizes[0] = i;
-  t->sizes[1] = j;
-  t->sizes[2] = m;
-}
-
-void tensor4_set_sizes(tensor4_t *t, uint32_t i, uint32_t j, uint32_t m, uint32_t n)
-{
-  t->sizes[0] = i;
-  t->sizes[1] = j;
-  t->sizes[2] = m;
-  t->sizes[3] = n;
-}
-
-// set linear strides
-
-void tensor2_set_linear_strides(tensor2_t *t)
-{
-  t->strides[1] = 1;
-  t->strides[0] = t->sizes[1];
-}
-
-void tensor3_set_linear_strides(tensor3_t *t)
-{
-  t->strides[2] = 1;
-  t->strides[1] = t->sizes[2];
-  t->strides[0] = t->sizes[1] * t->strides[1];
-}
-
-void tensor4_set_linear_strides(tensor4_t *t)
-{
-  t->strides[3] = 1;
-  t->strides[2] = t->sizes[3];
-  t->strides[1] = t->sizes[2] * t->strides[2];
-  t->strides[0] = t->sizes[1] * t->strides[1];
 }
 
 // index
