@@ -10,6 +10,8 @@ cuda_add_library(trt_pose SHARED
   src/matrix_fill.cu
 )
 
+target_link_libraries(trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
+
 if (BUILD_TESTS)
   find_package(GTest REQUIRED)
 
@@ -21,4 +23,7 @@ if (BUILD_TESTS)
 
   cuda_add_executable(test_matrix_fill test/test_matrix_fill.cu)
   target_link_libraries(test_matrix_fill gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES})
+
+  cuda_add_executable(test_matrix_solve test/test_matrix_solve.cu)
+  target_link_libraries(test_matrix_solve gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
 endif()

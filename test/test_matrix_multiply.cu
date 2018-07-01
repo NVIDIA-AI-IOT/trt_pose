@@ -30,9 +30,9 @@ TEST(matrix_multiply_nn_c, Valid)
     9, 14, 19,
     15, 24, 33
   };
-  matrix_transpose_data(&a, ahT, ah);
-  matrix_transpose_data(&b, bhT, bh);
-  matrix_transpose_data(&c, chT, chTrue);
+  matrix_copy_h2h_transpose(&a, ahT, ah);
+  matrix_copy_h2h_transpose(&b, bhT, bh);
+  matrix_copy_h2h_transpose(&c, chT, chTrue);
 
   // copy to device
   float *ad, *bd, *cd;
@@ -82,9 +82,9 @@ TEST(matrix_multiply_tt_c, Valid)
     10, 28,
     13, 40
   };
-  matrix_transpose_data(&a, ahT, ah);
-  matrix_transpose_data(&b, bhT, bh);
-  matrix_transpose_data(&c, chT, chTrue);
+  matrix_copy_h2h_transpose(&a, ahT, ah);
+  matrix_copy_h2h_transpose(&b, bhT, bh);
+  matrix_copy_h2h_transpose(&c, chT, chTrue);
 
   // copy to device
   float *ad, *bd, *cd;
@@ -136,9 +136,9 @@ TEST(matrix_multiply_nt_c, Valid)
     3, 13, 23,
     5, 23, 41
   };
-  matrix_transpose_data(&a, ahT, ah);
-  matrix_transpose_data(&b, bhT, bh);
-  matrix_transpose_data(&c, chT, chTrue);
+  matrix_copy_h2h_transpose(&a, ahT, ah);
+  matrix_copy_h2h_transpose(&b, bhT, bh);
+  matrix_copy_h2h_transpose(&c, chT, chTrue);
 
   // copy to device
   float *ad, *bd, *cd;
@@ -189,9 +189,9 @@ TEST(matrix_multiply_tn_c, Valid)
     20, 26, 
     26, 35
   };
-  matrix_transpose_data(&a, ahT, ah);
-  matrix_transpose_data(&b, bhT, bh);
-  matrix_transpose_data(&c, chT, chTrue);
+  matrix_copy_h2h_transpose(&a, ahT, ah);
+  matrix_copy_h2h_transpose(&b, bhT, bh);
+  matrix_copy_h2h_transpose(&c, chT, chTrue);
 
   // copy to device
   float *ad, *bd, *cd;

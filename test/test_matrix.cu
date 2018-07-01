@@ -29,7 +29,7 @@ TEST(matrix_size, Valid)
   ASSERT_EQ(15, matrix_size(&m));
 }
 
-TEST(matrix_transpose_data, Valid)
+TEST(matrix_copy_h2h_transpose, Valid)
 {
   matrix_t m;
   matrix_set_shape(&m, 3, 2);
@@ -39,7 +39,7 @@ TEST(matrix_transpose_data, Valid)
     4, 5
   };
   float d[3 * 2];
-  matrix_transpose_data(&m, dT, d);
+  matrix_copy_h2h_transpose(&m, dT, d);
   ASSERT_EQ(0, d[0]);
   ASSERT_EQ(2, d[1]);
   ASSERT_EQ(4, d[2]);
