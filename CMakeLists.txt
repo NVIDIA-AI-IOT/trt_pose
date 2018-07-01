@@ -8,6 +8,7 @@ find_package(CUDA REQUIRED)
 
 cuda_add_library(trt_pose SHARED
   src/matrix_fill.cu
+  src/matrix_solve.cu
 )
 
 target_link_libraries(trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
