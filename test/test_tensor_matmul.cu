@@ -47,6 +47,9 @@ TEST(tensor2_matmul, Valid) {
   AllFloatEqual(cDh, cDh_true, 2 * 2);
 
   cublasDestroy_v2(handle);
+  cudaFree(aD);
+  cudaFree(bD);
+  cudaFree(cD);
 }
 
 TEST(tensor2_matmul, Valid3x2) {
@@ -93,6 +96,9 @@ TEST(tensor2_matmul, Valid3x2) {
   AllFloatEqual(cDh, cDh_true, 3 * 3);
 
   cublasDestroy_v2(handle);
+  cudaFree(aD);
+  cudaFree(bD);
+  cudaFree(cD);
 }
 
 TEST(tensor2_matmul, ValidTranspose3x2) {
@@ -139,6 +145,9 @@ TEST(tensor2_matmul, ValidTranspose3x2) {
   AllFloatEqual(cDh, cDh_true, 3 * 3);
 
   cublasDestroy_v2(handle);
+  cudaFree(aD);
+  cudaFree(bD);
+  cudaFree(cD);
 }
 
 TEST(tensor2_matmul, Valid3) {
@@ -184,6 +193,9 @@ TEST(tensor2_matmul, Valid3) {
   AllFloatEqual(cDh, cDh_true, 2 * 2);
 
   cublasDestroy_v2(handle);
+  cudaFree(aD);
+  cudaFree(bD);
+  cudaFree(cD);
 }
 
 int main(int argc, char *argv[])
