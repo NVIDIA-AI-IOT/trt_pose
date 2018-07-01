@@ -6,7 +6,7 @@ inline cublasOperation_t trans_inv(cublasOperation_t trans)
   return trans == CUBLAS_OP_N ? CUBLAS_OP_T : CUBLAS_OP_N;
 }
 
-int tensor2_matmul(
+int tensor2_matmul_cuda(
     cublasHandle_t handle,
     cublasOperation_t transa,
     cublasOperation_t transb,

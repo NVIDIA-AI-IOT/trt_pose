@@ -24,7 +24,7 @@ inline uint64_t tensor2_get_size(tensor2_t *t);
 inline uint64_t tensor3_get_size(tensor3_t *t);
 inline uint64_t tensor4_get_size(tensor4_t *t);
 
-// set sizes
+// set sizes (will reset strides to block linear)
 
 void tensor2_set_sizes(tensor2_t *t, uint32_t i, uint32_t j);
 void tensor3_set_sizes(tensor3_t *t, uint32_t i, uint32_t j, uint32_t m);

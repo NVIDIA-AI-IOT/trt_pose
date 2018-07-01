@@ -6,6 +6,7 @@ void tensor2_set_sizes(tensor2_t *t, uint32_t i, uint32_t j)
 {
   t->sizes[0] = i;
   t->sizes[1] = j;
+  tensor2_set_linear_strides(t);
 }
 
 void tensor3_set_sizes(tensor3_t *t, uint32_t i, uint32_t j, uint32_t m)
@@ -13,6 +14,7 @@ void tensor3_set_sizes(tensor3_t *t, uint32_t i, uint32_t j, uint32_t m)
   t->sizes[0] = i;
   t->sizes[1] = j;
   t->sizes[2] = m;
+  tensor3_set_linear_strides(t);
 }
 
 void tensor4_set_sizes(tensor4_t *t, uint32_t i, uint32_t j, uint32_t m, uint32_t n)
@@ -21,6 +23,7 @@ void tensor4_set_sizes(tensor4_t *t, uint32_t i, uint32_t j, uint32_t m, uint32_
   t->sizes[1] = j;
   t->sizes[2] = m;
   t->sizes[3] = n;
+  tensor4_set_linear_strides(t);
 }
 
 // set linear strides
