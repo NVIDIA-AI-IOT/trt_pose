@@ -15,4 +15,6 @@ if (BUILD_TESTS)
   cuda_add_executable(test_matrix test/test_matrix.cu)
   target_link_libraries(test_matrix gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES})
 
+  cuda_add_executable(test_matrix_multiply test/test_matrix_multiply.cu)
+  target_link_libraries(test_matrix_multiply gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES})
 endif()

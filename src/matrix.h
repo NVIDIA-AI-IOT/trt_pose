@@ -36,3 +36,12 @@ inline uint64_t matrix_size(matrix_t *m)
 {
   return m->rows * m->cols;
 }
+
+inline void matrix_transpose_data(matrix_t *m, const float *data, float *dataT)
+{
+  for (uint32_t i = 0; i < m->rows; i++) {
+    for (uint32_t j = 0; j < m->cols; j++) {
+      dataT[matrix_index_c(m, i, j)] = data[matrix_index_r(m, i, j)];
+    }
+  }
+}

@@ -29,6 +29,26 @@ TEST(matrix_size, Valid)
   ASSERT_EQ(15, matrix_size(&m));
 }
 
+TEST(matrix_transpose_data, Valid)
+{
+  matrix_t m;
+  matrix_set_shape(&m, 3, 2);
+  float dT[] = {
+    0, 1,
+    2, 3,
+    4, 5
+  };
+  float d[3 * 2];
+  matrix_transpose_data(&m, dT, d);
+  ASSERT_EQ(0, d[0]);
+  ASSERT_EQ(2, d[1]);
+  ASSERT_EQ(4, d[2]);
+  ASSERT_EQ(1, d[3]);
+  ASSERT_EQ(0, d[matrix_index_c(&m, 0, 0)]);
+  ASSERT_EQ(2, d[matrix_index_c(&m, 1, 0)]);
+  ASSERT_EQ(5, d[matrix_index_c(&m, 2, 1)]);
+}
+
 int main(int argc, char *argv[])
 {
   testing::InitGoogleTest(&argc, argv);
