@@ -1,4 +1,5 @@
 #include "tensor.h"
+#include "tensor_transpose.h"
 #include "cuda_runtime.h"
 #include "cublas_v2.h"
 
@@ -16,18 +17,7 @@ int tensor2_matmul(
     float *cD, float *cW, tensor2_t *cT, float alpha=1.0f, float beta=0.0f)
 {
   // allocate workspace for tranpose
-  cublasSgemm(
-    handle,
-    trans_inv(transa), // invert because cublas is column major
-    trans_inv(transb),
-    aT->sizes[0], bT->sizes[1], aT->sizes[1], 
-    &alpha,
-    aD, aT->strides[0], // leading dim is stride based off column major indexing
-    bD, bT->strides[0],
-    &beta,
-    cW, cT->strides[0]
-  );
-
+  
   return 0;
 };
 
@@ -39,10 +29,27 @@ int tensor2_matmul(
     float *bD, tensor2_t *bT,
     float *cD, tensor2_t *cT, float alpha=1.0f, float beta=0.0f)
 {
-  float *cW;
-  cudaMalloc(&cW, sizeof(float) * tensor2_get_size(cT));
-  tensor2_matmul(handle, transa, transb, aD, aT, bD, bT, cD, cW, cT, alpha, beta);
-  cudaFree(cW);
+  tensor2_t tmpT = tensor2_transpose(cT);
+  float *tmp;
+  cudaMalloc(&tmp, sizeof(float) * tensor2_get_size(&tmpT));
+
+  // matmul C^T = AB
+  cublasSgemm(
+    handle,
+    trans_inv(transa), // invert because cublas is column major
+    trans_inv(transb),
+    aT->sizes[0], bT->sizes[1], aT->sizes[1], 
+    &alpha,
+    aD, aT->strides[0], // leading dim is stride based off column major indexing
+    bD, bT->strides[0],
+    &beta,
+    tmp, cT->strides[0]
+  );
+
+  // transpose
+  tensor2_transpose_data(handle, tmp, &tmpT, cD, cT);
+
+  cudaFree(tmp);
 
   return 0;
 }
