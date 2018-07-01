@@ -5,7 +5,7 @@
 
 #include "test_utils.h"
 
-TEST(tensor2_matmul, Valid) {
+TEST(tensor_matmul, Valid) {
   cublasHandle_t handle;
   cublasCreate_v2(&handle);
 
@@ -39,7 +39,7 @@ TEST(tensor2_matmul, Valid) {
   cudaMemcpy(aD, aDh, sizeof(float) * tensor2_get_size(&aT), cudaMemcpyHostToDevice);
   cudaMemcpy(bD, bDh, sizeof(float) * tensor2_get_size(&bT), cudaMemcpyHostToDevice);
 
-  tensor2_matmul_cuda(handle, CUBLAS_OP_N, CUBLAS_OP_N,
+  tensor_matmul_cuda(handle, CUBLAS_OP_N, CUBLAS_OP_T,
     aD, &aT, bD, &bT, cD, &cT);
 
   cudaMemcpy(cDh, cD, sizeof(float) * tensor2_get_size(&cT), cudaMemcpyDeviceToHost);

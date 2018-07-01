@@ -6,7 +6,7 @@ inline cublasOperation_t trans_inv(cublasOperation_t trans)
   return trans == CUBLAS_OP_N ? CUBLAS_OP_T : CUBLAS_OP_N;
 }
 
-int tensor2_matmul_cuda(
+int tensor_matmul_cuda(
     cublasHandle_t handle,
     cublasOperation_t transa,
     cublasOperation_t transb,
@@ -28,3 +28,18 @@ int tensor2_matmul_cuda(
 
   return 0;
 };
+
+int tensor_matmul_batch_cuda(
+    cublasHandle_t handle,
+    cublasOperation_t transa,
+    cublasOperation_t transb,
+    float *aD, tensor3_t *aT,
+    float *bD, tensor3_t *bT,
+    float *cD, tensor3_t *cT,
+    float alpha=1.0f, float beta=0.0f)
+{
+
+  // generate pointer list
+  // copy ptr list to device
+  // perform batch matrix multiplication
+}
