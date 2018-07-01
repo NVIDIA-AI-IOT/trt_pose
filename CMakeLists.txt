@@ -8,6 +8,7 @@ find_package(CUDA REQUIRED)
 
 cuda_add_library(trt_pose SHARED
   src/tensor.h
+  src/tensor_matmul.h
 )
 
 if (BUILD_TESTS)
