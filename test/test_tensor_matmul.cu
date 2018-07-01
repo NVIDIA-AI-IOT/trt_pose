@@ -5,7 +5,7 @@
 
 #include "test_utils.h"
 
-TEST(tensor_matmul, Valid) {
+TEST(tensor2_matmul, Valid) {
   cublasHandle_t handle;
   cublasCreate_v2(&handle);
 
@@ -39,12 +39,15 @@ TEST(tensor_matmul, Valid) {
   cudaMemcpy(aD, aDh, sizeof(float) * tensor2_get_size(&aT), cudaMemcpyHostToDevice);
   cudaMemcpy(bD, bDh, sizeof(float) * tensor2_get_size(&bT), cudaMemcpyHostToDevice);
 
-  tensor_matmul_cuda(handle, CUBLAS_OP_N, CUBLAS_OP_T,
+  tensor2_matmul(handle, CUBLAS_OP_N, CUBLAS_OP_N,
     aD, &aT, bD, &bT, cD, &cT);
 
   cudaMemcpy(cDh, cD, sizeof(float) * tensor2_get_size(&cT), cudaMemcpyDeviceToHost);
 
-  AllFloatEqual(cDh, cDh_true, tensor2_get_size(&cT));
+  ASSERT_EQ(cDh_true[tensor2_index(&cT, 0, 0)], cDh[tensor2_index(&cT, 0, 0)]);
+  ASSERT_EQ(cDh_true[tensor2_index(&cT, 0, 1)], cDh[tensor2_index(&cT, 0, 1)]);
+  ASSERT_EQ(cDh_true[tensor2_index(&cT, 1, 1)], cDh[tensor2_index(&cT, 1, 1)]);
+  ASSERT_EQ(cDh_true[tensor2_index(&cT, 1, 0)], cDh[tensor2_index(&cT, 1, 0)]);
 
   cublasDestroy_v2(handle);
 }

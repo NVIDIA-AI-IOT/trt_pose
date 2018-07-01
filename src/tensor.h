@@ -18,16 +18,6 @@ typedef struct tensor4 {
   int64_t strides[4];
 } tensor4_t;
 
-inline tensor2_t tensor2_transpose(tensor2 *t)
-{
-  tensor2_t tmp;
-  tmp.sizes[0] = t->sizes[1];
-  tmp.sizes[1] = t->sizes[0];
-  tmp.strides[0] = t->strides[1];
-  tmp.strides[1] = t->strides[0];
-  return tmp;
-}
-
 // get size
 
 inline uint64_t tensor2_get_size(tensor2_t *t);
@@ -65,35 +55,19 @@ void *tensor4_malloc(tensor4_t *t, uint8_t dsize);
 
 // get size
 
-inline uint8_t stride_argmax(int64_t *strides, uint8_t ndim)
-{
-  uint8_t maxdim = 0;
-  uint8_t maxstride = strides[0];
-  for (int i = 1; i < ndim; i++) {
-    if (strides[i] > maxstride) {
-      maxdim = i;
-      maxstride = strides[i];
-    }
-  }
-  return maxdim; 
-}
-
 inline uint64_t tensor2_get_size(tensor2_t *t)
 {
-  uint8_t maxdim = stride_argmax(t->strides, 2);
-  return t->sizes[maxdim] * t->strides[maxdim];
+  return t->sizes[0] * t->strides[0];
 }
 
 inline uint64_t tensor3_get_size(tensor3_t *t)
 {
-  uint8_t maxdim = stride_argmax(t->strides, 3);
-  return t->sizes[maxdim] * t->strides[maxdim];
+  return t->sizes[0] * t->strides[0];
 }
 
 inline uint64_t tensor4_get_size(tensor4_t *t)
 {
-  uint8_t maxdim = stride_argmax(t->strides, 4);
-  return t->sizes[maxdim] * t->strides[maxdim];
+  return t->sizes[0] * t->strides[0];
 }
 
 // index

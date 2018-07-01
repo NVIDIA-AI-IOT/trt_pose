@@ -92,13 +92,6 @@ TEST(tensor4_get_size, Valid) {
   ASSERT_EQ(120, tensor4_get_size(&t));
 }
 
-TEST(tensor2_transpose, ValidSize) {
-  tensor2_t a;
-  tensor2_set_sizes(&a, 3, 2);
-  tensor2_t b = tensor2_transpose(&a);
-  ASSERT_EQ(6, tensor2_get_size(&b)); 
-};
-
 int main(int argc, char *argv[])
 {
   testing::InitGoogleTest(&argc, argv);
