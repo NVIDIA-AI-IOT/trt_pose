@@ -21,6 +21,10 @@ void update_param(
     float *jacobian_data, matrix_t *jacobian_mat,
     float *param_data, matrix_t *param_mat, float *workspace, int workspace_size, cudaStream_t streamId)
 {
+  // set stream for ops
+  cublasSetStream_v2(cublasHandle, streamId);
+  cusolverDnSetStream(cusolverHandle, streamId);
+
   // create temporary matrix
   matrix_t tmp_4x4_mat, tmp_4xNN_mat;
   matrix_set_shape(&tmp_4x4_mat, 4, 4);
@@ -43,7 +47,7 @@ void update_param(
   //   initialize solution with identity
   //matrix_fill_identity_d(&tmp_4x4_mat, tmp_4x4_data_1);
   //matrix_copy_d2d(&tmp_4x4_mat, identity_4x4_data, tmp_4x4_data_1);
-  matrix_copy_h2d(&tmp_4x4_mat, identity_4x4_data, tmp_4x4_data_1);
+  matrix_copy_h2d_async(&tmp_4x4_mat, identity_4x4_data, tmp_4x4_data_1, streamId);
 
   //   solve
   matrix_solve_c(cusolverHandle, tmp_4x4_data_0, &tmp_4x4_mat, tmp_4x4_data_1, &tmp_4x4_mat, solve_workspace, solve_workspace_size);
@@ -53,6 +57,10 @@ void update_param(
 
   // compute param - (^) * residual
   matrix_multiply_nn_c(cublasHandle, tmp_4xNN_data, &tmp_4xNN_mat, residual_data, residual_mat, param_data, -1.0f, 1.0f);
+
+  // reset stream
+  cublasSetStream_v2(cublasHandle, NULL);
+  cusolverDnSetStream(cusolverHandle, NULL);
 }
 
 // computes residual and jacobian of gaussian fit centered around index
@@ -99,7 +107,7 @@ __global__ void residual_jacobian_d_kernel(
   jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 0)] = ij_coef * i_diff;
   jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 1)] = ij_coef * j_diff;
   jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 2)] = -exp_val;
-  jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 3)] = ij_coef * (i_diff_2 + j_diff_2) / (2.0 * param_data[3]), cudaStream_t;
+  jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 3)] = ij_coef * (i_diff_2 + j_diff_2) / (2.0 * param_data[3]);
 
 }
 
