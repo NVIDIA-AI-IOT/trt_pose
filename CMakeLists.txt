@@ -9,6 +9,7 @@ find_package(CUDA REQUIRED)
 cuda_add_library(trt_pose SHARED
   src/matrix_fill.cu
   src/matrix_solve.cu
+  src/matrix_peak_threshold.cu
 )
 
 target_link_libraries(trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
@@ -27,4 +28,7 @@ if (BUILD_TESTS)
 
   cuda_add_executable(test_matrix_solve test/test_matrix_solve.cu)
   target_link_libraries(test_matrix_solve gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
+
+  cuda_add_executable(test_matrix_peak_threshold test/test_matrix_peak_threshold.cu)
+  target_link_libraries(test_matrix_peak_threshold gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
 endif()

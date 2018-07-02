@@ -7,6 +7,7 @@
 #include "../src/matrix.h"
 #include "../src/matrix_fill.h"
 #include "../src/matrix_solve.h"
+#include "../src/matrix_copy.h"
 
 TEST(matrix_solve, Inverse)
 {

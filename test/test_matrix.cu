@@ -1,6 +1,8 @@
 #include "gtest/gtest.h"
 
 #include "../src/matrix.h"
+#include "../src/matrix_index.cuh"
+#include "../src/matrix_copy.h"
 
 TEST(matrix_index, Valid)
 {
