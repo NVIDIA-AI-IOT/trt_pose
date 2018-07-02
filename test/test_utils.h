@@ -16,3 +16,11 @@ void AllEqual(T *a, T *b, size_t N)
     ASSERT_EQ(a[i], b[i]);
   }
 }
+
+template<typename T>
+void AllNear(T *a, T*b, size_t N, T abserr)
+{
+  for (size_t i = 0; i < N; i++) {
+    ASSERT_NEAR(a[i], b[i], abserr);
+  }
+}

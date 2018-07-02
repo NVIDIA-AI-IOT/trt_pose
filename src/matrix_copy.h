@@ -32,3 +32,9 @@ inline void matrix_copy_h2h(matrix_t *m, const T *a, T *b)
 {
   memcpy(b, a, sizeof(T) * matrix_size(m));
 }
+
+template<typename T>
+inline void matrix_copy_d2d(matrix_t *m, const T *a, T *b)
+{
+  cudaMemcpy(b, a, sizeof(T) * matrix_size(m), cudaMemcpyDeviceToDevice);
+}
