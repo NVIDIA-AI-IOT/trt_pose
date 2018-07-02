@@ -51,8 +51,10 @@ TEST(matrix_copy_h2h_transpose, Valid)
   ASSERT_EQ(5, d[matrix_index_c(&m, 2, 1)]);
 }
 
+#ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[])
 {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
+#endif

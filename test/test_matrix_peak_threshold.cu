@@ -121,8 +121,10 @@ TEST(matrix_peak_threshold_mask_d, Valid)
   cudaFree(data_d);
 }
 
+#ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[])
 {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
+#endif

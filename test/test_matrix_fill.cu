@@ -39,8 +39,10 @@ TEST(matrix_fill_identity_dh, Valid)
   free(dd_h);
 }
 
+#ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[])
 {
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
+#endif
