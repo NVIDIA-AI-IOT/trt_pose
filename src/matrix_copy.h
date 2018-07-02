@@ -38,3 +38,29 @@ inline void matrix_copy_d2d(matrix_t *m, const T *a, T *b)
 {
   cudaMemcpy(b, a, sizeof(T) * matrix_size(m), cudaMemcpyDeviceToDevice);
 }
+
+// asynchronous methods
+
+template<typename T>
+inline void matrix_copy_h2d_async(matrix_t *m, T *src, T *dst, cudaStream_t streamId)
+{
+  cudaMemcpyAsync(dst, src, sizeof(T) * matrix_size(m), cudaMemcpyHostToDevice, streamId);
+}
+
+template<typename T>
+inline void matrix_copy_d2h_async(matrix_t *m, T *src, T *dst, cudaStream_t streamId)
+{
+  cudaMemcpyAsync(dst, src, sizeof(T) * matrix_size(m), cudaMemcpyDeviceToHost, streamId);
+}
+
+template<typename T>
+inline void matrix_copy_h2h_async(matrix_t *m, const T *src, T *dst, cudaStream_t streamId)
+{
+  cudaMemcpyAsync(dst, src, sizeof(T) * matrix_size(m), cudaMemcpyHostToHost, streamId);
+}
+
+template<typename T>
+inline void matrix_copy_d2d_async(matrix_t *m, const T *src, T *dst, cudaStream_t streamId)
+{
+  cudaMemcpyAsync(dst, src, sizeof(T) * matrix_size(m), cudaMemcpyDeviceToDevice, streamId);
+}

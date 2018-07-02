@@ -1,5 +1,9 @@
 #include "gtest/gtest.h"
 
+#include "cuda_runtime.h"
+
+#include "test_utils.h"
+
 #include "../src/matrix.h"
 #include "../src/matrix_index.cuh"
 #include "../src/matrix_copy.h"
@@ -82,6 +86,32 @@ TEST(matrix_unravel, Valid)
   ASSERT_EQ(1, matrix_unravel_col_r(&m, 5));
   ASSERT_EQ(2, matrix_unravel_row_r(&m, 5));
 
+}
+
+TEST(matrix_copy_async, Valid)
+{
+  matrix_t m;
+  matrix_set_shape(&m, 2, 2);
+  float mh_init[] = {
+    1, 2,
+    3, 4
+  };
+  float mh[2*2];
+  float *md; 
+  matrix_malloc_d(&m, &md);
+
+  cudaStream_t streamId;
+  cudaStreamCreate(&streamId);
+
+  matrix_copy_h2d_async(&m, mh_init, md, streamId);
+  matrix_copy_d2h_async(&m, md, mh, streamId);
+
+  cudaStreamSynchronize(streamId);
+
+  AllFloatEqual(mh_init, mh, matrix_size(&m));
+
+  cudaStreamDestroy(streamId);
+  cudaFree(md);
 }
 
 #ifndef EXCLUDE_MAIN
