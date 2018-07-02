@@ -2,7 +2,12 @@ cmake_minimum_required(VERSION 3.5)
 project(trt_pose)
 
 set(CMAKE_CXX_FLAGS -std=c++11)
+
 set(CUDA_NVCC_FLASGS -std=c++11)
+
+#if (CMAKE_BUILD_TYPE == DEBUG)
+  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -G -g)
+  #endif()
 
 find_package(CUDA REQUIRED)
 
@@ -10,6 +15,7 @@ cuda_add_library(trt_pose SHARED
   src/matrix_fill.cu
   src/matrix_solve.cu
   src/matrix_peak_threshold.cu
+  src/gaussian_fit.cu
 )
 
 target_link_libraries(trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
@@ -35,4 +41,6 @@ if (BUILD_TESTS)
   cuda_add_executable(test_matrix_peak_threshold test/test_matrix_peak_threshold.cu)
   target_link_libraries(test_matrix_peak_threshold gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
 
+  cuda_add_executable(test_gaussian_fit test/test_gaussian_fit.cu)
+  target_link_libraries(test_gaussian_fit gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
 endif()
