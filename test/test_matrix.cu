@@ -51,6 +51,39 @@ TEST(matrix_copy_h2h_transpose, Valid)
   ASSERT_EQ(5, d[matrix_index_c(&m, 2, 1)]);
 }
 
+TEST(matrix_unravel, Valid)
+{
+  matrix_t m;
+  matrix_set_shape(&m, 3, 2);
+
+  // col major
+  ASSERT_EQ(0, matrix_unravel_col_c(&m, 0));
+  ASSERT_EQ(0, matrix_unravel_row_c(&m, 0));
+  
+  ASSERT_EQ(0, matrix_unravel_col_c(&m, 1));
+  ASSERT_EQ(1, matrix_unravel_row_c(&m, 1));
+
+  ASSERT_EQ(1, matrix_unravel_col_c(&m, 3));
+  ASSERT_EQ(0, matrix_unravel_row_c(&m, 3));
+
+  ASSERT_EQ(1, matrix_unravel_col_c(&m, 5));
+  ASSERT_EQ(2, matrix_unravel_row_c(&m, 5));
+
+  // row major
+  ASSERT_EQ(0, matrix_unravel_col_r(&m, 0));
+  ASSERT_EQ(0, matrix_unravel_row_r(&m, 0));
+  
+  ASSERT_EQ(1, matrix_unravel_col_r(&m, 1));
+  ASSERT_EQ(0, matrix_unravel_row_r(&m, 1));
+
+  ASSERT_EQ(1, matrix_unravel_col_r(&m, 3));
+  ASSERT_EQ(1, matrix_unravel_row_r(&m, 3));
+
+  ASSERT_EQ(1, matrix_unravel_col_r(&m, 5));
+  ASSERT_EQ(2, matrix_unravel_row_r(&m, 5));
+
+}
+
 #ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[])
 {
