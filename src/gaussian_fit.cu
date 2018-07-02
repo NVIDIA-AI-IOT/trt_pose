@@ -19,7 +19,7 @@ void update_param(
     float *cmap_data, matrix_t *cmap_mat,
     float *residual_data, matrix_t *residual_mat,
     float *jacobian_data, matrix_t *jacobian_mat,
-    float *param_data, matrix_t *param_mat, float *workspace, int workspace_size)
+    float *param_data, matrix_t *param_mat, float *workspace, int workspace_size, cudaStream_t streamId)
 {
   // create temporary matrix
   matrix_t tmp_4x4_mat, tmp_4xNN_mat;
@@ -99,28 +99,8 @@ __global__ void residual_jacobian_d_kernel(
   jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 0)] = ij_coef * i_diff;
   jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 1)] = ij_coef * j_diff;
   jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 2)] = -exp_val;
-  jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 3)] = ij_coef * (i_diff_2 + j_diff_2) / (2.0 * param_data[3]);
+  jacobian_data[matrix_index_c(&jacobian_mat, residual_row, 3)] = ij_coef * (i_diff_2 + j_diff_2) / (2.0 * param_data[3]), cudaStream_t;
 
-}
-
-// computes residual and jacobian of gaussian fit centered around index
-// residual mat should be (NxN)x1
-// jacobian should be (NxN)x4
-// param data should be 4x1
-template<typename T>
-void residual_jacobian_d(
-    uint64_t idx, uint8_t N,
-    T *cmap_data, matrix_t *cmap_mat,
-    T *residual_data, matrix_t *residual_mat,
-    T *jacobian_data, matrix_t *jacobian_mat,
-    T *param_data, matrix_t *param_mat)
-{
-  static const dim3 blockDim = { N, N }; // 3x3 pixel window used to appx
-  residual_jacobian_d_kernel<<<1, blockDim>>>(idx, N,
-      cmap_data, *cmap_mat,
-      residual_data, *residual_mat,
-      jacobian_data, *jacobian_mat,
-      param_data, *param_mat);
 }
 
 // computes residual and jacobian of gaussian fit centered around index
@@ -143,7 +123,5 @@ void residual_jacobian_d(
       param_data, *param_mat);
 }
 
-
 template __global__ void residual_jacobian_d_kernel(uint64_t, uint8_t, float *, matrix_t, float *, matrix_t, float*, matrix_t, float*, matrix_t);
-template void residual_jacobian_d(uint64_t, uint8_t, float *, matrix_t *, float *, matrix_t *, float*, matrix_t *, float*, matrix_t *);
 template void residual_jacobian_d(uint64_t, uint8_t, float *, matrix_t *, float *, matrix_t *, float*, matrix_t *, float*, matrix_t *, cudaStream_t);
