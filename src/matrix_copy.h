@@ -26,3 +26,9 @@ inline void matrix_copy_h2h_transpose(matrix_t *m, const T *a, T *b)
     }
   }
 }
+
+template<typename T>
+inline void matrix_copy_h2h(matrix_t *m, const T *a, T *b)
+{
+  memcpy(b, a, sizeof(T) * matrix_size(m));
+}
