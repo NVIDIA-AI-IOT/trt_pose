@@ -434,6 +434,82 @@ TEST(residual_jacobian, SecondIterValidOffset)
   free(param_data_h);
 }
 
+TEST(gaussian_fit, Valid) {
+  matrix_t cmap_mat;
+  matrix_set_shape(&cmap_mat, 4, 4);
+
+  // create cmap data
+  float cmap_data_h[4 * 4] = {
+    0.0, 0.3, 0.0, 0.0,
+    0.3, 0.7, 0.2, 0.0,
+    0.0, 0.3, 0.0, 0.0,
+    0.0, 0.0, 0.0, 0.0,
+  };
+  const int max_idx = 5;
+  //float cmap_data_h[4 * 4];
+  //matrix_copy_h2h_transpose(&cmap_mat, cmap_data_h_transp, cmap_data_h);
+
+  // copy cmap to device
+  float *cmap_data_d;
+  matrix_malloc_d(&cmap_mat, &cmap_data_d);
+  matrix_copy_h2d(&cmap_mat, cmap_data_h, cmap_data_d);
+
+  // create optimization matrices
+  const uint8_t N = 3;
+  matrix_t jacobian_mat, residual_mat, param_mat;
+  matrix_set_shape(&jacobian_mat, N * N, 4);
+  matrix_set_shape(&residual_mat, N * N, 1);
+  matrix_set_shape(&param_mat, 4, 1);
+
+  float *jacobian_data_h, *residual_data_h, *param_data_h;
+  float *jacobian_data_d, *residual_data_d, *param_data_d;
+  matrix_malloc_d(&jacobian_mat, &jacobian_data_d);
+  matrix_malloc_d(&residual_mat, &residual_data_d);
+  matrix_malloc_d(&param_mat, &param_data_d);
+
+  matrix_malloc_h(&jacobian_mat, &jacobian_data_h);
+  matrix_malloc_h(&residual_mat, &residual_data_h);
+  matrix_malloc_h(&param_mat, &param_data_h);
+  
+  // initialize parameters
+  param_data_h[0] = 1.0;
+  param_data_h[1] = 1.0;
+  param_data_h[2] = 1.0;
+  param_data_h[3] = 1.0;
+  matrix_copy_h2d(&param_mat, param_data_h, param_data_d);
+
+  cublasHandle_t cublasHandle;
+  cusolverDnHandle_t cusolverHandle;
+  cublasCreate_v2(&cublasHandle);
+  cusolverDnCreate(&cusolverHandle);
+
+  int workspace_size = gaussian_fit_workspace_size(N);
+  void *workspace;
+  cudaMalloc(&workspace, workspace_size);
+  gaussian_fit(cublasHandle, cusolverHandle, 5, max_idx, N, cmap_data_d, &cmap_mat, param_data_d, &param_mat, (float *) workspace);
+
+  matrix_copy_d2h(&param_mat, param_data_d, param_data_h);
+
+  float param_data_h_true[] = {
+    1.,         0.92817621, 0.7337444,  0.42934063
+  };
+
+  AllNear(param_data_h_true, param_data_h, matrix_size(&param_mat), 0.01f);
+
+  cudaFree(cmap_data_d);
+  cudaFree(jacobian_data_d);
+  cudaFree(residual_data_d);
+  cudaFree(param_data_d);
+  cudaFree(workspace);
+
+  free(jacobian_data_h);
+  free(residual_data_h);
+  free(param_data_h);
+
+  cublasDestroy_v2(cublasHandle);
+  cusolverDnDestroy(cusolverHandle);
+}
+
 #ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[])
 {
