@@ -47,4 +47,7 @@ if (BUILD_TESTS)
   
   cuda_add_executable(test_matrix_add test/test_matrix_add.cu)
   target_link_libraries(test_matrix_add gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
+
+  cuda_add_executable(test_cmap_peaks test/test_cmap_peaks.cu)
+  target_link_libraries(test_cmap_peaks gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
 endif()
