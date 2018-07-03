@@ -13,6 +13,4 @@ void gauss_newton_step(
     cusolverDnHandle_t cusolverHandle,
     float *residual_data, matrix_t *residual_mat,
     float *jacobian_data, matrix_t *jacobian_mat,
-    float *param_data, matrix_t *param_mat, float *workspace, int workspace_size, cudaStream_t streamId=NULL); 
-
-
+    float *param_data, matrix_t *param_mat, float *workspace, cudaStream_t streamId=NULL); 

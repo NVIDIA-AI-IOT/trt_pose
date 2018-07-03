@@ -238,7 +238,7 @@ TEST(gauss_newton_step, Valid) {
   cudaMalloc(&workspace, workspace_size);
 
   gauss_newton_step(cublasHandle, cusolverHandle, residual_data_d, &residual_mat, 
-      jacobian_data_d, &jacobian_mat, param_data_d, &param_mat, workspace, workspace_size);
+      jacobian_data_d, &jacobian_mat, param_data_d, &param_mat, workspace);
 
   matrix_copy_d2h(&param_mat, param_data_d, param_data_h);
 

@@ -8,13 +8,12 @@
 
 
 // computes residual and jacobian of gaussian fit centered around index
-template<typename T>
 __global__ void residual_jacobian_d_kernel(
     uint64_t idx, uint8_t N,
-    T *cmap_data, matrix_t cmap_mat,
-    T *residual_data, matrix_t residual_mat,
-    T *jacobian_data, matrix_t jacobian_mat,
-    T *param_data, matrix_t param_mat)
+    float *cmap_data, matrix_t cmap_mat,
+    float *residual_data, matrix_t residual_mat,
+    float *jacobian_data, matrix_t jacobian_mat,
+    float *param_data, matrix_t param_mat)
 {
   int i_offset = threadIdx.x - N / 2;
   int j_offset = threadIdx.y - N / 2;
@@ -39,12 +38,12 @@ __global__ void residual_jacobian_d_kernel(
   }
 
   // compute jacobian and jacobian
-  T i_diff = i - param_data[0];
-  T j_diff = j - param_data[0];
-  T i_diff_2 = i_diff * i_diff;
-  T j_diff_2 = j_diff * j_diff;
-  T exp_val = exp(-(i_diff_2 + j_diff_2) / (2.0 * param_data[3]));
-  T ij_coef = -param_data[2] * exp_val / param_data[3];
+  float i_diff = i - param_data[0];
+  float j_diff = j - param_data[0];
+  float i_diff_2 = i_diff * i_diff;
+  float j_diff_2 = j_diff * j_diff;
+  float exp_val = exp(-(i_diff_2 + j_diff_2) / (2.0 * param_data[3]));
+  float ij_coef = -param_data[2] * exp_val / param_data[3];
 
   residual_data[matrix_index_c(&residual_mat, residual_row, 0)] = cmap_data[matrix_index_r(&cmap_mat, i, j)] - param_data[2] * exp_val;
 
@@ -59,13 +58,12 @@ __global__ void residual_jacobian_d_kernel(
 // residual mat should be (NxN)x1
 // jacobian should be (NxN)x4
 // param data should be 4x1
-template<typename T>
 void residual_jacobian_d(
     uint64_t idx, uint8_t N,
-    T *cmap_data, matrix_t *cmap_mat,
-    T *residual_data, matrix_t *residual_mat,
-    T *jacobian_data, matrix_t *jacobian_mat,
-    T *param_data, matrix_t *param_mat, cudaStream_t streamId)
+    float *cmap_data, matrix_t *cmap_mat,
+    float *residual_data, matrix_t *residual_mat,
+    float *jacobian_data, matrix_t *jacobian_mat,
+    float *param_data, matrix_t *param_mat, cudaStream_t streamId)
 {
   static const dim3 blockDim = { N, N }; // 3x3 pixel window used to appx
   residual_jacobian_d_kernel<<<1, blockDim, 0, streamId>>>(idx, N,
@@ -74,6 +72,3 @@ void residual_jacobian_d(
       jacobian_data, *jacobian_mat,
       param_data, *param_mat);
 }
-
-template __global__ void residual_jacobian_d_kernel(uint64_t, uint8_t, float *, matrix_t, float *, matrix_t, float*, matrix_t, float*, matrix_t);
-template void residual_jacobian_d(uint64_t, uint8_t, float *, matrix_t *, float *, matrix_t *, float*, matrix_t *, float*, matrix_t *, cudaStream_t);
