@@ -2,6 +2,9 @@
 
 #include "matrix.h"
 
+
+int matrix_peak_threshold_atomic_d(matrix_t *m, float *data, float threshold, int *count, int *peaks, int max_count, cudaStream_t streamId=NULL);
+
 template<typename T>
 int matrix_peak_threshold_mask_d(matrix_t *m, T *data, uint8_t *mask, T threshold, cudaStream_t streamId=NULL);
 

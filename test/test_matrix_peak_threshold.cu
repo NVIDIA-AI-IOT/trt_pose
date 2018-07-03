@@ -121,6 +121,43 @@ TEST(matrix_peak_threshold_mask_d, Valid)
   cudaFree(data_d);
 }
 
+TEST(matrix_peak_threshold_atomic_d, Valid)
+{
+  matrix_t m;
+  matrix_set_shape(&m, 4, 4);
+
+  float data_h[4 * 4] = {
+    0, 0, 0, 0,
+    1, 2, 1, 0,
+    0, 0, 0, 0,
+    0, 0, 2, 0,
+  };
+
+  float *data_d;
+  matrix_malloc_d(&m, &data_d);
+
+  matrix_copy_h2d(&m, data_h, data_d);
+
+  const int max_count = 5;
+  int count_h;
+  int peaks_h[max_count];
+  int *count_d, *peaks_d;
+  cudaMalloc(&count_d, sizeof(int));
+  cudaMalloc(&peaks_d, max_count * sizeof(int));
+
+  matrix_peak_threshold_atomic_d(&m, data_d, 1.0, count_d, peaks_d, max_count);
+
+  cudaMemcpy(&count_h, count_d, sizeof(int), cudaMemcpyDeviceToHost);
+  cudaMemcpy(peaks_h, peaks_d, max_count * sizeof(int), cudaMemcpyDeviceToHost);
+
+  ASSERT_EQ(2, count_h);
+  ASSERT_EQ(true, (peaks_h[0] == 5 || peaks_h[1] == 5) && (peaks_h[0] == 14 || peaks_h[1] == 14));
+
+  cudaFree(count_d);
+  cudaFree(peaks_d);
+  cudaFree(data_d);
+}
+
 #ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[])
 {
