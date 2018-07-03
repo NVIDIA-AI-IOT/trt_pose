@@ -5,15 +5,6 @@ template<typename T>
 __global__ void matrix_peak_threshold_mask_d_kernel(matrix_t m, T *data, uint8_t *mask, T threshold);
 
 template<typename T>
-int matrix_peak_threshold_mask_d(matrix_t *m, T *data, uint8_t *mask, T threshold)
-{
-  dim3 blockDim = { 8, 8 };
-  dim3 gridDim = { m->rows / 8 + 1, m->cols / 8 + 1 };
-  matrix_peak_threshold_mask_d_kernel<<<gridDim, blockDim>>>(*m, data, mask, threshold);
-  return 0;
-}
-
-template<typename T>
 int matrix_peak_threshold_mask_d(matrix_t *m, T *data, uint8_t *mask, T threshold, cudaStream_t streamId)
 {
   dim3 blockDim = { 8, 8 };
@@ -68,5 +59,4 @@ __global__ void matrix_peak_threshold_mask_d_kernel(matrix_t m, T *data, uint8_t
 // explicit instantiations
 
 template __global__ void matrix_peak_threshold_mask_d_kernel(matrix_t m, float *data, uint8_t *mask, float threshold);
-template int matrix_peak_threshold_mask_d(matrix_t *m, float *data, uint8_t *mask, float threshold);
 template int matrix_peak_threshold_mask_d(matrix_t *m, float *data, uint8_t *mask, float threshold, cudaStream_t streamId);

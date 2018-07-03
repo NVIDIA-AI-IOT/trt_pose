@@ -3,7 +3,7 @@
 #include "cublas_v2.h"
 #include "matrix.h"
 
-int matrix_multiply_nn_c(
+inline int matrix_multiply_nn_c(
     cublasHandle_t handle,
     float *a_data, matrix_t *a_mat,
     float *b_data, matrix_t *b_mat,
@@ -21,7 +21,7 @@ int matrix_multiply_nn_c(
   return 0;
 }
 
-int matrix_multiply_nt_c(
+inline int matrix_multiply_nt_c(
     cublasHandle_t handle,
     float *a_data, matrix_t *a_mat,
     float *b_data, matrix_t *b_mat,
@@ -39,7 +39,7 @@ int matrix_multiply_nt_c(
   return 0;
 }
 
-int matrix_multiply_tn_c(
+inline int matrix_multiply_tn_c(
     cublasHandle_t handle,
     float *a_data, matrix_t *a_mat,
     float *b_data, matrix_t *b_mat,
@@ -57,7 +57,7 @@ int matrix_multiply_tn_c(
   return 0;
 }
 
-int matrix_multiply_tt_c(
+inline int matrix_multiply_tt_c(
     cublasHandle_t handle,
     float *a_data, matrix_t *a_mat,
     float *b_data, matrix_t *b_mat,

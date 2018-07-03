@@ -3,9 +3,7 @@
 #include "matrix.h"
 
 template<typename T>
-int matrix_peak_threshold_mask_d(matrix_t *m, T *data, uint8_t *mask, T threshold);
-template<typename T>
-int matrix_peak_threshold_mask_d(matrix_t *m, T *data, uint8_t *mask, T threshold, cudaStream_t streamId);
+int matrix_peak_threshold_mask_d(matrix_t *m, T *data, uint8_t *mask, T threshold, cudaStream_t streamId=NULL);
 
 template<typename T>
 int matrix_count_nonzero_h(matrix_t *m, T *data)

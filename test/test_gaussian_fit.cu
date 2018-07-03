@@ -9,6 +9,7 @@
 #include "../src/matrix_copy.h"
 #include "../src/matrix_peak_threshold.h"
 #include "../src/gaussian_fit.h"
+#include "../src/gauss_newton.h"
 
 
 TEST(residual_jacobian, Valid)
@@ -181,7 +182,7 @@ TEST(residual_jacobian, ValidNonCentered)
   free(param_data_h);
 }
 
-TEST(update_param, Valid) {
+TEST(gauss_newton_step, Valid) {
   matrix_t cmap_mat;
   matrix_set_shape(&cmap_mat, 4, 4);
 
@@ -232,11 +233,11 @@ TEST(update_param, Valid) {
   cublasCreate_v2(&cublasHandle);
   cusolverDnCreate(&cusolverHandle);
 
-  int workspace_size = update_param_workspace_size(N);
+  int workspace_size = gauss_newton_step_workspace_size(&jacobian_mat);
   float *workspace;
   cudaMalloc(&workspace, workspace_size);
 
-  update_param(cublasHandle, cusolverHandle, max_idx, N, cmap_data_d, &cmap_mat, residual_data_d, &residual_mat, 
+  gauss_newton_step(cublasHandle, cusolverHandle, residual_data_d, &residual_mat, 
       jacobian_data_d, &jacobian_mat, param_data_d, &param_mat, workspace, workspace_size);
 
   matrix_copy_d2h(&param_mat, param_data_d, param_data_h);

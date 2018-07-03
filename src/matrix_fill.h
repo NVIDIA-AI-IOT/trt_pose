@@ -20,9 +20,5 @@ void matrix_fill_identity_h(matrix_t *m, T *data)
   }
 }
 
-// identity on device
 template<typename T>
-void matrix_fill_identity_d(matrix_t *m, T *data);
-
-template<typename T>
-void matrix_fill_identity_d(matrix_t *m, T *data, cudaStream_t stream);
+void matrix_fill_identity_d(matrix_t *m, T *data, cudaStream_t streamId=NULL);
