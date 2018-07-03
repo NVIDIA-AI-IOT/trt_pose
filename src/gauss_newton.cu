@@ -1,7 +1,7 @@
 #include "gauss_newton.h"
 
 #include "matrix_multiply.h"
-#include "matrix_index.cuh"
+#include "matrix_index.h"
 #include "matrix_fill.h"
 #include "matrix_solve.h"
 #include "matrix_copy.h"

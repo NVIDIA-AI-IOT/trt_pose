@@ -1,7 +1,7 @@
 #pragma once
 
 #include "matrix.h"
-#include "matrix_index.cuh"
+#include "matrix_index.h"
 #include "gauss_newton.h"
 
 // cmap_data is row-major (as per tensorRt)

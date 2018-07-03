@@ -1,4 +1,4 @@
-#include "matrix_index.cuh"
+#include "matrix_index.h"
 #include "matrix_peak_threshold.h"
 
 __global__ void matrix_peak_threshold_atomic_d_kernel(matrix_t m, float *data, float threshold, int *count, int *peaks, int max_count)

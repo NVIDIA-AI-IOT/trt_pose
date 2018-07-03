@@ -5,7 +5,7 @@
 #include "test_utils.h"
 
 #include "../src/matrix.h"
-#include "../src/matrix_index.cuh"
+#include "../src/matrix_index.h"
 #include "../src/matrix_multiply.h"
 #include "../src/matrix_copy.h"
 
