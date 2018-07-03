@@ -39,7 +39,7 @@ __global__ void residual_jacobian_d_kernel(
 
   // compute jacobian and jacobian
   float i_diff = i - param_data[0];
-  float j_diff = j - param_data[0];
+  float j_diff = j - param_data[1];
   float i_diff_2 = i_diff * i_diff;
   float j_diff_2 = j_diff * j_diff;
   float exp_val = exp(-(i_diff_2 + j_diff_2) / (2.0 * param_data[3]));
