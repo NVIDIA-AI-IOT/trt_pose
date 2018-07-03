@@ -19,6 +19,7 @@ void cmap_peaks(float *cmap_data_d, matrix_t *cmap_mat_h, int cmap_channels, flo
   streams = (cudaStream_t *) workspace_h;
   int *counts_d;
   counts_d = (int *) workspace_d;
+  cudaMemset(counts_d, 0, cmap_channels * sizeof(int)); // init counts to 0
   int *peaks_d;
   peaks_d = counts_d + cmap_channels;
 

@@ -7,6 +7,7 @@
 #include "test_matrix_multiply.cu"
 #include "test_matrix_peak_threshold.cu"
 #include "test_matrix_solve.cu"
+#include "test_cmap_peaks.cu"
 
 int main(int argc, char *argv[])
 {
