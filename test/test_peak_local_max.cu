@@ -29,9 +29,8 @@ TEST(peak_local_max, ComputesCorrectPeaks0) {
 
   int peak_indices_true[peak_max_count] = { 5, 11, 13, 5 + 16, 11 + 16, 13 + 16 };
 
-  for (int i = 0; i < cmap_channels; i++) {
-    assert_all_equal(peak_indices, peak_indices_true, peak_count);
-  }
+  ASSERT_EQ(6, peak_count);
+  assert_all_equal(peak_indices, peak_indices_true, peak_count);
 }
 
 #ifndef EXCLUDE_MAIN
