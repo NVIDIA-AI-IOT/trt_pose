@@ -16,44 +16,42 @@
  *   The memory to store peaks should be allocated to fit at least peak_max_count peaks per channel.
  * peak_max_count (host | in) - The maximum number of peaks per channel to detect.
  */
-void peak_local_max(
-    float *cmap, int cmap_channels, int cmap_height, int cmap_width,
+int peak_local_max(
+    const float *cmap, int cmap_channels, int cmap_height, int cmap_width,
     float threshold,
-    int *peak_counts, int **peak_ptrs, int peak_max_count)
+    int *peak_indices, int peak_max_count)
 {
-  for (int i = 0; i < cmap_channels; i++) {
-    float *cmap_i = cmap + i * cmap_height * cmap_width;
-    peak_counts[i] = 0;
-    for (int j = 0; j < cmap_height; j++) {
-      for (int k = 0; k < cmap_width; k++) {
-        int idx = IDX_2D(j, k, cmap_width);
-        float val = cmap_i[idx];
+  int peak_count = 0;
+  for (int c = 0; c < cmap_channels; c++)
+  {
+    int c_idx = c * cmap_height * cmap_width;
+    for (int i = 0; i < cmap_height; i++) 
+    {
+      int i_idx = c_idx + i * cmap_width;
+      for (int j = 0; j < cmap_width; j++)
+      {
+        int idx = i_idx + j;
+        float val = cmap[idx];
 
-        // below threshold
         if (val < threshold) {
           continue;
         }
 
-        // greater neighbor
-        if (j - 1 > 0 && cmap_i[IDX_2D(j - 1, k, cmap_width)] > val) {
+        if ((j - 1 >= 0 && cmap[idx - 1] > val) ||
+            (j + 1 < cmap_width && cmap[idx + 1] > val) ||
+            (i - 1 >= 0 && cmap[idx - cmap_width] > val) ||
+            (i + 1 < cmap_height && cmap[idx + cmap_width] > val))
+        {
           continue;
         }
-        if (j + 1 > 0 && cmap_i[IDX_2D(j + 1 , k, cmap_width)] > val) {
-          continue;
-        }
-        if (k - 1 > 0 && cmap_i[IDX_2D(j, k - 1, cmap_width)] > val) {
-          continue;
-        }
-        if (k + 1 > 0 && cmap_i[IDX_2D(j, k + 1, cmap_width)] > val) {
-          continue;
-        }
-
-        // is peak - increment count for channel and set index
-        if (peak_counts[i] < peak_max_count) { 
-          peak_ptrs[i][peak_counts[i]] = idx; 
-          peak_counts[i]++;
+        
+        if (peak_count != peak_max_count) {
+          peak_indices[peak_count++] = idx;
+        } else {
+          return peak_count;
         }
       }
     }
-  }
+  } 
+  return peak_count;
 }
