@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include <iostream>
 
 #include "test_utils.h"
 
@@ -27,10 +28,27 @@ TEST(peak_local_max, ComputesCorrectPeaks0) {
   int peak_count = peak_local_max(cmap, cmap_channels, cmap_height, cmap_width,
       threshold, peak_indices, peak_max_count);
 
+  peak_local_max(cmap, cmap_channels, cmap_height, cmap_width, threshold, peak_indices, peak_max_count);
+
   int peak_indices_true[peak_max_count] = { 5, 11, 13, 5 + 16, 11 + 16, 13 + 16 };
 
   ASSERT_EQ(6, peak_count);
   assert_all_equal(peak_indices, peak_indices_true, peak_count);
+}
+
+TEST(peak_local_max, TimeProfile) {
+  const int cmap_channels = 18;
+  const int cmap_height = 46;
+  const int cmap_width = 46;
+  const int peak_max_count = 2000;
+  float cmap[cmap_channels * cmap_height * cmap_width];
+  int peak_indices[peak_max_count];
+
+  int peak_count;
+  for (int i = 0; i < 1000; i++) {
+    peak_count = peak_local_max(cmap, cmap_channels, cmap_height, cmap_width, 0.5, peak_indices, peak_max_count);
+  }
+  std::cout << peak_count << std::endl;
 }
 
 #ifndef EXCLUDE_MAIN
