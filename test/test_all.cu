@@ -1,13 +1,6 @@
 #define EXCLUDE_MAIN
 
-#include "test_gaussian_fit.cu"
-#include "test_matrix.cu"
-#include "test_matrix_add.cu"
-#include "test_matrix_fill.cu"
-#include "test_matrix_multiply.cu"
-#include "test_matrix_peak_threshold.cu"
-#include "test_matrix_solve.cu"
-#include "test_cmap_peaks.cu"
+#include "gtest/gtest.h"
 
 int main(int argc, char *argv[])
 {
