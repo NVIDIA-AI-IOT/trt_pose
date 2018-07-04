@@ -16,14 +16,14 @@
  *   The memory to store peaks should be allocated to fit at least peak_max_count peaks per channel.
  * peak_max_count (host | in) - The maximum number of peaks per channel to detect.
  */
-int peak_local_max(
+void peak_local_max(
     const float *cmap, int cmap_channels, int cmap_height, int cmap_width,
     float threshold,
-    int *peak_indices, int peak_max_count)
+    int *peak_counts, int **peak_ptrs, int peak_max_count)
 {
-  int peak_count = 0;
   for (int c = 0; c < cmap_channels; c++)
   {
+    peak_counts[c] = 0;
     int c_idx = c * cmap_height * cmap_width;
     for (int i = 0; i < cmap_height; i++) 
     {
@@ -45,13 +45,12 @@ int peak_local_max(
           continue;
         }
         
-        if (peak_count != peak_max_count) {
-          peak_indices[peak_count++] = idx;
+        if (peak_counts[c] != peak_max_count) {
+          peak_ptrs[c][peak_counts[c]++] = i * cmap_width + j;
         } else {
-          return peak_count;
+          return;
         }
       }
     }
   } 
-  return peak_count;
 }
