@@ -32,7 +32,7 @@ void munkres_sub_min_col(float *a, int n, int m)
   }
 }
 
-void munkres_step_0(float *a, bool *s, int n, int m)
+void munkres_step_1(float *a, bool *s, int n, int m)
 {
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < m; j++) {

@@ -42,7 +42,7 @@ TEST(munkres_sub_min_col, Correct)
   assert_all_equal(a_true, a, n * m);
 }
 
-TEST(munkres_step_0, Correct)
+TEST(munkres_step_1, Correct)
 {
   const int n = 3;
   const int m = 4;
@@ -65,7 +65,7 @@ TEST(munkres_step_0, Correct)
     0, 0, 1, 0,
   };
 
-  munkres_step_0(a, s, n, m);
+  munkres_step_1(a, s, n, m);
   assert_all_equal(s_true, s, n * m);
 }
 
