@@ -328,6 +328,48 @@ TEST(munkres_step_5, Correct)
   assert_all_equal(a_true, a, n * m);
 }
 
+TEST(munkres, Correct)
+{
+  const int n = 3;
+  const int m = 4;
+
+  float a[n * m] = {
+    1, 2, 3, 2,
+    1, 2, 2, 3,
+    1, 3, 2, 2
+  };
+
+  bool c0[n] = {
+    0, 0, 0 
+  };
+
+  bool c1[m] = { 
+    0, 0, 0, 0
+  };
+
+  bool s[n * m] = {
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  };
+
+  bool p[n * m] = {
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  };
+
+  bool s_true[n * m] = {
+    0, 0, 0, 1,
+    0, 1, 0, 0,
+    1, 0, 0, 0
+  };
+
+  munkres(a, c0, c1, s, p, n, m);
+  assert_all_equal(s_true, s, n * m);
+}
+
+
 #ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[]) 
 {

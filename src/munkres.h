@@ -127,10 +127,10 @@ bool munkres_step_3(float *a, bool *c0, bool *c1, bool *s, bool *p, int *p0, int
   while (!munkres_step_3_all_covered(a, c0, c1, n, m)) 
   {
     if (munkres_step_3_prime(a, c0, c1, s, p, p0, p1, n, m)) {
-      return true;
+      return true; // go to procedure 4
     }
   }
-  return false;
+  return false; // go to procedure 5
 }
 
 void munkres_step_4(bool *c0, bool *c1, bool *s, bool *p, int *p0, int *p1, int n, int m)
@@ -212,5 +212,73 @@ void munkres_step_5(float *a, bool *c0, bool *c1, int n, int m)
     for (int i = 0; i < n; i++) {
       a[IDX_2D(i, j, m)] -= min;
     }
+  }
+}
+
+void munkres(float *a, bool *c0, bool *c1, bool *s, bool *p, int n, int m)
+{
+  // preliminary
+  int step = 0;
+  if (m >= n) {
+    munkres_sub_min_row(a, n, m);
+  } 
+  if (m > n) {
+    step = 1;
+  }
+
+  bool done = false;
+  int p0, p1;
+
+  while (!done) {
+    switch (step) {
+
+      case 0: 
+      {
+        munkres_sub_min_col(a, n, m);
+        step = 1;
+        break;
+      }
+
+      case 1: 
+      {
+        munkres_step_1(a, s, n, m);
+        step = 2;
+        break;
+      }
+
+      case 2: 
+      {
+        if (munkres_step_2(s, c1, n, m)) {
+          done = true;
+        } else {
+          step = 3;
+        }
+        break;
+      }
+
+      case 3: 
+      {
+        if (munkres_step_3(a, c0, c1, s, p, &p0, &p1, n, m)) {
+          step = 4;
+        } else {
+          step = 5;
+        }
+        break;
+      }
+
+      case 4: 
+      {
+        munkres_step_4(c0, c1, s, p, &p0, &p1, n, m);
+        step = 2;
+        break;
+      }
+
+      case 5: 
+      {
+        munkres_step_5(a, c0, c1, n, m);
+        step = 3;
+        break;
+      }
+    }  
   }
 }
