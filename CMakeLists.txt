@@ -11,7 +11,8 @@ set(CUDA_NVCC_FLASGS -std=c++11)
 
 find_package(CUDA REQUIRED)
 
-cuda_add_library(trt_pose SHARED
+add_library(trt_pose SHARED
+  src/munkres.c
 )
 
 target_link_libraries(trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
@@ -26,5 +27,5 @@ if (BUILD_TESTS)
   target_link_libraries(test_hungarian_assign gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
 
   add_executable(test_munkres test/test_munkres.cpp)
-  target_link_libraries(test_munkres gtest pthread)
+  target_link_libraries(test_munkres trt_pose gtest pthread)
 endif()
