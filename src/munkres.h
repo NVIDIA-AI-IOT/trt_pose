@@ -177,3 +177,40 @@ void munkres_step_4(bool *c0, bool *c1, bool *s, bool *p, int *p0, int *p1, int 
     c1[j] = false;
   }
 }
+
+void munkres_step_5(float *a, bool *c0, bool *c1, int n, int m)
+{
+  float min = 1e9; // will break if larger
+
+  for (int i = 0; i < n; i++) {
+    if (c0[i]) {
+      continue;
+    }
+    for (int j = 0; j < m; j++) {
+      if (c1[j]) {
+        continue;
+      }
+      if (a[IDX_2D(i, j, m)] < min) {
+        min = a[IDX_2D(i, j, m)];
+      }
+    }
+  }
+
+  for (int i = 0; i < n; i++) {
+    if (!c0[i]) {
+      continue;
+    }
+    for (int j = 0; j < m; j++) {
+      a[IDX_2D(i, j, m)] += min;
+    }
+  }
+
+  for (int j = 0; j < m; j++) {
+    if (c1[j]) {
+      continue;
+    }
+    for (int i = 0; i < n; i++) {
+      a[IDX_2D(i, j, m)] -= min;
+    }
+  }
+}
