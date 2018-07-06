@@ -23,9 +23,6 @@ if (BUILD_TESTS)
   cuda_add_executable(test_all test/test_all.cu)
   target_link_libraries(test_all gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
 
-  cuda_add_executable(test_hungarian_assign test/test_hungarian_assign.cu)
-  target_link_libraries(test_hungarian_assign gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
-
   add_executable(test_munkres test/test_munkres.cpp)
   target_link_libraries(test_munkres trt_pose gtest pthread)
 endif()

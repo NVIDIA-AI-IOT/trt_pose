@@ -3,6 +3,7 @@
 #include "test_utils.h"
 
 #include "../src/munkres.h"
+#include "../src/tensor.h"
 
 TEST(munkres_sub_min_row, Correct)
 {
@@ -13,14 +14,14 @@ TEST(munkres_sub_min_row, Correct)
     2, 1, 3, 1,
     3, 4, 2, 3
   };
-  float a_true[n * m] = {
+  float a_1[n * m] = {
     0, 1, 2, 1,
     1, 0, 2, 0,
     1, 2, 0, 1,
   };
 
-  munkres_sub_min_row(a, n, m);
-  assert_all_equal(a_true, a, n * m);
+  _munkres_sub_min_row(a, n, m);
+  assert_all_equal(a_1, a, n * m);
 }
 
 TEST(munkres_sub_min_col, Correct)
@@ -32,14 +33,14 @@ TEST(munkres_sub_min_col, Correct)
     2, 1, 3, 1,
     3, 4, 2, 3
   };
-  float a_true[n * m] = {
+  float a_1[n * m] = {
     0, 1, 1, 1,
     1, 0, 1, 0,
     2, 3, 0, 2,
   };
 
-  munkres_sub_min_col(a, n, m);
-  assert_all_equal(a_true, a, n * m);
+  _munkres_sub_min_col(a, n, m);
+  assert_all_equal(a_1, a, n * m);
 }
 
 TEST(munkres_step_1, Correct)
@@ -53,20 +54,20 @@ TEST(munkres_step_1, Correct)
     2, 3, 0, 2,
   };
 
-  bool s[n * m] = {
+  int s[n * m] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
   };
 
-  bool s_true[n * m] = {
+  int s_1[n * m] = {
     1, 0, 0, 0,
     0, 1, 0, 0,
     0, 0, 1, 0,
   };
 
-  munkres_step_1(a, s, n, m);
-  assert_all_equal(s_true, s, n * m);
+  _munkres_step_1(a, s, n, m);
+  assert_all_equal(s_1, s, n * m);
 }
 
 TEST(munkres_step_2, ShouldReturnTrue)
@@ -74,17 +75,17 @@ TEST(munkres_step_2, ShouldReturnTrue)
   const int n = 3;
   const int m = 4;
 
-  bool s[n * m] = {
+  int s[n * m] = {
     1, 0, 0, 0,
     0, 1, 0, 0,
     0, 0, 1, 0,
   };
-  bool c1[m] = { 
+  int c1[m] = { 
     0, 0, 0, 0
   };
 
-  bool done = munkres_step_2(s, c1, n, m);
-  ASSERT_EQ(true, done);
+  int done = _munkres_step_2(s, c1, n, m);
+  ASSERT_EQ(1, done);
 }
 
 TEST(munkres_step_2, ShouldReturnFalse)
@@ -92,17 +93,17 @@ TEST(munkres_step_2, ShouldReturnFalse)
   const int n = 3;
   const int m = 4;
 
-  bool s[n * m] = {
+  int s[n * m] = {
     1, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 1, 0,
   };
-  bool c1[m] = { 
+  int c1[m] = { 
     0, 0, 0, 0
   };
 
-  bool done = munkres_step_2(s, c1, n, m);
-  ASSERT_EQ(false, done);
+  int done = _munkres_step_2(s, c1, n, m);
+  ASSERT_EQ(0, done);
 }
 
 TEST(munkres_step_3_all_covered, Correct)
@@ -117,33 +118,33 @@ TEST(munkres_step_3_all_covered, Correct)
   };
 
   {
-  bool c0[n] = { 0, 0, 0 };
-  bool c1[m] = { 0, 0, 0, 0 };
-  ASSERT_EQ(false, munkres_step_3_all_covered(a, c0, c1, n, m));
+  int c0[n] = { 0, 0, 0 };
+  int c1[m] = { 0, 0, 0, 0 };
+  ASSERT_EQ(0, _munkres_step_3_all_covered(a, c0, c1, n, m));
   }
 
   {
-  bool c0[n] = { 1, 1, 1 };
-  bool c1[m] = { 0, 0, 0, 0 };
-  ASSERT_EQ(true, munkres_step_3_all_covered(a, c0, c1, n, m));
+  int c0[n] = { 1, 1, 1 };
+  int c1[m] = { 0, 0, 0, 0 };
+  ASSERT_EQ(1, _munkres_step_3_all_covered(a, c0, c1, n, m));
   }
 
   {
-  bool c0[n] = { 0, 0, 0 };
-  bool c1[m] = { 1, 1, 1, 1 };
-  ASSERT_EQ(true, munkres_step_3_all_covered(a, c0, c1, n, m));
+  int c0[n] = { 0, 0, 0 };
+  int c1[m] = { 1, 1, 1, 1 };
+  ASSERT_EQ(1, _munkres_step_3_all_covered(a, c0, c1, n, m));
   }
 
   {
-  bool c0[n] = { 0, 0, 0 };
-  bool c1[m] = { 1, 0, 1, 1 };
-  ASSERT_EQ(false, munkres_step_3_all_covered(a, c0, c1, n, m));
+  int c0[n] = { 0, 0, 0 };
+  int c1[m] = { 1, 0, 1, 1 };
+  ASSERT_EQ(0, _munkres_step_3_all_covered(a, c0, c1, n, m));
   }
 
   {
-  bool c0[n] = { 1, 0, 1 };
-  bool c1[m] = { 0, 1, 0, 1 };
-  ASSERT_EQ(true, munkres_step_3_all_covered(a, c0, c1, n, m));
+  int c0[n] = { 1, 0, 1 };
+  int c1[m] = { 0, 1, 0, 1 };
+  ASSERT_EQ(1, _munkres_step_3_all_covered(a, c0, c1, n, m));
   }
 }
 
@@ -158,27 +159,27 @@ TEST(munkres_step_3_prime, Correct)
     1, 0, 1, 1
   };
 
-  bool s[n * m] = {
+  int s[n * m] = {
     1, 0, 0, 0,
     0, 1, 0, 0,
     0, 0, 0, 0
   };
 
-  bool c0[n] = {
+  int c0[n] = {
     0, 0, 0 
   };
-  bool c1[m] = { 
+  int c1[m] = { 
     1, 1, 0, 0
   };
 
-  bool p[n * m] = {
+  int p[n * m] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
   };
   int p0, p1;
-  bool step4 = munkres_step_3_prime(a, c0, c1, s, p, &p0, &p1, n, m);
-  ASSERT_EQ(false, step4);
+  int step4 = _munkres_step_3_prime(a, c0, c1, s, p, &p0, &p1, n, m);
+  ASSERT_EQ(0, step4);
 }
 
 TEST(munkres_step_3_prime, Correct2)
@@ -192,29 +193,29 @@ TEST(munkres_step_3_prime, Correct2)
     0, 1, 0, 0
   };
 
-  bool s[n * m] = {
+  int s[n * m] = {
     1, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0
   };
 
-  bool c0[n] = {
+  int c0[n] = {
     1, 0, 0 
   };
-  bool c1[m] = { 
+  int c1[m] = { 
     0, 0, 0, 0
   };
 
-  bool p[n * m] = {
+  int p[n * m] = {
     0, 1, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
   };
 
   int p0, p1;
-  bool step4 = munkres_step_3_prime(a, c0, c1, s, p, &p0, &p1, n, m);
-  ASSERT_EQ(true, step4);
-  ASSERT_EQ(true, p[IDX_2D(1, 0, m)]);
+  int step4 = _munkres_step_3_prime(a, c0, c1, s, p, &p0, &p1, n, m);
+  ASSERT_EQ(1, step4);
+  ASSERT_EQ(1, p[IDX_2D(1, 0, m)]);
 }
 
 TEST(munkres_step_3, Correct)
@@ -228,30 +229,30 @@ TEST(munkres_step_3, Correct)
     0, 1, 0, 0
   };
 
-  bool s[n * m] = {
+  int s[n * m] = {
     1, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0
   };
 
-  bool c0[n] = {
+  int c0[n] = {
     0, 0, 0 
   };
-  bool c1[m] = { 
+  int c1[m] = { 
     1, 0, 0, 0
   };
 
-  bool p[n * m] = {
+  int p[n * m] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0,
   };
 
   int p0, p1;
-  bool step4 = munkres_step_3(a, c0, c1, s, p, &p0, &p1, n, m);
-  ASSERT_EQ(true, step4);
-  ASSERT_EQ(true, p[IDX_2D(1, 0, m)]);
-  ASSERT_EQ(true, p[IDX_2D(0, 1, m)]);
+  int step4 = _munkres_step_3(a, c0, c1, s, p, &p0, &p1, n, m);
+  ASSERT_EQ(1, step4);
+  ASSERT_EQ(1, p[IDX_2D(1, 0, m)]);
+  ASSERT_EQ(1, p[IDX_2D(0, 1, m)]);
 }
 
 TEST(munkres_step_4, Correct)
@@ -265,26 +266,26 @@ TEST(munkres_step_4, Correct)
     0, 1, 0, 0
   };
 
-  bool s[n * m] = {
+  int s[n * m] = {
     1, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0
   };
 
-  bool c0[n] = {
+  int c0[n] = {
     1, 0, 0 
   };
-  bool c1[m] = { 
+  int c1[m] = { 
     0, 0, 0, 0
   };
 
-  bool p[n * m] = {
+  int p[n * m] = {
     0, 1, 0, 0,
     1, 0, 0, 0,
     0, 0, 0, 0,
   };
 
-  bool s_true[n * m] = {
+  int s_1[n * m] = {
     0, 1, 0, 0,
     1, 0, 0, 0,
     0, 0, 0, 0
@@ -292,9 +293,9 @@ TEST(munkres_step_4, Correct)
 
   int p0 = 1;
   int p1 = 0;
-  munkres_step_4(c0, c1, s, p, &p0, &p1, n, m);
+  _munkres_step_4(c0, c1, s, p, &p0, &p1, n, m);
 
-  assert_all_equal(s_true, s, n * m);
+  assert_all_equal(s_1, s, n * m);
   ASSERT_EQ(0, p0);
   ASSERT_EQ(1, p1);
 }
@@ -310,22 +311,22 @@ TEST(munkres_step_5, Correct)
     0, 3, 2, 2
   };
 
-  bool c0[n] = {
+  int c0[n] = {
     0, 0, 0 
   };
 
-  bool c1[m] = { 
+  int c1[m] = { 
     1, 0, 0, 0
   };
 
-  float a_true[n * m] = {
+  float a_1[n * m] = {
     0, 0, 1, 0,
     0, 0, 0, 1,
     0, 1, 0, 0
   };
 
-  munkres_step_5(a, c0, c1, n, m);
-  assert_all_equal(a_true, a, n * m);
+  _munkres_step_5(a, c0, c1, n, m);
+  assert_all_equal(a_1, a, n * m);
 }
 
 TEST(munkres, Correct)
@@ -339,34 +340,34 @@ TEST(munkres, Correct)
     1, 3, 2, 2
   };
 
-  bool c0[n] = {
+  int c0[n] = {
     0, 0, 0 
   };
 
-  bool c1[m] = { 
+  int c1[m] = { 
     0, 0, 0, 0
   };
 
-  bool s[n * m] = {
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0
-  };
-
-  bool p[n * m] = {
+  int s[n * m] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0
   };
 
-  bool s_true[n * m] = {
+  int p[n * m] = {
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  };
+
+  int s_1[n * m] = {
     0, 0, 0, 1,
     0, 1, 0, 0,
     1, 0, 0, 0
   };
 
-  munkres(a, c0, c1, s, p, n, m);
-  assert_all_equal(s_true, s, n * m);
+  _munkres(a, c0, c1, s, p, n, m);
+  assert_all_equal(s_1, s, n * m);
 }
 
 TEST(munkres, CorrectWrapper)
@@ -380,13 +381,13 @@ TEST(munkres, CorrectWrapper)
     1, 3, 2, 2
   };
 
-  bool s[n * m] = {
+  int s[n * m] = {
     0, 0, 0, 0,
     0, 0, 0, 0,
     0, 0, 0, 0
   };
 
-  bool s_true[n * m] = {
+  int s_1[n * m] = {
     0, 0, 0, 1,
     0, 1, 0, 0,
     1, 0, 0, 0
@@ -395,7 +396,7 @@ TEST(munkres, CorrectWrapper)
   size_t workspace_size = munkres_workspace_size(n, m);
   void *workspace = malloc(workspace_size);
   munkres(a, s, n, m, workspace, workspace_size);
-  assert_all_equal(s_true, s, n * m);
+  assert_all_equal(s_1, s, n * m);
 }
 
 #ifndef EXCLUDE_MAIN
