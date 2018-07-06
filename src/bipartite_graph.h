@@ -7,6 +7,10 @@
 #define PAF_I_IDX 0
 #define PAF_J_IDX 1
 
+// TODO:
+//   1. threshold weighted graph (float graph -> uint8 graph)
+//   2. non-max suppression on weighted graph (uint8 graph -> uint8 graph (inplace))
+//   3. bipartite graph segmentation (DFS) (uint8 graph -> Nx(num_cmap) integers)
 // bipartite_graph - (paf_parts * max_num_peaks^2)
 void bipartite_graph(
     int *peak_counts, int **peak_ptrs, int peak_max_count,
@@ -40,9 +44,9 @@ void bipartite_graph(
           float pS_val_i = paf[IDX_3D(2 * k + PAF_I_IDX, (int) pS_i, (int) pS_j, paf_height, paf_width)]; // paf i value at sample i coordinate
           float pS_val_j = paf[IDX_3D(2 * k + PAF_J_IDX, (int) pS_i, (int) pS_j, paf_height, paf_width)]; // paf j value at sample j coordinate
           float dot_product = pS_val_i * p01_i_normed + pS_val_j * p01_j_normed;
-          bipartite_graph_k[IDX_2D(i, j, peak_counts[j])] = dot_product;
+          bipartite_graph_k[IDX_2D(i, j, peak_counts[c1])] = dot_product;
         }
       }
-    } 
+    }
   }
 }
