@@ -69,6 +69,42 @@ TEST(munkres_step_1, Correct)
   assert_all_equal(s_true, s, n * m);
 }
 
+TEST(munkres_step_1, ShouldReturnTrue)
+{
+  const int n = 3;
+  const int m = 4;
+
+  bool s[n * m] = {
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+  };
+  bool c1[m] = { 
+    0, 0, 0, 0
+  };
+
+  bool done = munkres_step_2(s, c1, n, m);
+  ASSERT_EQ(true, done);
+}
+
+TEST(munkres_step_1, ShouldReturnFalse)
+{
+  const int n = 3;
+  const int m = 4;
+
+  bool s[n * m] = {
+    1, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 1, 0,
+  };
+  bool c1[m] = { 
+    0, 0, 0, 0
+  };
+
+  bool done = munkres_step_2(s, c1, n, m);
+  ASSERT_EQ(false, done);
+}
+
 #ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[]) 
 {

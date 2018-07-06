@@ -58,3 +58,24 @@ void munkres_step_1(float *a, bool *s, int n, int m)
     }
   }
 }
+
+// returns true if finished
+bool munkres_step_2(bool *s, bool *c1, int n, int m)
+{
+  int k = n < m ? n : m;
+  int count = 0;
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      if (s[IDX_2D(i, j, m)]) {
+        c1[j] = true;
+      }
+    }
+  }
+  for (int j = 0; j < m; j++) {
+    if (c1[j] == true) {
+      count++;
+    }
+  }
+  return count >= k;
+}
