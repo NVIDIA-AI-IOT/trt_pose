@@ -254,6 +254,51 @@ TEST(munkres_step_3, Correct)
   ASSERT_EQ(true, p[IDX_2D(0, 1, m)]);
 }
 
+TEST(munkres_step_4, Correct)
+{
+  const int n = 3;
+  const int m = 4;
+
+  float a[n * m] = {
+    0, 0, 1, 0,
+    0, 0, 0, 1,
+    0, 1, 0, 0
+  };
+
+  bool s[n * m] = {
+    1, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  };
+
+  bool c0[n] = {
+    1, 0, 0 
+  };
+  bool c1[m] = { 
+    0, 0, 0, 0
+  };
+
+  bool p[n * m] = {
+    0, 1, 0, 0,
+    1, 0, 0, 0,
+    0, 0, 0, 0,
+  };
+
+  bool s_true[n * m] = {
+    0, 1, 0, 0,
+    1, 0, 0, 0,
+    0, 0, 0, 0
+  };
+
+  int p0 = 1;
+  int p1 = 0;
+  munkres_step_4(c0, c1, s, p, &p0, &p1, n, m);
+
+  assert_all_equal(s_true, s, n * m);
+  ASSERT_EQ(0, p0);
+  ASSERT_EQ(1, p1);
+}
+
 #ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[]) 
 {

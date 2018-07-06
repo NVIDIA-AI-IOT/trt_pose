@@ -132,3 +132,48 @@ bool munkres_step_3(float *a, bool *c0, bool *c1, bool *s, bool *p, int *p0, int
   }
   return false;
 }
+
+void munkres_step_4(bool *c0, bool *c1, bool *s, bool *p, int *p0, int *p1, int n, int m)
+{
+  while (true) {
+    bool star = false;
+    int s0 = 0;
+    int s1 = 0;
+
+    // search for star in prime's column
+    for (int i = 0; i < n; i++) {
+      if (s[IDX_2D(i, *p1, m)]) {
+        star = true;
+        s0 = i;
+        s1 = *p1;
+      }
+    }
+
+    s[IDX_2D(*p0, *p1, m)] = true; // star the prime
+    if (!star) {
+      break; // no star in column of prime, exit
+    }
+    
+    s[IDX_2D(s0, s1, m)] = 0; // un-star the star in prime's column
+
+    // search for prime in stars row
+    for (int j = 0; j < m; j++) {
+      // if prime found, update prime value
+      if (p[IDX_2D(s0, j, m)]) {
+        *p0 = s0;
+        *p1 = j;
+      }
+    }
+  }
+
+  // clear primes and uncover lines
+  for (int i = 0; i < n * m; i++) {
+    p[i] = false;
+  }
+  for (int i = 0; i < n; i++) {
+    c0[i] = false;
+  }
+  for (int j = 0; j < m; j++) {
+    c1[j] = false;
+  }
+}
