@@ -1,6 +1,7 @@
 #pragma once
 
 #include "tensor.h"
+#include <cstring>
 
 void munkres_sub_min_row(float *a, int n, int m)
 {
@@ -281,4 +282,18 @@ void munkres(float *a, bool *c0, bool *c1, bool *s, bool *p, int n, int m)
       }
     }  
   }
+}
+
+size_t munkres_workspace_size(int n, int m)
+{
+  return sizeof(bool) * (n + m + n * m);
+}
+
+void munkres(float *a, bool *s, int n, int m, void *workspace, size_t workspace_size)
+{
+  bool *p = (bool *) workspace;
+  bool *c0 = p + n * m;
+  bool *c1 = c0 + n;
+  memset(workspace, 0, workspace_size);
+  munkres(a, c0, c1, s, p, n, m);
 }

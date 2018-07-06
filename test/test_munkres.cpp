@@ -369,6 +369,34 @@ TEST(munkres, Correct)
   assert_all_equal(s_true, s, n * m);
 }
 
+TEST(munkres, CorrectWrapper)
+{
+  const int n = 3;
+  const int m = 4;
+
+  float a[n * m] = {
+    1, 2, 3, 2,
+    1, 2, 2, 3,
+    1, 3, 2, 2
+  };
+
+  bool s[n * m] = {
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  };
+
+  bool s_true[n * m] = {
+    0, 0, 0, 1,
+    0, 1, 0, 0,
+    1, 0, 0, 0
+  };
+
+  size_t workspace_size = munkres_workspace_size(n, m);
+  void *workspace = malloc(workspace_size);
+  munkres(a, s, n, m, workspace, workspace_size);
+  assert_all_equal(s_true, s, n * m);
+}
 
 #ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[]) 
