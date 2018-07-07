@@ -1,7 +1,8 @@
 #define EXCLUDE_MAIN
 
 #include "gtest/gtest.h"
-#include "test_peak_local_max.cu"
+#include "test_peak_local_max.cpp"
+#include "test_munkres.cpp"
 
 int main(int argc, char *argv[])
 {

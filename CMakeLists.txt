@@ -13,16 +13,17 @@ find_package(CUDA REQUIRED)
 
 add_library(trt_pose SHARED
   src/munkres.c
+  src/peak_local_max.c
 )
 
-target_link_libraries(trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
+target_link_libraries(trt_pose)
 
 if (BUILD_TESTS)
   find_package(GTest REQUIRED)
 
-  cuda_add_executable(test_all test/test_all.cu)
-  target_link_libraries(test_all gtest pthread trt_pose ${CUDA_CUBLAS_LIBRARIES} ${CUDA_cusolver_LIBRARY})
+  add_executable(test_all test/test_all.cpp)
+  target_link_libraries(test_all gtest pthread trt_pose)
 
   add_executable(test_munkres test/test_munkres.cpp)
-  target_link_libraries(test_munkres trt_pose gtest pthread)
+  target_link_libraries(test_munkres gtest pthread trt_pose)
 endif()
