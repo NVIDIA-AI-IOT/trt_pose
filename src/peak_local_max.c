@@ -1,44 +1,30 @@
 #include "peak_local_max.h"
 
+#include "matrix.h"
 #include "tensor.h"
 
-void peak_local_max(
-    const float *cmap, int cmap_channels, int cmap_height, int cmap_width,
-    float threshold,
-    int *peak_counts, int **peak_ptrs, int peak_max_count)
+int peak_local_max(matrix_t *m, float threshold, peak_t *peaks, int peaks_capacity)
 {
-  for (int c = 0; c < cmap_channels; c++)
-  {
-    peak_counts[c] = 0;
-    int c_idx = c * cmap_height * cmap_width;
-    for (int i = 0; i < cmap_height; i++) 
-    {
-      int i_idx = c_idx + i * cmap_width;
-      for (int j = 0; j < cmap_width; j++)
-      {
-        int idx = i_idx + j;
-        float val = cmap[idx];
-
-        if (val < threshold) {
-          continue;
-        }
-
-        if ((j - 1 >= 0 && cmap[idx - 1] > val) ||
-            (j + 1 < cmap_width && cmap[idx + 1] > val) ||
-            (i - 1 >= 0 && cmap[idx - cmap_width] > val) ||
-            (i + 1 < cmap_height && cmap[idx + cmap_width] > val))
-        {
-          continue;
-        }
-        
-        if (peak_counts[c] != peak_max_count) {
-          peak_ptrs[c][peak_counts[c]++] = i * cmap_width + j;
-        } else {
-          return;
-        }
+  int num_peaks = 0;
+  for (int i = 0; i < m->rows; i++) {
+    for (int j = 0; j < m->cols; j++) {
+      float val = matrix_at(m, i, j);
+      if (val < threshold) {
+        continue; // below threshold
+      }
+      if ((i - 1 > 0 && matrix_at(m, i - 1, j) > val) ||
+          (i + 1 < m->rows && matrix_at(m, i + 1, j) > val) ||
+          (j - 1 > 0 && matrix_at(m, i, j - 1) > val) ||
+          (j + 1 < m->cols && matrix_at(m, i, j + 1) > val)) {
+        continue; // greater neighbor
+      }
+      peaks[num_peaks].row = i;
+      peaks[num_peaks].col = j;
+      num_peaks++;
+      if (num_peaks == peaks_capacity) {
+        return num_peaks;
       }
     }
-  } 
+  }
+  return num_peaks;
 }
-
-

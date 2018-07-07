@@ -6,36 +6,26 @@
 #include "../src/peak_local_max.h"
 
 TEST(peak_local_max, ComputesCorrectPeaks0) {
-  const int cmap_channels = 2;
-  const int cmap_width = 4;
-  const int cmap_height = 4;
-  const int peak_max_count = 10;
-  const float threshold = 0.5;
   
-  float cmap[] = {
+  float data[] = {
     0, 1, 0, 0,
     0, 2, 0, 0,
     0, 0, 0, 2,
     1, 2, 1, 0,
-    0, 1, 0, 0,
-    0, 2, 0, 0,
-    0, 0, 0, 2,
-    1, 2, 1, 0
   };
   
-  int peak_indices[cmap_channels * peak_max_count];
-  int peak_counts[cmap_channels];
-  int *peak_ptrs[] = { &peak_indices[0], &peak_indices[peak_max_count] };
+  matrix_t m = { data, 4, 4 };
+  const int max_num_peaks = 10;
+  peak_t peaks[max_num_peaks];
 
-  peak_local_max(cmap, cmap_channels, cmap_height, cmap_width,
-      threshold, peak_counts, peak_ptrs, peak_max_count);
-
-
-  int peak_indices_true[peak_max_count] = { 5, 11, 13 };
-
-  for (int i = 0; i < cmap_channels; i++) {
-    assert_all_equal(peak_indices_true, peak_ptrs[i], peak_counts[i]);
-  }
+  int num_peaks = peak_local_max(&m, 0.5, peaks, max_num_peaks);
+  ASSERT_EQ(3, num_peaks);
+  ASSERT_EQ(1, peaks[0].row);
+  ASSERT_EQ(1, peaks[0].col);
+  ASSERT_EQ(2, peaks[1].row);
+  ASSERT_EQ(3, peaks[1].col);
+  ASSERT_EQ(3, peaks[2].row);
+  ASSERT_EQ(1, peaks[2].col);
 }
 
 #ifndef EXCLUDE_MAIN
