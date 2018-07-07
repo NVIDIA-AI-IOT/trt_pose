@@ -17,6 +17,6 @@ TODO
   - [ ] CUDA implementation
   - [ ] Tests
 - [ ] **peak_gaussian_fit** algorithm to fit gaussian-ish function to data near peak in confidence map
-  - [ ] CPU residual and jacobian computation
+  - [ ] CUDA residual and jacobian computation
   - [ ] CUDA gauss newton optimization
   - [ ] Tests
