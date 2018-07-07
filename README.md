@@ -1,6 +1,7 @@
 TODO
 ----
 
+### C 
 - [x] **peak_local_max** - algorithm to find local maxima above threshold in confidence map
   - [x] CPU implementation
   - [x] Tests
@@ -20,3 +21,13 @@ TODO
   - [ ] CUDA residual and jacobian computation
   - [ ] CUDA gauss newton optimization
   - [ ] Tests
+
+### C++
+
+- [ ] **TRTModel** - trt wrapper class
+- [ ] **TRTPoseModel** - pose wrapper class
+
+### Python
+
+- [ ] **TRTModel** - swig / python interface to TRTModel
+- [ ] **TRTPoseModel** - swig / python interface to TRTPoseModel
