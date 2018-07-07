@@ -14,6 +14,7 @@ find_package(CUDA REQUIRED)
 add_library(trt_pose SHARED
   src/munkres.c
   src/peak_local_max.c
+  src/paf_score_graph.c
 )
 
 target_link_libraries(trt_pose)

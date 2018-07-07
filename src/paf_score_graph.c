@@ -1,28 +1,19 @@
-#pragma once
+#include "paf_score_graph.h"
 
-#include <cmath>
-
+#include "math.h"
 #include "tensor.h"
 
-#define PAF_I_IDX 0
-#define PAF_J_IDX 1
-
-// TODO:
-//   1. threshold weighted graph (float graph -> uint8 graph)
-//   2. non-max suppression on weighted graph (uint8 graph -> uint8 graph (inplace))
-//   3. bipartite graph segmentation (DFS) (uint8 graph -> Nx(num_cmap) integers)
-// bipartite_graph - (paf_parts * max_num_peaks^2)
-void bipartite_graph(
+void paf_score_graph(
     int *peak_counts, int **peak_ptrs, int peak_max_count,
     float *paf, int paf_channels, int paf_height, int paf_width,
     int *paf_cmap_pairs,
-    float *bipartite_graph, int num_samples)
+    float *paf_score_graph, int num_samples)
 {
   int paf_count = paf_channels / 2;
   for (int k = 0; k < paf_count; k++) {
     int c0 = paf_cmap_pairs[2 * k];
     int c1 = paf_cmap_pairs[2 * k + 1];
-    float *bipartite_graph_k = bipartite_graph + peak_max_count * peak_max_count;
+    float *paf_score_graph_k = paf_score_graph + peak_max_count * peak_max_count;
     for (int i = 0; i < peak_counts[c0]; i++) {
       float p0_i = UNRAVEL_2D_i(peak_ptrs[c0][i], paf_width);
       float p0_j = UNRAVEL_2D_j(peak_ptrs[c0][i], paf_width);
@@ -44,7 +35,7 @@ void bipartite_graph(
           float pS_val_i = paf[IDX_3D(2 * k + PAF_I_IDX, (int) pS_i, (int) pS_j, paf_height, paf_width)]; // paf i value at sample i coordinate
           float pS_val_j = paf[IDX_3D(2 * k + PAF_J_IDX, (int) pS_i, (int) pS_j, paf_height, paf_width)]; // paf j value at sample j coordinate
           float dot_product = pS_val_i * p01_i_normed + pS_val_j * p01_j_normed;
-          bipartite_graph_k[IDX_2D(i, j, peak_counts[c1])] = dot_product;
+          paf_score_graph_k[IDX_2D(i, j, peak_counts[c1])] = dot_product;
         }
       }
     }
