@@ -393,10 +393,13 @@ TEST(munkres, CorrectWrapper)
     1, 0, 0, 0
   };
 
-  size_t workspace_size = munkres_workspace_size(n, m);
+  weighted_graph_t cost_graph = { a, n, m };
+  graph_t assignment_graph = { s, n, m };
+
+  size_t workspace_size = munkres_workspace_size(&cost_graph);
   void *workspace = malloc(workspace_size);
-  munkres(a, s, n, m, workspace, workspace_size);
-  assert_all_equal(s_1, s, n * m);
+  munkres(&cost_graph, &assignment_graph, workspace, workspace_size);
+  assert_all_equal(s_1, assignment_graph.data, n * m);
 }
 
 TEST(munkres, CorrectTranspose)
@@ -425,9 +428,12 @@ TEST(munkres, CorrectTranspose)
     0, 1, 0,
   };
 
-  size_t workspace_size = munkres_workspace_size(n, m);
+  weighted_graph_t cost_graph = { a, n, m };
+  graph_t assignment_graph = { s, n, m };
+
+  size_t workspace_size = munkres_workspace_size(&cost_graph);
   void *workspace = malloc(workspace_size);
-  munkres(a, s, n, m, workspace, workspace_size);
+  munkres(&cost_graph, &assignment_graph, workspace, workspace_size);
   assert_all_equal(s_1, s, n * m);
 }
 

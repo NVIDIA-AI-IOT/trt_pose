@@ -282,16 +282,19 @@ void _munkres(float *a, int *c0, int *c1, int *s, int *p, int n, int m)
   }
 }
 
-size_t munkres_workspace_size(int n, int m)
+size_t munkres_workspace_size(weighted_graph_t *cost_graph)
 {
-  return sizeof(int) * (n + m + n * m);
+  return sizeof(int) * (cost_graph->rows + cost_graph->cols + cost_graph->rows * cost_graph->cols);
 }
 
-void munkres(float *a, int *s, int n, int m, void *workspace, size_t workspace_size)
+void munkres(weighted_graph_t *cost_graph, graph_t *assignment_graph, void *workspace, size_t workspace_size)
 {
+  int n = cost_graph->rows;
+  int m = cost_graph->cols;
+
   int *p = (int *) workspace;
   int *c0 = p + n * m;
   int *c1 = c0 + n;
   memset(workspace, 0, workspace_size);
-  _munkres(a, c0, c1, s, p, n, m);
+  _munkres(cost_graph->data, c0, c1, assignment_graph->data, p, n, m);
 }

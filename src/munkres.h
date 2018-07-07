@@ -2,6 +2,8 @@
 #define MUNKRES_H
 
 #include "string.h"
+#include "weighted_graph.h"
+#include "graph.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,8 +22,8 @@ void _munkres_step_4(int *c0, int *c1, int *s, int *p, int *p0, int *p1, int n, 
 void _munkres_step_5(float *a, int *c0, int *c1, int n, int m);
 void _munkres(float *a, int *c0, int *c1, int *s, int *p, int n, int m);
 
-size_t munkres_workspace_size(int n, int m);
-void munkres(float *a, int *s, int n, int m, void *workspace, size_t workspace_size);
+size_t munkres_workspace_size(weighted_graph_t *cost_graph);
+void munkres(weighted_graph_t *cost_graph, graph_t *assignment_graph, void *workspace, size_t workspace_size);
 
 #ifdef __cplusplus
 }
