@@ -2,7 +2,6 @@
 #define PAF_COST_GRAPH
 
 #include "matrix.h"
-#include "peak.h"
 #include "vector.h"
 
 #ifdef __cplusplus

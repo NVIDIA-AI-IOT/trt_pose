@@ -14,6 +14,11 @@ typedef struct vector2 {
   float j;
 } vector2_t;
 
+typedef struct ivector2 {
+  int i;
+  int j;
+} ivector2_t;
+
 static inline float vector2_dot(vector2_t a, vector2_t b) {
   return a.i * b.i + a.j * b.j;
 }
@@ -51,6 +56,22 @@ static inline vector2_t vector2_add_scalar(vector2_t x, float scalar) {
   x.j += scalar;
   return x;
 }
+
+static inline vector2_t vector2_from_i(ivector2_t x) {
+  vector2_t y;
+  y.i = x.i;
+  y.j = x.j;
+  return y;
+}
+
+static inline ivector2_t peak_from_vector2(vector2_t x) {
+  ivector2_t y;
+  y.i = x.i;
+  y.j = x.j;
+  return y; 
+}
+
+
 
 #ifdef __cplusplus
 }

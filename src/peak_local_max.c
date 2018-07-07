@@ -3,7 +3,7 @@
 #include "matrix.h"
 #include "tensor.h"
 
-int peak_local_max(matrix_t *m, float threshold, peak_t *peaks, int peaks_capacity)
+int peak_local_max(matrix_t *m, float threshold, ivector2_t *peaks, int peaks_capacity)
 {
   int num_peaks = 0;
   for (int i = 0; i < m->rows; i++) {
@@ -18,8 +18,8 @@ int peak_local_max(matrix_t *m, float threshold, peak_t *peaks, int peaks_capaci
           (j + 1 < m->cols && matrix_at(m, i, j + 1) > val)) {
         continue; // greater neighbor
       }
-      peaks[num_peaks].row = i;
-      peaks[num_peaks].col = j;
+      peaks[num_peaks].i = i;
+      peaks[num_peaks].j = j;
       num_peaks++;
       if (num_peaks == peaks_capacity) {
         return num_peaks;

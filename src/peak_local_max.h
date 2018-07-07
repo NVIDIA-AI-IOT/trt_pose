@@ -3,13 +3,13 @@
 
 #include "tensor.h"
 #include "matrix.h"
-#include "peak.h"
+#include "vector.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int peak_local_max(matrix_t *m, float threshold, peak_t *peaks, int peaks_capacity);
+int peak_local_max(matrix_t *m, float threshold, ivector2_t *peaks, int peaks_size);
 
 #ifdef __cplusplus
 }

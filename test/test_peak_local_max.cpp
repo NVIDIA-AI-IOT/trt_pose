@@ -16,16 +16,16 @@ TEST(peak_local_max, ComputesCorrectPeaks0) {
   
   matrix_t m = { data, 4, 4 };
   const int max_num_peaks = 10;
-  peak_t peaks[max_num_peaks];
+  ivector2_t peaks[max_num_peaks];
 
   int num_peaks = peak_local_max(&m, 0.5, peaks, max_num_peaks);
   ASSERT_EQ(3, num_peaks);
-  ASSERT_EQ(1, peaks[0].row);
-  ASSERT_EQ(1, peaks[0].col);
-  ASSERT_EQ(2, peaks[1].row);
-  ASSERT_EQ(3, peaks[1].col);
-  ASSERT_EQ(3, peaks[2].row);
-  ASSERT_EQ(1, peaks[2].col);
+  ASSERT_EQ(1, peaks[0].i);
+  ASSERT_EQ(1, peaks[0].j);
+  ASSERT_EQ(2, peaks[1].i);
+  ASSERT_EQ(3, peaks[1].j);
+  ASSERT_EQ(3, peaks[2].i);
+  ASSERT_EQ(1, peaks[2].j);
 }
 
 #ifndef EXCLUDE_MAIN
