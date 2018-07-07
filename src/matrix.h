@@ -21,12 +21,17 @@ typedef struct cmatrix {
   int cols;
 } cmatrix_t;
 
-extern inline float matrix_at(matrix_t *self, int row, int col)
+static inline float matrix_at(matrix_t *self, int row, int col)
 {
   return self->data[IDX_2D(row, col, self->cols)];
 }
 
-extern inline float cmatrix_at(cmatrix_t *self, int row, int col)
+static inline float * matrix_at_mutable(matrix_t *self, int row, int col)
+{
+  return &self->data[IDX_2D(row, col, self->cols)];
+}
+
+static inline float cmatrix_at(cmatrix_t *self, int row, int col)
 {
   return self->data[IDX_2D_colmajor(row, col, self->rows)];
 }
