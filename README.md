@@ -24,10 +24,4 @@ TODO
 
 ### C++
 
-- [ ] **TRTModel** - trt wrapper class
-- [ ] **TRTPoseModel** - pose wrapper class
-
-### Python
-
-- [ ] **TRTModel** - swig / python interface to TRTModel
-- [ ] **TRTPoseModel** - swig / python interface to TRTPoseModel
+- [ ] Demo live video application
