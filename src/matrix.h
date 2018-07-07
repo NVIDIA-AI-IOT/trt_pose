@@ -14,12 +14,11 @@ typedef struct matrix {
   int cols;
 } matrix_t;
 
-// col major matrix
-typedef struct cmatrix {
-  float *data;
+typedef struct imatrix {
+  int *data;
   int rows;
   int cols;
-} cmatrix_t;
+} imatrix_t;
 
 static inline float matrix_at(matrix_t *self, int row, int col)
 {
@@ -31,9 +30,14 @@ static inline float * matrix_at_mutable(matrix_t *self, int row, int col)
   return &self->data[IDX_2D(row, col, self->cols)];
 }
 
-static inline float cmatrix_at(cmatrix_t *self, int row, int col)
+static inline int imatrix_at(imatrix_t *self, int row, int col)
 {
-  return self->data[IDX_2D_colmajor(row, col, self->rows)];
+  return self->data[IDX_2D(row, col, self->cols)];
+}
+
+static inline int * imatrix_at_mutable(imatrix_t *self, int row, int col)
+{
+  return &self->data[IDX_2D(row, col, self->cols)];
 }
 
 #ifdef __cplusplus

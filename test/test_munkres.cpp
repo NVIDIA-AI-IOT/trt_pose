@@ -393,8 +393,8 @@ TEST(munkres, CorrectWrapper)
     1, 0, 0, 0
   };
 
-  weighted_graph_t cost_graph = { a, n, m };
-  graph_t assignment_graph = { s, n, m };
+  matrix_t cost_graph = { a, n, m };
+  imatrix_t assignment_graph = { s, n, m };
 
   size_t workspace_size = munkres_workspace_size(&cost_graph);
   void *workspace = malloc(workspace_size);
@@ -428,8 +428,8 @@ TEST(munkres, CorrectTranspose)
     0, 1, 0,
   };
 
-  weighted_graph_t cost_graph = { a, n, m };
-  graph_t assignment_graph = { s, n, m };
+  matrix_t cost_graph = { a, n, m };
+  imatrix_t assignment_graph = { s, n, m };
 
   size_t workspace_size = munkres_workspace_size(&cost_graph);
   void *workspace = malloc(workspace_size);

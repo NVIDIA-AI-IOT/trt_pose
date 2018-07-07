@@ -282,12 +282,12 @@ void _munkres(float *a, int *c0, int *c1, int *s, int *p, int n, int m)
   }
 }
 
-size_t munkres_workspace_size(weighted_graph_t *cost_graph)
+size_t munkres_workspace_size(matrix_t *cost_graph)
 {
   return sizeof(int) * (cost_graph->rows + cost_graph->cols + cost_graph->rows * cost_graph->cols);
 }
 
-void munkres(weighted_graph_t *cost_graph, graph_t *assignment_graph, void *workspace, size_t workspace_size)
+void munkres(matrix_t *cost_graph, imatrix_t *assignment_graph, void *workspace, size_t workspace_size)
 {
   int n = cost_graph->rows;
   int m = cost_graph->cols;
