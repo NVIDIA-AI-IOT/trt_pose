@@ -10,15 +10,44 @@ class Matrix
 public:
   Matrix(int nrows, int ncols) : nrows(nrows), ncols(ncols)
   {
-    this->alloc();
+    data = (T*) malloc(sizeof(T) * nrows * ncols);
+    refcount = (int*) malloc(sizeof(int));
+    *refcount = 1;
+    shared = true;
   }
-  Matrix(T *data, int nrows, int ncols) : data(data), nrows(nrows), ncols(ncols), owning(false) {};
+
+  Matrix(const Matrix<T> &other) : nrows(other.nrows), ncols(other.ncols)
+  {
+    if (other.shared)
+    {
+      shared = true;
+      refcount = other.refcount;
+      (*refcount)++;
+    }
+    else
+    {
+      shared = false;
+      data = other.data;
+    }
+  }
+
+  Matrix(T *data, int nrows, int ncols) : data(data), nrows(nrows), ncols(ncols), shared(false) {};
+
   ~Matrix()
   {
-    if (owning)
+    if (shared)
     {
-      this->destroy();
+      if (deref() == 0)
+      {
+        destroy();
+      }
     }
+  }
+
+  int deref()
+  {
+    (*refcount)--;
+    return *refcount;
   }
 
   /**
@@ -100,13 +129,15 @@ public:
     }
   }
 
-  /**
-   * Allocates memory and sets data pointer, and sets ownership of data
-   */
-  inline void alloc()
+  void fill(T value)
   {
-    data = (T*) malloc(sizeof(T) * nrows * ncols); 
-    owning = true;
+    for (int i = 0; i < nrows; i++)
+    {
+      for (int j = 0; j < ncols; j++)
+      {
+        *at_(i, j) = value;
+      }
+    }
   }
 
   /**
@@ -114,8 +145,11 @@ public:
    */
   inline void destroy()
   {
-    free(data);
-    owning = false;
+    if (shared)
+    {
+      free(data);
+      free(refcount);
+    }
   }
 
   const int nrows;
@@ -123,5 +157,6 @@ public:
 
 private:
   T *data;
-  bool owning;
+  bool shared;
+  int *refcount;
 };
