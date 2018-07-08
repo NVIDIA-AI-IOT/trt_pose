@@ -59,6 +59,7 @@ ivector2_t queue_front(queue_t *Q)
   return Q->nodes[Q->front];
 }
 
+// TODO: currently O(n) but O(1) possible if we use index arrays rather than a connection mask
 // (cmap, idx_cmap), return 1 if child found 0 otherwise
 int connected_child(imatrix_t assignment_graph, ivector2_t inter_graph_connection, ivector2_t node, ivector2_t *child)
 {

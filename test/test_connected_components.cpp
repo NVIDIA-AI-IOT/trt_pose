@@ -249,6 +249,45 @@ TEST(connected_components, ComputesCorrectPeaks5) {
   ASSERT_EQ(4, count);
 }
 
+TEST(connected_components, ComputesCorrectPeaks6) {
+
+  const int part_types = 19;
+  const int connection_types = 2;
+  const int max_num_indices = 100;
+  int counts[part_types] = { 10,10 };
+  ivector2_t assignment_indicies[] = {
+    { 0, 1 },
+    { 1, 2 },
+  };
+  
+  int connection_0_data[10*10];
+  imatrix_t connection_0_mat;
+  connection_0_mat.rows = counts[0];
+  connection_0_mat.cols = counts[1];
+  connection_0_mat.data = connection_0_data;
+  memset(connection_0_data, 0, sizeof(connection_0_data));
+
+  int connection_1_data[10*10];
+  imatrix_t connection_1_mat;
+  connection_1_mat.rows = counts[1];
+  connection_1_mat.cols = counts[2];
+  connection_1_mat.data = connection_1_data;
+  memset(connection_1_data, 0, sizeof(connection_1_data));
+
+  imatrix_t assignment_graphs[connection_types] = { connection_0_mat, connection_1_mat };
+
+  int components_data[part_types * max_num_indices];
+  memset(&components_data, 0, sizeof(components_data));
+
+  imatrix_t components_mat;
+  components_mat.rows = part_types;
+  components_mat.cols = max_num_indices;
+  components_mat.data = components_data;
+
+  int count = connected_components(&components_mat, counts, assignment_graphs, assignment_indicies, connection_types);
+}
+
+
 #ifndef EXCLUDE_MAIN
 int main(int argc, char *argv[])
 {
