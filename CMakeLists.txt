@@ -29,6 +29,9 @@ if (BUILD_TESTS)
   add_executable(test_munkres test/test_munkres.cpp)
   target_link_libraries(test_munkres gtest pthread trt_pose)
 
+  add_executable(test_munkres_v2 test/test_munkres_v2.cpp)
+  target_link_libraries(test_munkres_v2 gtest pthread trt_pose)
+
   add_executable(test_connected_components test/test_connected_components.cpp)
   target_link_libraries(test_connected_components gtest pthread trt_pose)
 endif()
