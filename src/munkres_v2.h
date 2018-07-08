@@ -91,7 +91,7 @@ int munkres_v2_step_3(matrix_t *cost_graph, bipartite_graph_t *star_graph, bipar
         else
         {
           c0[i] = 1;
-          c1[j] = 0;
+          c1[star_graph->vertical[i]] = 0;
         }
       }
     }
@@ -114,6 +114,8 @@ void munkres_v2_step_4(bipartite_graph_t *star_graph, bipartite_graph_t *prime_g
     p0 = s0;
     p1 = prime_graph->vertical[s0]; // prime in s0's row
   }
+  bipartite_graph_connect(star_graph, p0, p1);
+
   for (int i = 0; i < star_graph->rows; i++) 
   {
     c0[i] = 0;
@@ -217,6 +219,7 @@ void munkres_v2(matrix_t *cost_graph, bipartite_graph_t *star_graph)
         break;
       case 5:
         munkres_v2_step_5(cost_graph, c0, c1);
+        step = 3;
         break;
     }
   }
