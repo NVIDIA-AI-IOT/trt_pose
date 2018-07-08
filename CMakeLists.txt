@@ -12,10 +12,6 @@ set(CUDA_NVCC_FLASGS -std=c++11)
 find_package(CUDA REQUIRED)
 
 add_library(trt_pose SHARED
-  src/munkres.c
-  src/peak_local_max.c
-  src/paf_cost_graph.c
-  src/connected_components.c
 )
 
 target_link_libraries(trt_pose)
@@ -26,12 +22,6 @@ if (BUILD_TESTS)
   add_executable(test_all test/test_all.cpp)
   target_link_libraries(test_all gtest pthread trt_pose)
 
-  add_executable(test_munkres test/test_munkres.cpp)
-  target_link_libraries(test_munkres gtest pthread trt_pose)
-
-  add_executable(test_munkres_v2 test/test_munkres_v2.cpp)
-  target_link_libraries(test_munkres_v2 gtest pthread trt_pose)
-
-  add_executable(test_connected_components test/test_connected_components.cpp)
-  target_link_libraries(test_connected_components gtest pthread trt_pose)
+  add_executable(test_PairGraph test/test_PairGraph.cpp)
+  target_link_libraries(test_PairGraph gtest pthread trt_pose)
 endif()

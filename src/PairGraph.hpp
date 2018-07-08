@@ -1,6 +1,6 @@
 #pragma once
 
-#include <array>
+#include <memory>
 
 class PairGraph
 {
