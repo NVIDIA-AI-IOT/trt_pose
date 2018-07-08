@@ -30,6 +30,12 @@ static inline float * matrix_at_mutable(matrix_t *self, int row, int col)
   return &self->data[IDX_2D(row, col, self->cols)];
 }
 
+static inline void matrix_set_shape(matrix_t *self, int rows, int cols)
+{
+  self->rows = rows;
+  self->cols = cols;
+}
+
 static inline int imatrix_at(imatrix_t *self, int row, int col)
 {
   return self->data[IDX_2D(row, col, self->cols)];
@@ -38,6 +44,12 @@ static inline int imatrix_at(imatrix_t *self, int row, int col)
 static inline int * imatrix_at_mutable(imatrix_t *self, int row, int col)
 {
   return &self->data[IDX_2D(row, col, self->cols)];
+}
+
+static inline void imatrix_set_shape(matrix_t *self, int rows, int cols)
+{
+  self->rows = rows;
+  self->cols = cols;
 }
 
 #ifdef __cplusplus
