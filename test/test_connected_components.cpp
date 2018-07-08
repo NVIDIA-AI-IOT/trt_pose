@@ -12,6 +12,61 @@ TEST(connected_components, ComputesCorrectPeaks0) {
   //   T1 - 2 detected
   //   T2 - 1 detected
   
+  const int part_types = 2;
+  const int connection_types = 0;
+  const int max_num_indices = 10;
+  int counts[3] = { 2, 1 };
+  
+  //imatrix_t assignment_graphs[connection_types];// = { connection_0_mat, connection_1_mat };
+
+  int components_data[part_types * max_num_indices];
+  memset(&components_data, 0, sizeof(components_data));
+
+  imatrix_t components_mat;
+  components_mat.rows = part_types;
+  components_mat.cols = max_num_indices;
+  components_mat.data = components_data;
+
+  int count = connected_components(&components_mat, counts, NULL, NULL, connection_types);
+  ASSERT_EQ(count, 3);
+}
+
+TEST(connected_components, ComputesCorrectPeaks1) {
+
+  // 3 part types, 2 connection types (T0->T1), (T1->T2)
+  // PARTS
+  //   T0 - 3 detected
+  //   T1 - 2 detected
+  //   T2 - 1 detected
+  
+  const int part_types = 2;
+  const int connection_types = 0;
+  const int max_num_indices = 10;
+  int counts[3] = { 2, 2 };
+  
+  //imatrix_t assignment_graphs[connection_types];// = { connection_0_mat, connection_1_mat };
+
+  int components_data[part_types * max_num_indices];
+  memset(&components_data, 0, sizeof(components_data));
+
+  imatrix_t components_mat;
+  components_mat.rows = part_types;
+  components_mat.cols = max_num_indices;
+  components_mat.data = components_data;
+
+  int count = connected_components(&components_mat, counts, NULL, NULL, connection_types);
+  ASSERT_EQ(count, 4);
+}
+
+
+TEST(connected_components, ComputesCorrectPeaks2) {
+
+  // 3 part types, 2 connection types (T0->T1), (T1->T2)
+  // PARTS
+  //   T0 - 3 detected
+  //   T1 - 2 detected
+  //   T2 - 1 detected
+  
   const int part_types = 3;
   const int connection_types = 2;
   const int max_num_indices = 10;

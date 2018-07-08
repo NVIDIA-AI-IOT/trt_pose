@@ -1,4 +1,5 @@
 #include "connected_components.h"
+#include "stdlib.h"
 
 #define MAX_QUEUE_SIZE 1000
 
@@ -59,14 +60,18 @@ ivector2_t queue_front(queue_t *Q)
 }
 
 // (cmap, idx_cmap), return 1 if child found 0 otherwise
-int connected_child(imatrix_t assignment_graph, ivector2_t inter_graph_connection, ivector2_t node, ivector2_t *child)
+int connected_child(imatrix_t *components, imatrix_t assignment_graph, ivector2_t inter_graph_connection, ivector2_t node, ivector2_t *child)
 {
   if (inter_graph_connection.i == node.i) 
   {
     // search for connection in row
     child->i = inter_graph_connection.j;
-    for (int j = 0; j < assignment_graph.cols; j++) {
-      if (imatrix_at(&assignment_graph, node.i, j)) {
+    for (int j = 0; j < assignment_graph.cols; j++) 
+    {
+      int *connected = imatrix_at_mutable(&assignment_graph, node.j, j);
+      if (*connected)
+      {
+        *connected = 0; 
         child->j = j;
         return 1;
       }
@@ -77,8 +82,12 @@ int connected_child(imatrix_t assignment_graph, ivector2_t inter_graph_connectio
   {
     // search for connection in column
     child->i = inter_graph_connection.i;
-    for (int i = 0; i < assignment_graph.rows; i++) {
-      if (imatrix_at(&assignment_graph, i, node.i)) {
+    for (int i = 0; i < assignment_graph.rows; i++) 
+    {
+      int *connected = imatrix_at_mutable(&assignment_graph, i, node.j);
+      if (*connected)
+      {
+        *connected = 0;
         child->j = i;
         return 1;
       }
@@ -106,8 +115,7 @@ void connected_search(imatrix_t *components, int component_id, imatrix_t *assign
     for (int i = 0; i < num_assignment_graphs; i++) 
     {
       ivector2_t child;
-      if (connected_child(assignment_graphs[i], assignment_graph_indices[i], node, &child)
-          && (imatrix_at(components, child.i, child.j) == 0))
+      if (connected_child(components, assignment_graphs[i], assignment_graph_indices[i], node, &child))
       {
         queue_push(&Q, child);
       }
