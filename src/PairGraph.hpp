@@ -1,39 +1,38 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 class PairGraph
 {
 public:
 
-  PairGraph(int rows, int cols)
+  PairGraph(int nrows, int ncols) : nrows(nrows), ncols(ncols)
   {
-    this->cols = cols;
-    this->rows = rows;
-    this->col = (int*) malloc(sizeof(int) * this->rows);
-    this->row = (int*) malloc(sizeof(int) * this->cols);
+    this->cols = (int*) malloc(sizeof(int) * nrows);
+    this->rows = (int*) malloc(sizeof(int) * ncols);
   }
 
   ~PairGraph()
   {
-    free(this->col);
-    free(this->row);
+    free(this->rows);
+    free(this->cols);
   }
   
   /**
    * Returns the column index of the pair matching this row
    */
-  inline int col_pair(int row)
+  inline int colForRow(int row) const
   {
-    return this->col[row];
+    return this->rows[row];
   }
 
   /**
    * Returns the row index of the pair matching this column
    */
-  inline int row_pair(int col)
+  inline int rowForCol(int col) const
   {
-    return this->row[col];
+    return this->cols[col];
   }
 
   /**
@@ -41,8 +40,23 @@ public:
    */
   inline void set(int row, int col)
   {
-    this->col[row] = col;
-    this->row[col] = row;
+    this->rows[row] = col;
+    this->cols[col] = row;
+  }
+
+  inline bool isRowSet(int row) const
+  {
+    return rows[row] >= 0; 
+  }
+
+  inline bool isColSet(int col) const
+  {
+    return cols[col] >= 0;
+  }
+
+  inline bool isPair(int row, int col)
+  {
+    return rows[row] == col;
   }
 
   /**
@@ -50,8 +64,8 @@ public:
    */
   inline void reset(int row, int col)
   {
-    this->col[row] = -1;
-    this->row[col] = -1;
+    this->rows[row] = -1;
+    this->cols[col] = -1;
   }
 
   /**
@@ -59,19 +73,47 @@ public:
    */
   void clear()
   {
-    for (int i = 0; i < this->rows; i++) 
+    for (int i = 0; i < this->nrows; i++) 
     {
-      this->col[i] = -1;
+      this->rows[i] = -1;
     }
-    for (int j = 0; j < this->cols; j++)
+    for (int j = 0; j < this->ncols; j++)
     {
-      this->row[j] = -1;
+      this->cols[j] = -1;
     }
   }
 
+  int numPairs()
+  {
+    int count = 0;
+    for (int i = 0; i < nrows; i++)
+    {
+      if (rows[i] >= 0)
+      {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  std::vector<std::pair<int, int>> pairs()
+  {
+    std::vector<std::pair<int, int>> p(numPairs());
+    int count = 0;
+    for (int i = 0; i < nrows; i++)
+    {
+      if (isRowSet(i))
+      {
+        p[count++] = { i, colForRow(i) };
+      }
+    }
+    return p;
+  }
+
+  const int nrows;
+  const int ncols;
+
 private:
-  int *row;
-  int *col;
-  int rows;
-  int cols;
+  int *rows;
+  int *cols;
 };

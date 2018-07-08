@@ -11,17 +11,17 @@ set(CUDA_NVCC_FLASGS -std=c++11)
 
 find_package(CUDA REQUIRED)
 
-add_library(trt_pose SHARED
-)
+#add_library(trt_pose SHARED
+#)
 
-target_link_libraries(trt_pose)
+#target_link_libraries(trt_pose)
 
 if (BUILD_TESTS)
   find_package(GTest REQUIRED)
 
   add_executable(test_all test/test_all.cpp)
-  target_link_libraries(test_all gtest pthread trt_pose)
+  target_link_libraries(test_all gtest pthread)# trt_pose)
 
-  add_executable(test_PairGraph test/test_PairGraph.cpp)
-  target_link_libraries(test_PairGraph gtest pthread trt_pose)
+  add_executable(test_munkres test/test_munkres.cpp)
+  target_link_libraries(test_munkres gtest pthread)# trt_pose)
 endif()
