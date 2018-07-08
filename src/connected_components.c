@@ -60,7 +60,7 @@ ivector2_t queue_front(queue_t *Q)
 }
 
 // (cmap, idx_cmap), return 1 if child found 0 otherwise
-int connected_child(imatrix_t *components, imatrix_t assignment_graph, ivector2_t inter_graph_connection, ivector2_t node, ivector2_t *child)
+int connected_child(imatrix_t assignment_graph, ivector2_t inter_graph_connection, ivector2_t node, ivector2_t *child)
 {
   if (inter_graph_connection.i == node.i) 
   {
@@ -115,7 +115,7 @@ void connected_search(imatrix_t *components, int component_id, imatrix_t *assign
     for (int i = 0; i < num_assignment_graphs; i++) 
     {
       ivector2_t child;
-      if (connected_child(components, assignment_graphs[i], assignment_graph_indices[i], node, &child))
+      if (connected_child(assignment_graphs[i], assignment_graph_indices[i], node, &child))
       {
         queue_push(&Q, child);
       }
