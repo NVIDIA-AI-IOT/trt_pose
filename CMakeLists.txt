@@ -27,4 +27,7 @@ if (BUILD_TESTS)
 
   add_executable(test_connect_parts test/test_connect_parts.cpp)
   target_link_libraries(test_connect_parts gtest pthread)# trt_pose)
+
+  add_executable(test_find_peaks test/test_find_peaks.cpp)
+  target_link_libraries(test_find_peaks gtest pthread)# trt_pose)
 endif()

@@ -4,13 +4,13 @@
 #include <vector>
 #include "tensor.h"
 
-template<typename T>
+template<class T, class Alloc = std::allocator<T>>
 class Matrix
 {
 public:
   Matrix(int nrows, int ncols) : nrows(nrows), ncols(ncols)
   {
-    data = (T*) malloc(sizeof(T) * nrows * ncols);
+    data = alloc.allocate(nrows * ncols);
     refcount = (int*) malloc(sizeof(int));
     *refcount = 1;
     shared = true;
@@ -28,6 +28,7 @@ public:
     {
       shared = false;
       data = other.data;
+      refcount = nullptr;
     }
   }
 
@@ -147,7 +148,7 @@ public:
   {
     if (shared)
     {
-      free(data);
+      alloc.deallocate(data, nrows * ncols);
       free(refcount);
     }
   }
@@ -156,6 +157,7 @@ public:
   const int ncols;
 
 private:
+  Alloc alloc;
   T *data;
   bool shared;
   int *refcount;
