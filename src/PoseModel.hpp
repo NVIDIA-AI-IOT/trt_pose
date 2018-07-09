@@ -39,6 +39,23 @@ size_t dimSize(nvinfer1::Dims dims)
 class PoseModel
 {
 public:
+
+  int getInputHeight() {
+    return trt_engine->getBindingDimensions(input_binding_idx).d[1];
+  }
+
+  int getInputWidth() {
+    return trt_engine->getBindingDimensions(input_binding_idx).d[2];
+  }
+
+  int getMapHeight() {
+    return trt_engine->getBindingDimensions(cmap_binding_idx).d[1];
+  }
+
+  int getMapWidth() {
+    return trt_engine->getBindingDimensions(cmap_binding_idx).d[2];
+  }
+
   PoseModel(const std::string &engine_path, const Config &config) 
   {
     std::ifstream engine_file;
