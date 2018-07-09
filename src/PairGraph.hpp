@@ -9,16 +9,10 @@ public:
 
   PairGraph(int nrows, int ncols) : nrows(nrows), ncols(ncols)
   {
-    this->cols = (int*) malloc(sizeof(int) * nrows);
-    this->rows = (int*) malloc(sizeof(int) * ncols);
+    this->rows.resize(nrows);
+    this->cols.resize(ncols);
   }
 
-  ~PairGraph()
-  {
-    free(this->rows);
-    free(this->cols);
-  }
-  
   /**
    * Returns the column index of the pair matching this row
    */
@@ -114,6 +108,6 @@ public:
   const int ncols;
 
 private:
-  int *rows;
-  int *cols;
+  std::vector<int> rows;
+  std::vector<int> cols;
 };

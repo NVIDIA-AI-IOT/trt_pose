@@ -24,4 +24,7 @@ if (BUILD_TESTS)
 
   add_executable(test_munkres test/test_munkres.cpp)
   target_link_libraries(test_munkres gtest pthread)# trt_pose)
+
+  add_executable(test_connect_parts test/test_connect_parts.cpp)
+  target_link_libraries(test_connect_parts gtest pthread)# trt_pose)
 endif()
