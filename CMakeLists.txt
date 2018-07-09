@@ -30,4 +30,7 @@ if (BUILD_TESTS)
 
   add_executable(test_find_peaks test/test_find_peaks.cpp)
   target_link_libraries(test_find_peaks gtest pthread)# trt_pose)
+
+  add_executable(test_paf_cost_graph test/test_paf_cost_graph.cpp)
+  target_link_libraries(test_paf_cost_graph gtest pthread)# trt_pose)
 endif()
