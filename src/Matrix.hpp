@@ -93,7 +93,7 @@ public:
     return min;
   }
 
-  T addToCol(int col, T value)
+  inline T addToCol(int col, T value)
   {
     for (int i = 0; i < nrows; i++) 
     {
@@ -101,7 +101,7 @@ public:
     }
   }
 
-  T addToRow(int row, T value)
+  inline T addToRow(int row, T value)
   {
     for (int j = 0; j < ncols; j++) 
     {
@@ -109,7 +109,7 @@ public:
     }
   }
 
-  T sumIndices(const std::vector<std::pair<int, int>> &indices)
+  inline T sumIndices(const std::vector<std::pair<int, int>> &indices)
   {
     T sum = 0;
     for (int i = 0; i < indices.size(); i++)
@@ -119,7 +119,7 @@ public:
     return sum;
   }
 
-  T copy(const Matrix<T> &other)
+  inline T copy(const Matrix<T> &other)
   {
     for (int i = 0; i < nrows; i++)
     {
@@ -130,7 +130,7 @@ public:
     }
   }
 
-  void fill(T value)
+  inline void fill(T value)
   {
     for (int i = 0; i < nrows; i++)
     {

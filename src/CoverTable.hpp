@@ -51,7 +51,7 @@ public:
     return cols[col];
   }
 
-  void clear()
+  inline void clear()
   {
     for (int i = 0; i < nrows; i++)
     {
