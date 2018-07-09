@@ -5,52 +5,44 @@
 #include <unordered_set>
 #include <queue>
 #include "PairGraph.hpp"
-#include "Matrix.hpp"
-#include "Part.hpp"
-#include "Component.hpp"
 
-Component ConnectedPartsSearch(
-    int i, int j,
-    const std::vector<std::vector<Part>> &parts,
+std::unordered_map<int, int> ConnectedPartsSearch(
+    std::pair<int, int> node,
     const std::vector<PairGraph> &graphs,
     const std::vector<std::pair<int, int>> &topology,
     std::vector<std::vector<bool>> &visited)
 {
-  Component component;
-  std::queue<Part> queue;
-  queue.push(parts[i][j]);
+  std::unordered_map<int, int> component;
+  std::queue<std::pair<int, int>> queue;
+  queue.push(node);
 
   while (!queue.empty())
   {
     auto node = queue.front();
     queue.pop();
 
-    if (visited[node.channel][node.idx])
+    if (visited[node.first][node.second])
     {
       continue;
     }
 
-    component.addPart(node);
-    visited[node.channel][node.idx] = true;
+    component.insert(node);
+    visited[node.first][node.second] = true;
 
     for (size_t i = 0; i < graphs.size(); i++)
     {
-      if (topology[i].first == node.channel)
+      if (topology[i].first == node.first)
       {
-        if (graphs[i].isRowSet(node.idx))
+        if (graphs[i].isRowSet(node.second))
         {
-          int channel = topology[i].second;
-          int idx = graphs[i].colForRow(node.idx);
-          queue.push(parts[channel][idx]);
+          queue.push({topology[i].second, graphs[i].colForRow(node.second)});
         }
       }
-      else if (topology[i].second == node.channel)
+      else if (topology[i].second == node.first)
       {
-        if (graphs[i].isColSet(node.idx))
+        if (graphs[i].isColSet(node.second))
         {
-          int channel = topology[i].first;
-          int idx = graphs[i].rowForCol(node.idx);
-          queue.push(parts[channel][idx]);
+          queue.push({topology[i].first, graphs[i].rowForCol(node.second)});
         }
       }
     }
@@ -59,16 +51,16 @@ Component ConnectedPartsSearch(
 }
 
 // match 
-std::vector<Component> ConnectParts(
-    const std::vector<std::vector<Part>> &parts,
+std::vector<std::unordered_map<int, int>> ConnectParts(
+    const std::vector<int> &part_counts,
     const std::vector<PairGraph> &graphs,
     const std::vector<std::pair<int, int>> &topology)
 {
-  std::vector<Component> components;
-  std::vector<std::vector<bool>> visited(parts.size());
-  for (size_t i = 0; i < parts.size(); i++)
+  std::vector<std::unordered_map<int, int>> components;
+  std::vector<std::vector<bool>> visited(part_counts.size());
+  for (size_t i = 0; i < part_counts.size(); i++)
   {
-    visited[i].resize(parts[i].size());
+    visited[i].resize(part_counts[i]);
   }
 
   for (size_t i = 0; i < visited.size(); i++)
@@ -77,7 +69,7 @@ std::vector<Component> ConnectParts(
     {
       if (!visited[i][j])
       {
-        auto comp = ConnectedPartsSearch(i, j, parts, graphs, topology, visited);
+        auto comp = ConnectedPartsSearch({i, j}, graphs, topology, visited);
         components.push_back(comp);
       } 
     }
