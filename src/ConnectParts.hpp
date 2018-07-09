@@ -6,7 +6,7 @@
 #include <queue>
 #include "PairGraph.hpp"
 
-std::unordered_map<int, int> ConnectedPartsSearch(
+std::unordered_map<int, int> SearchPart(
     std::pair<int, int> node,
     const std::vector<PairGraph> &graphs,
     const std::vector<std::pair<int, int>> &topology,
@@ -69,7 +69,7 @@ std::vector<std::unordered_map<int, int>> ConnectParts(
     {
       if (!visited[i][j])
       {
-        auto comp = ConnectedPartsSearch({i, j}, graphs, topology, visited);
+        auto comp = SearchPart({i, j}, graphs, topology, visited);
         components.push_back(comp);
       } 
     }
