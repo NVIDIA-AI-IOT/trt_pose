@@ -1,29 +1,21 @@
 TODO
 ----
 
-### C 
-- [x] **peak_local_max** - algorithm to find local maxima above threshold in confidence map
-  - [x] CPU implementation
-  - [x] Tests
-- [ ] **munkres** - algorithm to solve assignment problem for optimal part matching
-  - [x] CPU implementation
-  - [x] Tests
-  - [ ] Refactor to use O(1) bipartite graph lookup structure
-- [ ] **paf_score_graph** algorithm to generate part connection score graph
-  - [x] CPU implementation
-  - [ ] Tests
-- [ ] **connected_components** algorithm to parse assignment graph into connected objects
-  - [x] CPU implementation
-  - [x] Tests
-  - [ ] Refactor to use O(1) bipartite graph lookup structure
-- [ ] **gauss_newton_batch** algorithm to implement gauss newton optimization for batches of NxM matrices
-  - [ ] CUDA implementation
-  - [ ] Tests
-- [ ] **peak_gaussian_fit** algorithm to fit gaussian-ish function to data near peak in confidence map
-  - [ ] CUDA residual and jacobian computation
-  - [ ] CUDA gauss newton optimization
-  - [ ] Tests
+### inference
 
-### C++
+- [x] **FindPeaks** - peak detection in cmap
+- [x] **PafCostGraph** - generate part-part cost graph from peaks / PAF
+- [x] **Munkres** - optimal part-part assignment from cost graph via munkres algorithm
+- [x] **ConnectParts** - connect parts into objects by searching part-part assignment graphs
+- [x] **ParseObjects** - combine above steps to parse objects from cmap, paf and configuration
+- [ ] **GaussNewton** - gauss newton optimization for multiple NxM matrices in batches (CUDA impl)
+- [ ] **GaussianFit** - fit gaussians to peaks in cmap via gauss newton optimization (CUDA impl)
+- [ ] **PoseModel** - takes tensorrt engine and config used, wraps execution
 
-- [ ] Demo live video application
+# training
+
+- [ ] **GeneratePaf** - generate part affinity field from objects
+- [ ] **GenerateCmap** - generate confidence map from objects
+- [ ] **CocoDataset** - wrapper for coco / generators to generate samples
+- [ ] **Model** - generate model from configuration, starts from pretrained image cls model, configurable num stages, feature extractor, stage model, etc.
+- [ ] **Train** - training script for selected dataset (really, coco)
