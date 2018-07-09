@@ -1,7 +1,6 @@
 import subprocess
 import os
 import re
-import basename
 
 PROTOTXT_URL = 'https://raw.githubusercontent.com/CMU-Perceptual-Computing-Lab/openpose/master/models/pose/coco/pose_deploy_linevec.prototxt'
 CAFFEMODEL_URL = 'http://posefs1.perception.cs.cmu.edu/OpenPose/models/pose/coco/pose_iter_440000.caffemodel'

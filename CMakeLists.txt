@@ -11,10 +11,13 @@ set(CUDA_NVCC_FLASGS -std=c++11)
 
 find_package(CUDA REQUIRED)
 
-#add_library(trt_pose SHARED
-#)
 
-#target_link_libraries(trt_pose)
+include_directories(${CUDA_INCLUDE_DIRS})
+#add_library(trt_pose SHARED
+#  src/PoseModel.cpp
+#)
+#
+#target_link_libraries(trt_pose ${CUDA_LIBRARIES} nvinfer)
 
 if (BUILD_TESTS)
   find_package(GTest REQUIRED)
@@ -36,4 +39,8 @@ if (BUILD_TESTS)
 
   add_executable(test_parse_objects test/test_parse_objects.cpp)
   target_link_libraries(test_parse_objects gtest pthread)# trt_pose)
+
+  find_package(OpenCV REQUIRED)
+  add_executable(test_pose_model test/test_pose_model.cpp)
+  target_link_libraries(test_pose_model gtest pthread ${OpenCV_LIBS} ${CUDA_LIBRARIES} nvinfer)
 endif()

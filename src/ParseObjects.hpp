@@ -4,9 +4,12 @@
 #include "ConnectParts.hpp"
 #include "PafCostGraph.hpp"
 #include "FindPeaks.hpp"
-#include "Config.hpp"
+#include "ParserConfig.hpp"
 
-std::vector<std::unordered_map<int, std::pair<int, int>>> parseObjects(float *cmap, float *paf, const Config &config)
+#define PAF_I_DIM 1
+#define PAF_J_DIM 0
+
+std::vector<std::unordered_map<int, std::pair<int, int>>> parseObjects(float *cmap, float *paf, const ParserConfig &config)
 {
   std::vector<std::unordered_map<int, std::pair<int, int>>> objects;
   std::vector<std::vector<std::pair<int, int>>> peaks;
@@ -29,8 +32,8 @@ std::vector<std::unordered_map<int, std::pair<int, int>>> parseObjects(float *cm
   for (size_t i = 0; i < config.topology.size(); i++)
   {
     std::pair<Matrix<float>, Matrix<float>> paf_i = {
-      Matrix<float>(paf + (2 * i) * size, height, width),
-      Matrix<float>(paf + (2 * i + 1) * size, height, width)
+      Matrix<float>(paf + (2 * i + PAF_I_DIM) * size, height, width),
+      Matrix<float>(paf + (2 * i + PAF_J_DIM) * size, height, width)
     };
 
     // compute cost graph

@@ -3,11 +3,11 @@
 #include "../src/Matrix.hpp"
 #include "../src/PafCostGraph.hpp"
 #include "../src/ParseObjects.hpp"
-#include "../src/Config.hpp"
+#include "../src/ParserConfig.hpp"
 
 TEST(parse_objects, valid)
 {
-  Config config;
+  ParserConfig config;
   config.topology = {
     { 0, 1 }
   };
@@ -19,15 +19,17 @@ TEST(parse_objects, valid)
 
 
   float paf[] = {
+    
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 1, 1, 1,
+
     0, 1, 0, 0,
     0, 1, 0, 0,
     0, 1, 0, 0,
     0, 0, 0, 0,
 
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 0, 0, 0,
-    0, 1, 1, 1
   };
 
 
