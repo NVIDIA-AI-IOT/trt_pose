@@ -23,6 +23,15 @@ add_library(trt_pose SHARED
 )
 
 target_link_libraries(trt_pose ${CUDA_LIBRARIES} nvinfer)
+set_target_properties(trt_pose PROPERTIES PUBLIC_HEADER
+  "src/PoseModel.hpp;src/Config.hpp;src/tensor.h"
+)
+
+install(TARGETS trt_pose
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib/static
+  PUBLIC_HEADER DESTINATION include/trt_pose)
 
 if (BUILD_TESTS)
   find_package(GTest REQUIRED)
