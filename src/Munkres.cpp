@@ -25,7 +25,7 @@ void munkresStep1(const Matrix<T> &cost_graph, PairGraph &star_graph)
   {
     for (int j = 0; j < cost_graph.ncols; j++)
     {
-      if (!star_graph.isRowSet(i) && !star_graph.isColSet(j))
+      if (!star_graph.isRowSet(i) && !star_graph.isColSet(j) && (cost_graph.at(i, j) == 0))
       {
         star_graph.set(i, j);
       }
@@ -91,7 +91,7 @@ void munkresStep4(PairGraph &star_graph, PairGraph &prime_graph, CoverTable &cov
     // repeat for prime in cleared star's row
     p = { s.first, prime_graph.colForRow(s.first) };
   }
-
+  star_graph.set(p.first, p.second);
   cover_table.clear();
   prime_graph.clear();
 }
@@ -183,6 +183,8 @@ void munkres(Matrix<T> &cost_graph, PairGraph &star_graph)
         break;
       case 5:
         munkresStep5(cost_graph, cover_table);
+        step = 3;
+        break;
     }
   }
 }

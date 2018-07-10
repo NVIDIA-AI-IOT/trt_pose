@@ -8,7 +8,7 @@
 #include "../src/Config.hpp"
 
 #define TEST_IMAGE_PATH "data/test.jpg"
-#define TEST_ENGINE_PATH "data/pose.plan"
+#define TEST_ENGINE_PATH "data/pose_368_6.plan"
 #define TEST_ENGINE_HEIGHT 368
 #define TEST_ENGINE_WIDTH 368
 #define TEST_ENGINE_INPUT_NAME "image"
@@ -29,7 +29,7 @@ size_t createInput(float **data, std::string path, int height, int width)
       for (int j = 0; j < image.cols; j++)
       {
         // convert HWC to CHW and scale and offset
-        (*data)[IDX_3D(c, i, j, image.rows, image.cols)] = ((float) image.data[IDX_3D(i, j, c, image.cols, image.channels())]) / 255.0f - 0.5;
+        (*data)[IDX_3D(c, i, j, image.rows, image.cols)] = ((float) image.data[IDX_3D(i, j, c, image.cols, image.channels())]) / 255.0f;
       }
     }
   }
@@ -39,7 +39,7 @@ size_t createInput(float **data, std::string path, int height, int width)
 TEST(pose_model, sample_image)
 {
   std::string test_engine_path = TEST_ENGINE_PATH;
-  Config config = DEFAULT_HUMAN_POSE_CONFIG();
+  Config config = DEFAULT_COCO_HUMAN_POSE_CONFIG();
   std::unique_ptr<IPoseModel> model;
   model.reset(IPoseModel::createPoseModel(test_engine_path, config));
   

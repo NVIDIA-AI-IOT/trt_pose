@@ -1,19 +1,15 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 class CoverTable
 {
 public:
   CoverTable(int nrows, int ncols) : nrows(nrows), ncols(ncols)
   {
-    rows = (bool*) malloc(sizeof(bool) * nrows);
-    cols = (bool*) malloc(sizeof(bool) * ncols);
-  }
-  ~CoverTable()
-  {
-    free(rows);
-    free(cols);
+    rows.resize(nrows);
+    cols.resize(ncols);
   }
 
   inline void coverRow(int row)
@@ -67,6 +63,6 @@ public:
   const int ncols;
 
 private:
-  bool *rows;
-  bool *cols;
+  std::vector<bool> rows;
+  std::vector<bool> cols;
 };

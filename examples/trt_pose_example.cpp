@@ -30,7 +30,7 @@ void formatInput(uint8_t *src, float *dst, int height, int width)
 int main()
 {
   // create pose model
-  Config pose_config = DEFAULT_HUMAN_POSE_CONFIG();
+  Config pose_config = DEFAULT_COCO_HUMAN_POSE_CONFIG();
   pose_config.trt_cmap_name = "Mconv7_stage2_L2";
   pose_config.trt_paf_name = "Mconv7_stage2_L1";
   pose_config.peak_threshold = 0.4;

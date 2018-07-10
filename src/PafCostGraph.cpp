@@ -9,9 +9,13 @@ Matrix<float> pafCostGraph(
   for (size_t i = 0; i < peaks.first.size(); i++)
   {
     std::pair<float, float> p0 = peaks.first[i];
+    p0.first += 0.5;
+    p0.second += 0.5;
     for (size_t j = 0; j < peaks.second.size(); j++)
     {
       std::pair<float, float> p1 = peaks.second[j];
+      p1.first += 0.5;
+      p1.second += 0.5;
       std::pair<float, float> p01 = { p1.first - p0.first, p1.second - p0.second };
       float norm = sqrtf(p01.first * p01.first + p01.second * p01.second);
       std::pair<float, float> p01_unit = { p01.first / norm, p01.second / norm };
