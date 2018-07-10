@@ -1,5 +1,7 @@
 #include "PafCostGraph.hpp"
 
+#define EPS 1e-6
+
 Matrix<float> pafCostGraph(
     const std::pair<const Matrix<float> &, const Matrix<float> &> &paf,
     const std::pair<const std::vector<std::pair<int, int>>&, const std::vector<std::pair<int, int>>&> &peaks,
@@ -17,7 +19,7 @@ Matrix<float> pafCostGraph(
       p1.first += 0.5;
       p1.second += 0.5;
       std::pair<float, float> p01 = { p1.first - p0.first, p1.second - p0.second };
-      float norm = sqrtf(p01.first * p01.first + p01.second * p01.second);
+      float norm = sqrtf(p01.first * p01.first + p01.second * p01.second) + EPS; // numerical stability
       std::pair<float, float> p01_unit = { p01.first / norm, p01.second / norm };
 
       float sum = 0.0f;
