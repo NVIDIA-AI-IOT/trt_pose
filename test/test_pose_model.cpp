@@ -40,15 +40,17 @@ TEST(pose_model, sample_image)
 {
   std::string test_engine_path = TEST_ENGINE_PATH;
   Config config = DEFAULT_HUMAN_POSE_CONFIG();
-  PoseModel model(test_engine_path, config);
+  std::unique_ptr<IPoseModel> model;
+  model.reset(IPoseModel::createPoseModel(test_engine_path, config));
   
   float *data_h, *data_d;
   size_t size = createInput(&data_h, 
-      TEST_IMAGE_PATH, model.getInputHeight(), model.getInputWidth());
+      TEST_IMAGE_PATH, model->getInputHeight(), model->getInputWidth());
   cudaMalloc(&data_d, size);
   cudaMemcpy(data_d, data_h, size, cudaMemcpyHostToDevice);
 
-  auto objects = model.execute(data_d);
+  auto objects = model->execute(data_d);
+  ASSERT_EQ(2, objects.size());
 
   free(data_h);
   cudaFree(data_d);

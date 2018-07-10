@@ -1,5 +1,34 @@
 #include "PoseModel.hpp"
 
+#include "ParserConfig.hpp"
+#include "ParseObjects.hpp"
+
+#include "NvInfer.h"
+#include "cuda_runtime.h"
+
+class PoseModel : public IPoseModel
+{
+public:
+
+  PoseModel(const std::string &engine_path, const Config &config); 
+  ~PoseModel();
+
+  int getInputHeight() override; 
+  int getInputWidth() override;
+  int getMapHeight() override;
+  int getMapWidth() override;
+  std::vector<std::unordered_map<int, std::pair<int, int>>> execute(float *data) override;
+
+private:
+  int input_binding_idx, cmap_binding_idx, paf_binding_idx;
+  float *cmap_buffer_h, *cmap_buffer_d, *paf_buffer_h, *paf_buffer_d;
+  size_t cmap_size, paf_size;
+  ParserConfig parser_config;
+  nvinfer1::IRuntime *trt_runtime;
+  nvinfer1::ICudaEngine *trt_engine;
+  nvinfer1::IExecutionContext *trt_context;
+};
+
 class PoseModelLogger : public nvinfer1::ILogger
 {
   void log (Severity severity, const char *msg) override
@@ -103,3 +132,7 @@ std::vector<std::unordered_map<int, std::pair<int, int>>> PoseModel::execute(flo
   return parseObjects(cmap_buffer_h, paf_buffer_h, parser_config);
 }
 
+IPoseModel *IPoseModel::createPoseModel(const std::string &engine_path, const Config &config)
+{
+  return (IPoseModel*) new PoseModel(engine_path, config);
+}

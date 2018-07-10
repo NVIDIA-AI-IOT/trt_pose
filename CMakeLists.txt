@@ -58,3 +58,7 @@ if (BUILD_TESTS)
   add_executable(test_pose_model test/test_pose_model.cpp)
   target_link_libraries(test_pose_model gtest pthread ${OpenCV_LIBS} trt_pose)
 endif()
+
+if (BUILD_EXAMPLES)
+  add_subdirectory(examples)
+endif()
