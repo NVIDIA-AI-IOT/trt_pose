@@ -4,6 +4,7 @@ TODO
 ### inference
 
 - [x] **FindPeaks** - peak detection in cmap
+    - [ ] enable NxN neighborhood non-max suppression (currently uses NSEW)
 - [x] **PafCostGraph** - generate part-part cost graph from peaks / PAF
 - [x] **Munkres** - optimal part-part assignment from cost graph via munkres algorithm
 - [x] **ConnectParts** - connect parts into objects by searching part-part assignment graphs
