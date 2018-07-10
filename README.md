@@ -10,7 +10,7 @@ TODO
 - [x] **ParseObjects** - combine above steps to parse objects from cmap, paf and configuration
 - [ ] **GaussNewton** - gauss newton optimization for multiple NxM matrices in batches (CUDA impl)
 - [ ] **GaussianFit** - fit gaussians to peaks in cmap via gauss newton optimization (CUDA impl)
-- [ ] **PoseModel** - takes tensorrt engine and config used, wraps execution
+- [x] **PoseModel** - takes tensorrt engine and config used, wraps execution
 
 # training
 
