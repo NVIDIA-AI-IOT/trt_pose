@@ -31,10 +31,10 @@ int main()
 {
   // create pose model
   Config pose_config = DEFAULT_COCO_HUMAN_POSE_CONFIG();
-  pose_config.trt_cmap_name = "Mconv7_stage2_L2";
-  pose_config.trt_paf_name = "Mconv7_stage2_L1";
+  pose_config.trt_cmap_name = "Mconv7_stage4_L2";
+  pose_config.trt_paf_name = "Mconv7_stage4_L1";
   pose_config.peak_threshold = 0.4;
-  std::unique_ptr<IPoseModel> model(IPoseModel::createPoseModel("data/pose_256_2.plan", pose_config));
+  std::unique_ptr<IPoseModel> model(IPoseModel::createPoseModel("data/pose_256_4.plan", pose_config));
    
   unsigned int image_width = model->getInputWidth();
   unsigned int image_height = model->getInputHeight();
@@ -80,7 +80,7 @@ int main()
         if (object.count(i) > 0) 
         {
                     cout << pose_config.part_names[i] << " ";
-          cv::circle(raw, { (object[i].second + 0.5f) * wscale, (object[i].first + 0.5) * hscale}, 5, color,5);
+          cv::circle(raw, { ((float)object[i].second + 0.5f) * wscale, ((float)object[i].first + 0.5f) * hscale}, 5, color,5);
         }
       }
       cout << endl;

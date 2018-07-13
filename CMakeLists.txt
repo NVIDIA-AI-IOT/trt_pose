@@ -6,13 +6,16 @@ set(CMAKE_CXX_FLAGS -std=c++11)
 set(CUDA_NVCC_FLASGS -std=c++11)
 
 #if (CMAKE_BUILD_TYPE == DEBUG)
-  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -G -g)
+#set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -G -g)
   #endif()
 
 find_package(CUDA REQUIRED)
-
-
 include_directories(${CUDA_INCLUDE_DIRS})
+
+find_package(LAPACK REQUIRED)
+include_directories(${LAPACK_INCLUDE_DIR})
+include_directories(${BLAS_INCLUDE_DIR})
+
 add_library(trt_pose SHARED
   src/ParseObjects.cpp
   src/PoseModel.cpp
@@ -20,9 +23,10 @@ add_library(trt_pose SHARED
   src/Munkres.cpp
   src/FindPeaks.cpp
   src/ConnectParts.cpp
+  src/GaussNewton.cpp
 )
 
-target_link_libraries(trt_pose ${CUDA_LIBRARIES} nvinfer)
+target_link_libraries(trt_pose ${CUDA_LIBRARIES} nvinfer ${LAPACK_LIBRARIES} ${BLAS_INCLUDE_DIR} lapacke)
 set_target_properties(trt_pose PROPERTIES PUBLIC_HEADER
   "src/PoseModel.hpp;src/Config.hpp;src/tensor.h"
 )

@@ -67,6 +67,19 @@ public:
     return &data[IDX_2D(row, col, ncols)];
   }
 
+  /**
+   * Colmajor access
+   */
+  inline T at_c(int row, int col) const 
+  {
+    return data[IDX_2D_colmajor(row, col, ncols)];
+  }
+
+  inline T at_c_(int row, int col) const
+  {
+    return &data[IDX_2D_colmajor(row, col, ncols)];
+  }
+
   inline T minRow(int row) const
   {
     T min = at(row, 0);
@@ -141,6 +154,13 @@ public:
     }
   }
 
+  inline void fill_identity()
+  {
+    for (int i = 0; i < nrows; i++) {
+      *at_(i, i) = 1.0f;
+    }
+  }
+
   /**
    * Frees memory and sets data pointer, resets ownership of data
    */
@@ -151,6 +171,11 @@ public:
       alloc.deallocate(data, nrows * ncols);
       free(refcount);
     }
+  }
+
+  inline T* dataMutable()
+  {
+    return data;
   }
 
   const int nrows;
