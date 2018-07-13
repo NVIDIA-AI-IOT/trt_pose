@@ -41,7 +41,7 @@ std::vector<std::unordered_map<int, std::pair<int, int>>> parseObjects(float *cm
   }
 
   // connect parts to form objects (contains reference indicies, not actual peak cooridnates)
-  auto objects_ = ConnectParts(part_counts, pair_graphs, config.topology);  
+  auto objects_ = connectParts(part_counts, pair_graphs, config.topology);  
 
   objects.resize(objects_.size());
 

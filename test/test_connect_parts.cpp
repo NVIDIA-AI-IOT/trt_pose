@@ -16,7 +16,7 @@ TEST(connect_parts, ShouldWorkA)
   graph0.set(0, 0);
   graph0.set(1, 1);
 
-  auto components = ConnectParts(parts, { graph0 }, topology);
+  auto components = connectParts(parts, { graph0 }, topology);
   ASSERT_EQ(2, components.size());
 }
 
@@ -41,7 +41,7 @@ TEST(connect_parts, ShouldWorkB)
   graph1.set(1, 1);
   graph1.set(2, 2);
 
-  auto components = ConnectParts(parts, { graph0, graph1 }, topology);
+  auto components = connectParts(parts, { graph0, graph1 }, topology);
   ASSERT_EQ(3, components.size());
 }
 
@@ -66,7 +66,7 @@ TEST(connect_parts, ShouldWorkC)
   graph1.set(1, 1);
 //graph1.set(2, 2);
 
-  auto components = ConnectParts(parts, { graph0, graph1 }, topology);
+  auto components = connectParts(parts, { graph0, graph1 }, topology);
   ASSERT_EQ(4, components.size());
 }
 

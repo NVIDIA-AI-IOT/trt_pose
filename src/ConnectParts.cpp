@@ -1,6 +1,6 @@
 #include "ConnectParts.hpp"
 
-std::unordered_map<int, int> SearchPart(
+std::unordered_map<int, int> searchPart(
     std::pair<int, int> node,
     const std::vector<PairGraph> &graphs,
     const std::vector<std::pair<int, int>> &topology,
@@ -45,7 +45,7 @@ std::unordered_map<int, int> SearchPart(
 }
 
 // match 
-std::vector<std::unordered_map<int, int>> ConnectParts(
+std::vector<std::unordered_map<int, int>> connectParts(
     const std::vector<int> &part_counts,
     const std::vector<PairGraph> &graphs,
     const std::vector<std::pair<int, int>> &topology)
@@ -63,7 +63,7 @@ std::vector<std::unordered_map<int, int>> ConnectParts(
     {
       if (!visited[i][j])
       {
-        auto comp = SearchPart({i, j}, graphs, topology, visited);
+        auto comp = searchPart({i, j}, graphs, topology, visited);
         components.push_back(comp);
       } 
     }
