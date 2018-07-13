@@ -156,6 +156,7 @@ public:
 
   inline void fill_identity()
   {
+    std::fill(data, data + nrows * ncols, 0);
     for (int i = 0; i < nrows; i++) {
       *at_(i, i) = 1.0f;
     }

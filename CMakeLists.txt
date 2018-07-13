@@ -61,6 +61,9 @@ if (BUILD_TESTS)
   find_package(OpenCV REQUIRED)
   add_executable(test_pose_model test/test_pose_model.cpp)
   target_link_libraries(test_pose_model gtest pthread ${OpenCV_LIBS} trt_pose)
+
+  add_executable(test_gauss_newton test/test_gauss_newton.cpp)
+  target_link_libraries(test_gauss_newton gtest pthread trt_pose)
 endif()
 
 if (BUILD_EXAMPLES)
