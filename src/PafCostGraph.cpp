@@ -40,4 +40,3 @@ Matrix<float> pafCostGraph(
   }
   return cost_graph;
 }
-

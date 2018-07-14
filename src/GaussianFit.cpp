@@ -4,11 +4,11 @@
 #include <cmath>
 
 void computeResidualJacobian(
-    const std::pair<int, int> peak, 
-    const Matrix<float> cmap, 
-    const Matrix<float> param,
-    Matrix<float> residual, 
-    Matrix<float> jacobian,
+    const std::pair<int, int> &peak, 
+    const Matrix<float> &cmap, 
+    const Matrix<float> &param,
+    Matrix<float> &residual, 
+    Matrix<float> &jacobian,
     int wsize)
 {
   int wsize_half = wsize / 2;
@@ -47,7 +47,7 @@ void computeResidualJacobian(
 }
 
 
-Gaussian gaussianFit(const std::pair<int, int> peak, const Matrix<float> cmap, int wsize, int niter)
+Gaussian gaussianFit(const std::pair<int, int> &peak, const Matrix<float> &cmap, int wsize, int niter)
 {
   Matrix<float> param(NPARAM, 1);
   Matrix<float> residual(wsize * wsize, 1);
