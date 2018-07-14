@@ -8,8 +8,10 @@
 #include "trt_pose/PoseModel.hpp"
 #include "trt_pose/Config.hpp"
 #include "trt_pose/tensor.h"
+#include "trt_pose/Object.hpp"
 
 #include "cuda_runtime.h"
+#include <cmath>
 
 using namespace std;
 
@@ -31,10 +33,10 @@ int main()
 {
   // create pose model
   Config pose_config = DEFAULT_COCO_HUMAN_POSE_CONFIG();
-  pose_config.trt_cmap_name = "Mconv7_stage4_L2";
-  pose_config.trt_paf_name = "Mconv7_stage4_L1";
+  pose_config.trt_cmap_name = "Mconv7_stage2_L2";
+  pose_config.trt_paf_name = "Mconv7_stage2_L1";
   pose_config.peak_threshold = 0.4;
-  std::unique_ptr<IPoseModel> model(IPoseModel::createPoseModel("data/pose_256_4.plan", pose_config));
+  std::unique_ptr<IPoseModel> model(IPoseModel::createPoseModel("data/pose_256_2.plan", pose_config));
    
   unsigned int image_width = model->getInputWidth();
   unsigned int image_height = model->getInputHeight();
@@ -68,19 +70,23 @@ int main()
     auto objects = model->execute(image_d);
     for (int j = 0; j < objects.size(); j++) 
     {
-      cv::Scalar color = { 0, 255, 0 };
-      if (j == 0)
-        color = { 0, 255, 0 };
-      else
-        color = { 255, 0 , 0};
+      cv::Scalar green = { 0, 255, 0 };
+      cv::Scalar blue = { 255, 0, 0 };
+      //if (j == 0)
+      //  color = { 0, 255, 0 };
+      //else
+      //  color = { 255, 0 , 0};
 
       auto object = objects[j];
       for (int i = 0; i < pose_config.part_names.size(); i++)
       {
-        if (object.count(i) > 0) 
+        if (object.gaussians.count(i) > 0) 
         {
+          auto p = object.peaks[i];
+          auto g = object.gaussians[i];
                     cout << pose_config.part_names[i] << " ";
-          cv::circle(raw, { ((float)object[i].second + 0.5f) * wscale, ((float)object[i].first + 0.5f) * hscale}, 5, color,5);
+          cv::circle(raw, { ((float)p.second + 0.5f) * wscale, ((float)p.first + 0.5f) * hscale}, 1.0f * hscale, blue,3);
+          //cv::circle(raw, { ((float)g.mean_j + 0.5f) * wscale, ((float)g.mean_i + 0.5f) * hscale}, sqrtf(g.sigma2) * hscale, green,3);
         }
       }
       cout << endl;

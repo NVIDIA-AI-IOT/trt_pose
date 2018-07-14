@@ -24,11 +24,12 @@ add_library(trt_pose SHARED
   src/FindPeaks.cpp
   src/ConnectParts.cpp
   src/GaussNewton.cpp
+  src/GaussianFit.cpp
 )
 
 target_link_libraries(trt_pose ${CUDA_LIBRARIES} nvinfer ${LAPACK_LIBRARIES} ${BLAS_INCLUDE_DIR} lapacke)
 set_target_properties(trt_pose PROPERTIES PUBLIC_HEADER
-  "src/PoseModel.hpp;src/Config.hpp;src/tensor.h"
+  "src/PoseModel.hpp;src/Config.hpp;src/tensor.h;src/Gaussian.hpp;src/Object.hpp"
 )
 
 install(TARGETS trt_pose

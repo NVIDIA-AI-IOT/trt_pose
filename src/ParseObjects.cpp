@@ -1,8 +1,9 @@
 #include "ParseObjects.hpp"
+#include "GaussianFit.hpp"
 
-std::vector<std::unordered_map<int, std::pair<int, int>>> parseObjects(float *cmap, float *paf, const ParserConfig &config)
+std::vector<Object> parseObjects(float *cmap, float *paf, const ParserConfig &config)
 {
-  std::vector<std::unordered_map<int, std::pair<int, int>>> objects;
+  std::vector<Object> objects;
   std::vector<std::vector<std::pair<int, int>>> peaks;
   std::vector<int> part_counts;
   std::vector<PairGraph> pair_graphs;
@@ -50,7 +51,11 @@ std::vector<std::unordered_map<int, std::pair<int, int>>> parseObjects(float *cm
   {
     for (auto &p : objects_[i])
     {
-      objects[i].insert({p.first, peaks[p.first][p.second]});
+      auto peak = peaks[p.first][p.second];
+      objects[i].peaks.insert({p.first, peak});
+      // fit gaussian to peak and add to object
+      Matrix<float> cmap_i(cmap + p.first * size, height, width);
+      objects[i].gaussians.insert({p.first, gaussianFit(peak, cmap_i, 3, 4)});
     }
   }
 

@@ -17,7 +17,7 @@ public:
   int getInputWidth() override;
   int getMapHeight() override;
   int getMapWidth() override;
-  std::vector<std::unordered_map<int, std::pair<int, int>>> execute(float *data) override;
+  std::vector<Object> execute(float *data) override;
 
 private:
   int input_binding_idx, cmap_binding_idx, paf_binding_idx;
@@ -113,7 +113,7 @@ PoseModel::~PoseModel()
   cudaFree(paf_buffer_d);
 }
 
-std::vector<std::unordered_map<int, std::pair<int, int>>> PoseModel::execute(float *data)
+std::vector<Object> PoseModel::execute(float *data)
 {
   void *bindings[3];
   bindings[input_binding_idx] = data;

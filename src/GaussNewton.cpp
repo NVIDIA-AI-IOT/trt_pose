@@ -3,7 +3,7 @@
 #include "lapacke.h"
 #include "cblas.h"
 
-void gaussNewtonUpdate(Matrix<float> &param, Matrix<float> &residual, Matrix<float> &jacobian)
+void gaussNewtonUpdate(Matrix<float> param, Matrix<float> residual, Matrix<float> jacobian)
 {
   float alpha = 1.0f;
   float beta = 0.0f;

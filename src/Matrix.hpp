@@ -21,6 +21,7 @@ public:
     if (other.shared)
     {
       shared = true;
+      data = other.data;
       refcount = other.refcount;
       (*refcount)++;
     }
@@ -156,10 +157,15 @@ public:
 
   inline void fill_identity()
   {
-    std::fill(data, data + nrows * ncols, 0);
+    fill_zero();
     for (int i = 0; i < nrows; i++) {
       *at_(i, i) = 1.0f;
     }
+  }
+
+  inline void fill_zero()
+  {
+    std::fill(data, data + nrows * ncols, 0);
   }
 
   /**
