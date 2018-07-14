@@ -33,10 +33,10 @@ int main()
 {
   // create pose model
   Config pose_config = DEFAULT_COCO_HUMAN_POSE_CONFIG();
-  pose_config.trt_cmap_name = "Mconv7_stage2_L2";
-  pose_config.trt_paf_name = "Mconv7_stage2_L1";
+  pose_config.trt_cmap_name = "Mconv7_stage3_L2";
+  pose_config.trt_paf_name = "Mconv7_stage3_L1";
   pose_config.peak_threshold = 0.4;
-  std::unique_ptr<IPoseModel> model(IPoseModel::createPoseModel("data/pose_256_2.plan", pose_config));
+  std::unique_ptr<IPoseModel> model(IPoseModel::createPoseModel("data/pose_368_3.plan", pose_config));
    
   unsigned int image_width = model->getInputWidth();
   unsigned int image_height = model->getInputHeight();
@@ -70,7 +70,6 @@ int main()
     auto objects = model->execute(image_d);
     for (int j = 0; j < objects.size(); j++) 
     {
-      cv::Scalar green = { 0, 255, 0 };
       cv::Scalar blue = { 255, 0, 0 };
       //if (j == 0)
       //  color = { 0, 255, 0 };
@@ -84,9 +83,10 @@ int main()
         {
           auto p = object.peaks[i];
           auto g = object.gaussians[i];
+          cv::Scalar green = { 0, 255.0f * g.alpha, 0 };
                     cout << pose_config.part_names[i] << " ";
-          cv::circle(raw, { ((float)p.second + 0.5f) * wscale, ((float)p.first + 0.5f) * hscale}, 1.0f * hscale, blue,3);
-          //cv::circle(raw, { ((float)g.mean_j + 0.5f) * wscale, ((float)g.mean_i + 0.5f) * hscale}, sqrtf(g.sigma2) * hscale, green,3);
+          //cv::circle(raw, { ((float)p.second + 0.5f) * wscale, ((float)p.first + 0.5f) * hscale}, 1.0f * hscale, blue,3);
+          cv::circle(raw, { ((float)g.mean_j + 0.5f) * wscale, ((float)g.mean_i + 0.5f) * hscale}, sqrtf(g.sigma2) * hscale, green,3);
         }
       }
       cout << endl;
