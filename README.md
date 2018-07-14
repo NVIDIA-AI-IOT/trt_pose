@@ -9,6 +9,8 @@ TODO
 - [x] **Munkres** - optimal part-part assignment from cost graph via munkres algorithm
 - [x] **ConnectParts** - connect parts into objects by searching part-part assignment graphs
 - [x] **ParseObjects** - combine above steps to parse objects from cmap, paf and configuration
+- [x] **GaussNewton** - gauss newton optimization for multiple NxM matrices in batches (CPU impl)
+- [x] **GaussianFit** - fit gaussians to peaks in cmap via gauss newton optimization (CPU impl)
 - [ ] **GaussNewton** - gauss newton optimization for multiple NxM matrices in batches (CUDA impl)
 - [ ] **GaussianFit** - fit gaussians to peaks in cmap via gauss newton optimization (CUDA impl)
 - [x] **PoseModel** - takes tensorrt engine and config used, wraps execution
