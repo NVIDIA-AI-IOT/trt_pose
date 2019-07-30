@@ -1,9 +1,10 @@
 #include <torch/extension.h>
 #include <vector>
 
-void find_peaks_out(torch::Tensor output, torch::Tensor input, float threshold, int window_size, int max_count)
+void find_peaks_out(torch::Tensor counts, torch::Tensor peaks, torch::Tensor input, float threshold, int window_size, int max_count)
 {
-    auto output_a = output.accessor<int, 4>();
+    auto counts_a = counts.accessor<int, 2>();
+    auto peaks_a = peaks.accessor<int, 4>();
     auto input_a = input.accessor<float, 4>();
     
     int w = window_size / 2;
@@ -15,7 +16,7 @@ void find_peaks_out(torch::Tensor output, torch::Tensor input, float threshold, 
         for (int c = 0; c < input.size(1); c++)
         {
             int count = 0;
-            auto output_a_bc = output_a[b][c];
+            auto peaks_a_bc = peaks_a[b][c];
             auto input_a_bc = input_a[b][c];
             
             for (int i = 0; i < height && count < max_count; i++)
@@ -50,18 +51,19 @@ void find_peaks_out(torch::Tensor output, torch::Tensor input, float threshold, 
                     }
                     
                     if (is_peak) {
-                        output_a_bc[count][0] = 1;
-                        output_a_bc[count][1] = i;
-                        output_a_bc[count][2] = j;
+                        peaks_a_bc[count][0] = i;
+                        peaks_a_bc[count][1] = j;
                         count++;
                     }
                 }
             }
+            
+            counts_a[b][c] = count;
         }
     }
 }
 
-torch::Tensor find_peaks(torch::Tensor input, float threshold, int window_size, int max_count)
+std::vector<torch::Tensor> find_peaks(torch::Tensor input, float threshold, int window_size, int max_count)
 {
     auto options = torch::TensorOptions()
         .dtype(torch::kInt32)
@@ -69,9 +71,10 @@ torch::Tensor find_peaks(torch::Tensor input, float threshold, int window_size, 
         .device(torch::kCPU)
         .requires_grad(false);
     
-    auto output = torch::zeros({input.size(0), input.size(1), max_count, 3}, options); // valid, i, j
-    find_peaks_out(output, input, threshold, window_size, max_count);
-    return output;
+    auto counts = torch::zeros({input.size(0), input.size(1)}, options);
+    auto peaks = torch::zeros({input.size(0), input.size(1), max_count, 2}, options); // valid, i, j
+    find_peaks_out(counts, peaks, input, threshold, window_size, max_count);
+    return {counts, peaks};
 }
 
 
