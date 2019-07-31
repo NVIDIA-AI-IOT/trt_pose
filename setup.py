@@ -18,7 +18,9 @@ setup(
         'trt_pose/plugins/find_peaks.cpp',
         'trt_pose/plugins/paf_score_graph.cpp',
         'trt_pose/plugins/refine_peaks.cpp',
-        'trt_pose/plugins/plugins.cpp'
+        'trt_pose/plugins/plugins.cpp',
+        'trt_pose/plugins/munkres.cpp',
+#         'trt_pose/plugins/connect_parts.cpp'
     ])],
     cmdclass={'build_ext': cpp_extension.BuildExtension},
     install_requires=[
