@@ -3,7 +3,7 @@
 #include "paf_score_graph.hpp"
 #include "refine_peaks.hpp"
 #include "munkres.hpp"
-// #include "connect_parts.hpp"
+#include "connect_parts.hpp"
 
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
@@ -14,6 +14,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("refine_peaks", &refine_peaks, "refine_peaks");
   m.def("refine_peaks_out", &refine_peaks_out, "refine_peaks_out");
   m.def("munkres", &munkres, "munkres");
+  m.def("connect_parts", &connect_parts, "connect_parts");
   m.def("assignment", &assignment, "assignment");
   m.def("assignment_out", &assignment_out, "assignment_out");
 //   m.def("connect_parts", &connect_parts, "connect_parts");

@@ -35,7 +35,7 @@ TOPOLOGY = [
     [21, 20, PARTS.index('NECK'), PARTS.index('LSHOULDER')],
     [23, 22, PARTS.index('LSHOULDER'), PARTS.index('LELBOW')],
     [25, 24, PARTS.index('LELBOW'), PARTS.index('LWRIST')],
-    [27, 26, PARTS.index('LSHOULDER'), PARTS.index('RHIP')],
+    [27, 26, PARTS.index('LSHOULDER'), PARTS.index('LEAR')],
     [29, 28, PARTS.index('NECK'), PARTS.index('NOSE')],
     [31, 30, PARTS.index('NOSE'), PARTS.index('REYE')],
     [33, 32, PARTS.index('NOSE'), PARTS.index('LEYE')],
