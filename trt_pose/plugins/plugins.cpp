@@ -5,6 +5,7 @@
 #include "munkres.hpp"
 #include "connect_parts.hpp"
 #include "generate_cmap.hpp"
+#include "generate_paf.hpp"
 
 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
@@ -19,4 +20,5 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("assignment", &assignment, "assignment");
   m.def("assignment_out", &assignment_out, "assignment_out");
   m.def("generate_cmap", &generate_cmap, "generate_cmap");
+  m.def("generate_paf", &generate_paf, "generate_paf");
 }
