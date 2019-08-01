@@ -1,23 +1,3 @@
-COCO_PARTS = [
-    "NOSE",
-    "LEYE",
-    "REYE",
-    "LEAR",
-    "REAR",
-    "LSHOULDER",
-    "RSHOULDER",
-    "LELBOW",
-    "RELBOW",
-    "LWRIST",
-    "RWRIST",
-    "LHIP",
-    "RHIP",
-    "LKNEE",
-    "RKNEE",
-    "LANKLE",
-    "RANKLE",
-]
-
 PARTS = [
     "NOSE",
     "NECK",
