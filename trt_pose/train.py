@@ -92,5 +92,5 @@ if __name__ == '__main__':
         print('%d (%fsec), %f' % (i, (t1 - t0), epoch_loss / len(loader)))
         
         if i % args.save_interval == 0:
-            checkpoint_path = os.path.join(args.output_dir, 'epoch_%d.pth')
+            checkpoint_path = os.path.join(args.output_dir, 'epoch_%d.pth' % i)
             torch.save(model.state_dict(), checkpoint_path)
