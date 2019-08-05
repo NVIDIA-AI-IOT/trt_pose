@@ -41,21 +41,21 @@ def resnet18_pose(cmap_channels, paf_channels, upsample_channels=256, pretrained
 
 
 def resnet34_pose(cmap_channels, paf_channels, upsample_channels=256, pretrained=True):
-    resnet = torchvision.models.resnet18(pretrained=pretrained)
+    resnet = torchvision.models.resnet34(pretrained=pretrained)
     return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 512)
 
 
 def resnet50_pose(cmap_channels, paf_channels, upsample_channels=256, pretrained=True):
-    resnet = torchvision.models.resnet18(pretrained=pretrained)
+    resnet = torchvision.models.resnet50(pretrained=pretrained)
     return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 2048)
 
 
 def resnet101_pose(cmap_channels, paf_channels, upsample_channels=256, pretrained=True):
-    resnet = torchvision.models.resnet18(pretrained=pretrained)
+    resnet = torchvision.models.resnet101(pretrained=pretrained)
     return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 2048)
 
 
 def resnet152_pose(cmap_channels, paf_channels, upsample_channels=256, pretrained=True):
-    resnet = torchvision.models.resnet18(pretrained=pretrained)
+    resnet = torchvision.models.resnet152(pretrained=pretrained)
     return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 2048)
 
