@@ -6,7 +6,7 @@ import os
 import tqdm
 import apex.amp as amp
 import time
-from .data import PoseDataset
+from .data import CmapPafDataset
 from .models import MODELS
 
 
@@ -26,7 +26,7 @@ if __name__ == '__main__':
     if not os.path.exists(args.output_dir):
         subprocess.call(['mkdir', '-p', args.output_dir])
         
-    dataset = PoseDataset(
+    dataset = CmapPafDataset(
         args.dataset,
         transforms=torchvision.transforms.Compose([
             torchvision.transforms.ToTensor(),

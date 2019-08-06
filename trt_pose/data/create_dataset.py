@@ -61,7 +61,7 @@ def generate_cmap_paf(annotations, image_shape, feature_shape, parts, topology, 
     return cmap.cpu()[0].numpy(), paf.cpu()[0].numpy()
 
 
-def generate_pose_dataset(output_dir, coco_images_dir, coco_annotation_file, category_name, image_shape, feature_shape, stdev):
+def create_dataset(output_dir, coco_images_dir, coco_annotation_file, category_name, image_shape, feature_shape, stdev):
     
     images_dir = os.path.join(output_dir, 'images')
     cmaps_dir = os.path.join(output_dir, 'cmaps')
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     parser.add_argument('stdev', type=float, help='Stdev in pixels of CMAP / PAF features')
     args = parser.parse_args()
     
-    generate_pose_dataset(
+    create_dataset(
         args.output_dir,
         args.coco_images_dir,
         args.coco_annotation_file,

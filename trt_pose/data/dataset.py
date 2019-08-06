@@ -24,7 +24,7 @@ def _coco_category_parts(coco_category):
     return coco_category['keypoints']
 
 
-class PoseDataset(torch.utils.data.Dataset):
+class CmapPafDataset(torch.utils.data.Dataset):
     def __init__(self, directory, transforms=None):
         self.directory = directory
         self.images_dir = os.path.join(directory, 'images')

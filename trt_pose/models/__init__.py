@@ -2,9 +2,9 @@ from .resnet import *
 
 
 MODELS = {
-    'resnet18_u256': resnet18_pose,
-    'resnet34_u256': resnet34_pose,
-    'resnet50_u256': resnet50_pose,
-    'resnet101_u256': resnet101_pose,
-    'resnet152_u256': resnet152_pose
+    'resnet18_baseline': resnet18_baseline,
+    'resnet34_baseline': resnet34_baseline,
+    'resnet50_baseline': resnet50_baseline,
+    'resnet101_baseline': resnet101_baseline,
+    'resnet152_baseline': resnet152_baseline
 }
