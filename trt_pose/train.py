@@ -9,6 +9,7 @@ import time
 from .data import CmapPafDataset
 from .models import MODELS
 
+EPS = 1e-6
 
 if __name__ == '__main__':
     
@@ -21,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', type=str, default='checkpoints', help='Path to store saved model weights')
     parser.add_argument('--save_interval', type=int, default=5, help='Save interval in epochs')
     parser.add_argument('--num_loader_workers', type=int, default=8)
+    parser.add_argument('--mask_offset', type=float, default=1e-2)
     args = parser.parse_args()
     
     if not os.path.exists(args.output_dir):
@@ -73,11 +75,11 @@ if __name__ == '__main__':
 
             cmap_out, paf_out = model(image)
 
-            cmap_mask = cmap.max(1, keepdim=True)[0]
-            paf_mask = (paf[:, 0::2]**2 + paf[:, 1::2]**2).sqrt().max(1, keepdim=True)[0]
+            cmap_mask = cmap.max(1, keepdim=True)[0] + args.mask_offset
+            paf_mask = (paf[:, 0::2]**2 + paf[:, 1::2]**2).sqrt().max(1, keepdim=True)[0] + args.mask_offset
 
-            cmap_loss = torch.mean((1e-2 + cmap_mask) * (cmap_out - cmap)**2)
-            paf_loss = torch.mean((1e-2 + paf_mask) * (paf_out - paf)**2)
+            cmap_loss = torch.sum(cmap_mask * (cmap_out - cmap)**2) / (cmap_mask.sum() + EPS)
+            paf_loss = torch.sum(paf_mask * (paf_out - paf)**2) / (paf_mask.sum() + EPS)
 
             loss = cmap_loss + paf_loss
             epoch_loss += float(loss)

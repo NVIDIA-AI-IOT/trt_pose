@@ -8,7 +8,7 @@ import subprocess
 import PIL.Image
 import trt_pose.plugins
 import pycocotools.coco
-from .data import _coco_category_parts, _coco_category_topology_tensor
+from .dataset import _coco_category_parts, _coco_category_topology_tensor
 
 
 def _coco_annotations_to_tensors(annotations, image_shape, parts, topology, max_count=100):
