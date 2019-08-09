@@ -23,6 +23,7 @@ if __name__ == '__main__':
     parser.add_argument('--save_interval', type=int, default=5, help='Save interval in epochs')
     parser.add_argument('--num_loader_workers', type=int, default=8)
     parser.add_argument('--mask_offset', type=float, default=1e-2)
+    parser.add_argument('--learning_rate', type=float, default=1e-3)
     args = parser.parse_args()
     
     if not os.path.exists(args.output_dir):
@@ -54,7 +55,7 @@ if __name__ == '__main__':
         num_workers=args.num_loader_workers
     )
     
-    optimizer = torch.optim.Adam(model.parameters())
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     
     model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
 
@@ -75,12 +76,23 @@ if __name__ == '__main__':
 
             cmap_out, paf_out = model(image)
 
-            cmap_mask = cmap.max(1, keepdim=True)[0] + args.mask_offset
-            paf_mask = (paf[:, 0::2]**2 + paf[:, 1::2]**2).sqrt().max(1, keepdim=True)[0] + args.mask_offset
-
-            cmap_loss = torch.sum(cmap_mask * (cmap_out - cmap)**2) / (cmap_mask.sum() + EPS)
-            paf_loss = torch.sum(paf_mask * (paf_out - paf)**2) / (paf_mask.sum() + EPS)
-
+#             cmap_mask = cmap.max(1, keepdim=True)[0] + args.mask_offset
+#             paf_mask = (paf[:, 0::2]**2 + paf[:, 1::2]**2).sqrt()#.max(1, keepdim=True)[0] + args.mask_offset
+#             paf_mask_f = torch.zeros((paf_mask.shape[0], 2 * paf_mask.shape[1], paf_mask.shape[2], paf_mask.shape[3]), device=device)
+#             paf_mask_f[:, 0::2, :, :] = paf_mask
+#             paf_mask_f[:, 1::2, :, :] = paf_mask
+#             paf_mask_f += args.mask_offset
+            
+            cmap_loss = torch.mean((cmap_out - cmap)**2)
+            paf_loss = torch.mean((paf_out - paf)**2)
+#             cmap_loss = torch.sum(cmap_mask * (cmap_out - cmap)**2) / (cmap_mask.sum() + EPS)
+#             paf_loss = torch.sum(paf_mask_f * (paf_out - paf)**2, dim=(2, 3)) / (paf_mask_f.sum(dim=(2, 3)) + EPS)
+#             paf_loss = torch.sum(torch.mean(paf_loss, dim=1))
+        
+#             cmap_mask = cmap + args.mask_offset
+#             cmap_loss = torch.sum(cmap_mask* (cmap_out - cmap)**2, dim=(2, 3)) / (cmap_mask.sum(dim=(2, 3)) + EPS)
+#             cmap_loss = torch.sum(torch.mean(cmap_loss, dim=1))
+            
             loss = cmap_loss + paf_loss
             epoch_loss += float(loss)
             
