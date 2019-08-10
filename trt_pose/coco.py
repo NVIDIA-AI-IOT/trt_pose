@@ -75,6 +75,8 @@ class CocoDataset(torch.utils.data.Dataset):
     
     def __init__(self, images_dir, annotations_file, category_name, use_crowd=False, min_area=0.0, max_area=1.0, max_part_count=100, cachefile=None):
         
+        self.images_dir = images_dir
+        
         if cachefile is not None and os.path.exists(cachefile):
             print('Cachefile found.  Loading from cache file...')
             cache = torch.load(cachefile)
@@ -159,4 +161,12 @@ class CocoDataset(torch.utils.data.Dataset):
                 'parts': self.parts,
                 'filenames': self.filenames
             }, cachefile)
-            
+    
+    def __len__(self):
+        return len(self.filenames)
+    
+    def __getitem__(self, idx):
+
+        image = PIL.Image.open(os.path.join(self.images_dir, self.filenames[idx])).convert('RGB')
+
+        return image, {'counts': self.counts[idx], 'peaks': self.peaks[idx], 'connections': self.connections[idx], 'topology': self.topology, 'parts': self.parts}
