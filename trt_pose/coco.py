@@ -160,11 +160,12 @@ class CocoDataset(torch.utils.data.Dataset):
                  min_area=0.0,
                  max_area=1.0,
                  max_part_count=100,
-                 tensor_cache_file='cached_tensors.pt',
                  random_angle=0.0,
                  random_scale=0.0,
-                 random_translate=0.0):
+                 random_translate=0.0,
+                 transforms=None):
 
+        self.transforms=transforms
         self.is_bmp = is_bmp
         self.images_dir = images_dir
         self.image_shape = image_shape
@@ -173,6 +174,8 @@ class CocoDataset(torch.utils.data.Dataset):
         self.random_angle = random_angle
         self.random_scale = random_scale
         self.random_translate = random_translate
+        
+        tensor_cache_file = annotations_file + '.cache'
 
         if tensor_cache_file is not None and os.path.exists(tensor_cache_file):
             print('Cachefile found.  Loading from cache file...')
@@ -299,4 +302,8 @@ class CocoDataset(torch.utils.data.Dataset):
             counts, peaks,
             self.target_shape[0], self.target_shape[1], stdev)
 
+        image = image.convert('RGB')
+        if self.transforms is not None:
+            image = self.transforms(image)
+            
         return image, cmap[0], paf[0]
