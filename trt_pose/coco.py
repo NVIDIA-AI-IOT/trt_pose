@@ -279,10 +279,10 @@ class CocoDataset(torch.utils.data.Dataset):
         peaks = self.peaks[idx]
         
         # affine transformation
-        shiftx = float(torch.rand(1)) * self.random_translate
-        shifty = float(torch.rand(1)) * self.random_translate
-        scale = 1.0 + float(torch.rand(1)) * self.random_scale
-        angle = float(torch.rand(1)) * self.random_angle
+        shiftx = 2.0 * float(torch.rand(1)) * self.random_translate - self.random_translate
+        shifty = 2.0 * float(torch.rand(1)) * self.random_translate - self.random_translate
+        scale = 1.0 + 2.0 * float(torch.rand(1)) * self.random_scale - self.random_scale
+        angle = 2.0 * float(torch.rand(1)) * self.random_angle - self.random_angle
         
         quad = get_quad(angle, (shiftx, shifty), scale)
         
