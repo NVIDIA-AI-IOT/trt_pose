@@ -1,13 +1,15 @@
 import torch
 import torch.utils.data
-import torch.nn.functional as F
 import torch.nn
 import os
-import glob
 import PIL.Image
 import json
-import numpy as np
 import tqdm
+import trt_pose
+import trt_pose.plugins
+import glob
+import torchvision.transforms.functional as FT
+import numpy as np
 
 
 def coco_category_to_topology(coco_category):
@@ -30,7 +32,11 @@ def coco_category_to_parts(coco_category):
     return coco_category['keypoints']
 
 
-def coco_annotations_to_tensors(coco_annotations, image_shape, parts, topology, max_count=100):
+def coco_annotations_to_tensors(coco_annotations,
+                                image_shape,
+                                parts,
+                                topology,
+                                max_count=100):
     """Gets tensors corresponding to peak counts, peak coordinates, and peak to peak connections
     """
     annotations = coco_annotations
@@ -45,41 +51,132 @@ def coco_annotations_to_tensors(coco_annotations, image_shape, parts, topology, 
     connections = -torch.ones((K, 2, M)).int()
 
     for ann_idx, ann in enumerate(annotations):
-        
+
         kps = ann['keypoints']
-        
+
         # add visible peaks
         for c in range(C):
-            
-            x = kps[c*3]
-            y = kps[c*3+1]
-            visible = kps[c*3 + 2]
+
+            x = kps[c * 3]
+            y = kps[c * 3 + 1]
+            visible = kps[c * 3 + 2]
 
             if visible:
                 peaks[c][counts[c]][0] = (float(y) + 0.5) / (IH + 1.0)
                 peaks[c][counts[c]][1] = (float(x) + 0.5) / (IW + 1.0)
                 counts[c] = counts[c] + 1
                 visibles[ann_idx][c] = 1
-        
+
         for k in range(K):
             c_a = topology[k][2]
             c_b = topology[k][3]
             if visibles[ann_idx][c_a] and visibles[ann_idx][c_b]:
                 connections[k][0][counts[c_a] - 1] = counts[c_b] - 1
                 connections[k][1][counts[c_b] - 1] = counts[c_a] - 1
-                
+
     return counts, peaks, connections
 
 
-class CocoDataset(torch.utils.data.Dataset):
+def convert_dir_to_bmp(output_dir, input_dir):
+    files = glob.glob(os.path.join(input_dir, '*.jpg'))
+    for f in files:
+        new_path = os.path.join(
+            output_dir,
+            os.path.splitext(os.path.basename(f))[0] + '.bmp')
+        img = PIL.Image.open(f)
+        img.save(new_path)
+
+        
+def get_quad(angle, translation, scale):
+    quad = np.array([
+    [0.0, 0.0],
+    [0.0, 1.0],
+    [1.0, 1.0],
+    [1.0, 0.0],
+    ])
+    quad -= 0.5
+
+    R = np.array([
+        [np.cos(angle), -np.sin(angle)],
+        [np.sin(angle), np.cos(angle)]
+    ])
+
+    quad = np.dot(quad, R)
+
+    quad += np.array(translation)
+    quad *= scale
+    quad += 0.5
     
-    def __init__(self, images_dir, annotations_file, category_name, use_crowd=False, min_area=0.0, max_area=1.0, max_part_count=100, cachefile=None):
-        
+    return quad
+
+
+def transform_image(image, size, quad):
+    new_quad = np.zeros_like(quad)
+    new_quad[:, 0] = quad[:, 0] * image.size[0]
+    new_quad[:, 1] = quad[:, 1] * image.size[1]
+    
+    new_quad = (new_quad[0][0], new_quad[0][1],
+            new_quad[1][0], new_quad[1][1],
+            new_quad[2][0], new_quad[2][1],
+            new_quad[3][0], new_quad[3][1])
+    
+    return image.transform(size, PIL.Image.QUAD, new_quad)
+
+
+def transform_points_xy(points, quad):
+    p00 = quad[0]
+    p01 = quad[1] - p00
+    p10 = quad[3] - p00
+    p01 /= np.sum(p01**2)
+    p10 /= np.sum(p10**2)
+    
+    A = np.array([
+        p10,
+        p01,
+    ]).transpose()
+    
+    return np.dot(points - p00, A)
+
+
+def transform_peaks(counts, peaks, quad):
+    newpeaks = peaks.clone().numpy()
+    C = counts.shape[0]
+    for c in range(C):
+        count = int(counts[c])
+        newpeaks[c][0:count] = transform_points_xy(newpeaks[c][0:count][:, ::-1], quad)[:, ::-1]
+    return torch.from_numpy(newpeaks)
+
+
+class CocoDataset(torch.utils.data.Dataset):
+    def __init__(self,
+                 images_dir,
+                 annotations_file,
+                 category_name,
+                 image_shape,
+                 target_shape,
+                 is_bmp=False,
+                 stdev=0.02,
+                 use_crowd=False,
+                 min_area=0.0,
+                 max_area=1.0,
+                 max_part_count=100,
+                 tensor_cache_file='cached_tensors.pt',
+                 random_angle=0.0,
+                 random_scale=0.0,
+                 random_translate=0.0):
+
+        self.is_bmp = is_bmp
         self.images_dir = images_dir
-        
-        if cachefile is not None and os.path.exists(cachefile):
+        self.image_shape = image_shape
+        self.target_shape = target_shape
+        self.stdev = stdev
+        self.random_angle = random_angle
+        self.random_scale = random_scale
+        self.random_translate = random_translate
+
+        if tensor_cache_file is not None and os.path.exists(tensor_cache_file):
             print('Cachefile found.  Loading from cache file...')
-            cache = torch.load(cachefile)
+            cache = torch.load(tensor_cache_file)
             self.counts = cache['counts']
             self.peaks = cache['peaks']
             self.connections = cache['connections']
@@ -87,40 +184,39 @@ class CocoDataset(torch.utils.data.Dataset):
             self.parts = cache['parts']
             self.filenames = cache['filenames']
             return
-            
+
         with open(annotations_file, 'r') as f:
             data = json.load(f)
-        
+
         cat = [c for c in data['categories'] if c['name'] == category_name][0]
         cat_id = cat['id']
-        
+
         img_map = {}
         for img in data['images']:
             img_map[img['id']] = img
-            
-        # get all images and annotations belonging to each image that meet criteria
+
         samples = {}
         for ann in data['annotations']:
-            
+
             # filter by category
             if ann['category_id'] != cat_id:
                 continue
-                
+
             # filter by crowd
             if not use_crowd and ann['iscrowd']:
                 continue
-                
+
             img_id = ann['image_id']
             img = img_map[img_id]
             height = img['height']
             width = img['width']
             area = ann['area']
-            
+
             # filter by object area
             normalized_area = float(area) / float(height * width)
             if normalized_area < min_area or normalized_area > max_area:
                 continue
-            
+
             # add metadata
             if img_id not in samples:
                 sample = {}
@@ -129,30 +225,33 @@ class CocoDataset(torch.utils.data.Dataset):
                 samples[img_id] = sample
             else:
                 samples[img_id]['anns'] += [ann]
-        
+
         # generate tensors
         self.topology = coco_category_to_topology(cat)
         self.parts = coco_category_to_parts(cat)
-        
+
         N = len(samples)
         C = len(self.parts)
         K = self.topology.shape[0]
         M = max_part_count
-        
+
+        print('Generating intermediate tensors...')
         self.counts = torch.zeros((N, C), dtype=torch.int32)
         self.peaks = torch.zeros((N, C, M, 2), dtype=torch.float32)
         self.connections = torch.zeros((N, K, 2, M), dtype=torch.int32)
         self.filenames = []
         for i, sample in tqdm.tqdm(enumerate(samples.values())):
-            self.filenames.append(sample['img']['file_name'])
+            filename = sample['img']['file_name']
+            self.filenames.append(filename)
             image_shape = (sample['img']['height'], sample['img']['width'])
-            counts_i, peaks_i, connections_i = coco_annotations_to_tensors(sample['anns'], image_shape, self.parts, self.topology)
+            counts_i, peaks_i, connections_i = coco_annotations_to_tensors(
+                sample['anns'], image_shape, self.parts, self.topology)
             self.counts[i] = counts_i
             self.peaks[i] = peaks_i
             self.connections[i] = connections_i
-        
-        if cachefile is not None:
-            print('Saving to cache file...')
+
+        if tensor_cache_file is not None:
+            print('Saving to intermediate tensors to cache file...')
             torch.save({
                 'counts': self.counts,
                 'peaks': self.peaks,
@@ -160,13 +259,44 @@ class CocoDataset(torch.utils.data.Dataset):
                 'topology': self.topology,
                 'parts': self.parts,
                 'filenames': self.filenames
-            }, cachefile)
-    
+            }, tensor_cache_file)
+
     def __len__(self):
         return len(self.filenames)
-    
+
     def __getitem__(self, idx):
 
-        image = PIL.Image.open(os.path.join(self.images_dir, self.filenames[idx])).convert('RGB')
+        if self.is_bmp:
+            filename = os.path.splitext(self.filenames[idx])[0] + '.bmp'
+        else:
+            filename = os.path.splitext(self.filenames[idx])[0] + '.jpg'
 
-        return image, {'counts': self.counts[idx], 'peaks': self.peaks[idx], 'connections': self.connections[idx], 'topology': self.topology, 'parts': self.parts}
+        image = PIL.Image.open(os.path.join(self.images_dir, filename))
+        counts = self.counts[idx]
+        peaks = self.peaks[idx]
+        
+        # affine transformation
+        shiftx = float(torch.rand(1)) * self.random_translate
+        shifty = float(torch.rand(1)) * self.random_translate
+        scale = 1.0 + float(torch.rand(1)) * self.random_scale
+        angle = float(torch.rand(1)) * self.random_angle
+        
+        quad = get_quad(angle, (shiftx, shifty), scale)
+        
+        image = transform_image(image, (self.image_shape[1], self.image_shape[0]), quad)
+        peaks = transform_peaks(counts, peaks, quad)
+        
+        counts = counts[None, ...]
+        peaks = peaks[None, ...]
+
+        stdev = int(self.stdev * self.target_shape[0])
+
+        cmap = trt_pose.plugins.generate_cmap(counts, peaks,
+            self.target_shape[0], self.target_shape[1], stdev, stdev * 5)
+
+        paf = trt_pose.plugins.generate_paf(
+            self.connections[idx][None, ...], self.topology,
+            counts, peaks,
+            self.target_shape[0], self.target_shape[1], stdev)
+
+        return image, cmap[0], paf[0]
