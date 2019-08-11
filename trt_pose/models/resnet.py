@@ -27,10 +27,7 @@ class ResNetBackbone(torch.nn.Module):
 def _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, feature_channels):
     model = torch.nn.Sequential(
         ResNetBackbone(resnet),
-        UpsampleCBR(feature_channels, upsample_channels),
-        UpsampleCBR(upsample_channels, upsample_channels),
-        UpsampleCBR(upsample_channels, upsample_channels),
-        CmapPafHead(upsample_channels, cmap_channels, paf_channels)
+        CmapPafHead(feature_channels, cmap_channels, paf_channels, upsample_channels, num_upsample=3)
     )
     return model
     
