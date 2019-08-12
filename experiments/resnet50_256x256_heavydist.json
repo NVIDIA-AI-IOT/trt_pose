@@ -7,15 +7,15 @@
         "target_shape": [64, 64],
         "stdev": 0.023,
         "is_bmp": false,
-        "random_angle": 0.15,
-        "random_scale": 0.25,
+        "random_angle": 0.1,
+        "random_scale": 0.2,
         "random_translate": 0.1
     },
     "color_jitter": {
-        "brightness": 0.1,
-        "contrast": 0.1,
-        "saturation": 0.1,
-        "hue": 0.03
+        "brightness": 0.3,
+        "contrast": 0.3,
+        "saturation": 0.3,
+        "hue": 0.05
     },
     "test_dataset": {
         "images_dir": "val2017",
@@ -49,11 +49,6 @@
             "upsample_channels": 256,
             "num_upsample": 3
         }
-    },
-    "loss": {
-      "weigh_cmap_freq": true,
-      "weigh_paf_freq": true,
-      "margin": 1e-2
     },
     "optimizer": {
         "name": "Adam",

@@ -121,26 +121,7 @@ if __name__ == '__main__':
             cmap_out, paf_out = model(image)
             
                 
-            cmap_loss = torch.mean((cmap_out - cmap)**2, dim=(2, 3))
-            paf_loss = torch.mean((paf_out - paf)**2, dim=(2, 3))
-
-            if config['loss']['weigh_cmap_freq']:
-                cmap_loss *= part_weight[None, :]
-                cmap_loss = torch.sum(cmap_loss, dim=1)
-            else:
-                cmap_loss = torch.mean(cmap_loss, dim=1)
-
-            if config['loss']['weigh_paf_freq']:
-                paf_loss[:, ::2] *= paf_weight
-                paf_loss[:, 1::2] *= paf_weight
-                paf_loss = torch.sum(paf_loss, dim=1)
-            else:
-                paf_loss = torch.mean(paf_loss, dim=1)
-
-            cmap_loss = torch.mean(cmap_loss)
-            paf_loss = torch.mean(paf_loss)
-            
-            loss = cmap_loss + paf_loss
+            loss = F.mse_loss(cmap_out, cmap) + F.mse_loss(paf_out, paf)
             
             with amp.scale_loss(loss, optimizer) as scaled_loss:
                 scaled_loss.backward()
@@ -161,26 +142,7 @@ if __name__ == '__main__':
 
                 cmap_out, paf_out = model(image)
                 
-                cmap_loss = torch.mean(torch.relu((cmap_out - cmap)**2 - config['loss']['margin']), dim=(2, 3))
-                paf_loss = torch.mean(torch.relu((paf_out - paf)**2 - config['loss']['margin'], dim=(2, 3))
-                
-                if config['loss']['weigh_cmap_freq']:
-                    cmap_loss *= part_weight[None, :]
-                    cmap_loss = torch.sum(cmap_loss, dim=1)
-                else:
-                    cmap_loss = torch.mean(cmap_loss, dim=1)
-                    
-                if config['loss']['weigh_paf_freq']:
-                    paf_loss[:, ::2] *= paf_weight
-                    paf_loss[:, 1::2] *= paf_weight
-                    paf_loss = torch.sum(paf_loss, dim=1)
-                else:
-                    paf_loss = torch.mean(paf_loss, dim=1)
-                    
-                cmap_loss = torch.mean(cmap_loss)
-                paf_loss = torch.mean(paf_loss)
-                    
-                loss = paf_loss + cmap_loss
+                loss = F.mse_loss(cmap_out, cmap) + F.mse_loss(paf_out, paf)
 
                 test_loss += float(loss)
         test_loss /= len(test_loader)
