@@ -307,3 +307,11 @@ class CocoDataset(torch.utils.data.Dataset):
             image = self.transforms(image)
             
         return image, cmap[0], paf[0]
+
+    def get_part_type_counts(self):
+        return torch.sum(self.counts, dim=0)
+    
+    def get_paf_type_counts(self):
+        c = torch.sum(self.connections[:, :, 0, :] >= 0, dim=-1) # sum over parts
+        c = torch.sum(c, dim=0) # sum over batch
+        return c

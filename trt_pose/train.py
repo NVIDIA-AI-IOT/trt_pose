@@ -57,6 +57,7 @@ if __name__ == '__main__':
     
     train_dataset_kwargs = config["train_dataset"]
     train_dataset_kwargs['transforms'] = torchvision.transforms.Compose([
+            torchvision.transforms.ColorJitter(**config['color_jitter']),
             torchvision.transforms.ToTensor(),
             torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
@@ -70,6 +71,14 @@ if __name__ == '__main__':
     train_dataset = CocoDataset(**train_dataset_kwargs)
     test_dataset = CocoDataset(**test_dataset_kwargs)
     
+    part_type_counts = test_dataset.get_part_type_counts().float().cuda()
+    part_weight = 1.0 / part_type_counts
+    part_weight = part_weight / torch.sum(part_weight)
+    paf_type_counts = test_dataset.get_paf_type_counts().float().cuda()
+    paf_weight = 1.0 / paf_type_counts
+    paf_weight = paf_weight / torch.sum(paf_weight)
+    paf_weight /= 2.0
+    
     train_loader = torch.utils.data.DataLoader(
         train_dataset,
         **config["train_loader"]
@@ -81,6 +90,10 @@ if __name__ == '__main__':
     )
     
     model = MODELS[config['model']['name']](**config['model']['kwargs']).to(device)
+    
+    if "initial_state_dict" in config['model']:
+        print('Loading initial weights from %s' % config['model']['initial_state_dict'])
+        model.load_state_dict(torch.load(config['model']['initial_state_dict']))
     
     optimizer = OPTIMIZERS[config['optimizer']['name']](model.parameters(), **config['optimizer']['kwargs'])
     model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
@@ -107,7 +120,27 @@ if __name__ == '__main__':
             optimizer.zero_grad()
             cmap_out, paf_out = model(image)
             
-            loss = F.mse_loss(cmap_out, cmap) + F.mse_loss(paf_out, paf)
+                
+            cmap_loss = torch.mean((cmap_out - cmap)**2, dim=(2, 3))
+            paf_loss = torch.mean((paf_out - paf)**2, dim=(2, 3))
+
+            if config['loss']['weigh_cmap_freq']:
+                cmap_loss *= part_weight[None, :]
+                cmap_loss = torch.sum(cmap_loss, dim=1)
+            else:
+                cmap_loss = torch.mean(cmap_loss, dim=1)
+
+            if config['loss']['weigh_paf_freq']:
+                paf_loss[:, ::2] *= paf_weight
+                paf_loss[:, 1::2] *= paf_weight
+                paf_loss = torch.sum(paf_loss, dim=1)
+            else:
+                paf_loss = torch.mean(paf_loss, dim=1)
+
+            cmap_loss = torch.mean(cmap_loss)
+            paf_loss = torch.mean(paf_loss)
+            
+            loss = cmap_loss + paf_loss
             
             with amp.scale_loss(loss, optimizer) as scaled_loss:
                 scaled_loss.backward()
@@ -127,8 +160,27 @@ if __name__ == '__main__':
                 paf = paf.to(device)
 
                 cmap_out, paf_out = model(image)
-
-                loss = F.mse_loss(cmap_out, cmap) + F.mse_loss(paf_out, paf)
+                
+                cmap_loss = torch.mean(torch.relu((cmap_out - cmap)**2 - config['loss']['margin']), dim=(2, 3))
+                paf_loss = torch.mean(torch.relu((paf_out - paf)**2 - config['loss']['margin'], dim=(2, 3))
+                
+                if config['loss']['weigh_cmap_freq']:
+                    cmap_loss *= part_weight[None, :]
+                    cmap_loss = torch.sum(cmap_loss, dim=1)
+                else:
+                    cmap_loss = torch.mean(cmap_loss, dim=1)
+                    
+                if config['loss']['weigh_paf_freq']:
+                    paf_loss[:, ::2] *= paf_weight
+                    paf_loss[:, 1::2] *= paf_weight
+                    paf_loss = torch.sum(paf_loss, dim=1)
+                else:
+                    paf_loss = torch.mean(paf_loss, dim=1)
+                    
+                cmap_loss = torch.mean(cmap_loss)
+                paf_loss = torch.mean(paf_loss)
+                    
+                loss = paf_loss + cmap_loss
 
                 test_loss += float(loss)
         test_loss /= len(test_loader)
