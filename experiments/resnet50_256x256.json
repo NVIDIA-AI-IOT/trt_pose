@@ -5,11 +5,20 @@
         "category_name": "person",
         "image_shape": [256, 256],
         "target_shape": [64, 64],
-        "stdev": 0.023,
+        "stdev": 0.025,
         "is_bmp": false,
-        "random_angle": 0.1,
-        "random_scale": 0.2,
-        "random_translate": 0.1
+        "random_angle": 0.05,
+        "random_scale": 0.1,
+        "random_translate": 0.05
+    },
+    "stdev_schedule": {
+        "0": 0.025
+    },
+    "color_jitter": {
+        "brightness": 0.05,
+        "contrast": 0.05,
+        "saturation": 0.05,
+        "hue": 0.01
     },
     "test_dataset": {
         "images_dir": "val2017",
@@ -17,7 +26,7 @@
         "category_name": "person",
         "image_shape": [256, 256],
         "target_shape": [64, 64],
-        "stdev": 0.023,
+        "stdev": 0.025,
         "is_bmp": false,
         "random_angle": 0.0,
         "random_scale": 0.0,
@@ -45,16 +54,19 @@
         }
     },
     "optimizer": {
-        "name": "Adam",
+        "name": "SGD",
         "kwargs": {
-            "lr": 0.001
+            "lr": 0.1,
+            "momentum": 0.95,
+            "weight_decay": 1e-4
         }
     },
     "epochs": 200,
     "lr_schedule": {
-        "0": 0.001,
-        "50": 0.0001,
-        "100": 0.00001
+        "0": 0.1,
+        "50": 0.01,
+        "100": 0.001,
+        "150": 0.0001
     },
     "checkpoints": {
         "interval": 3,

@@ -100,6 +100,12 @@ if __name__ == '__main__':
     
     for epoch in range(config["epochs"]):
         
+        if str(epoch) in config['stdev_schedule']:
+            stdev = config['stdev_schedule'][str(epoch)]
+            print('Adjusting stdev to %f' % stdev)
+            train_dataset.stdev = stdev
+            test_dataset.stdev = stdev
+            
         if str(epoch) in config['lr_schedule']:
             new_lr = config['lr_schedule'][str(epoch)]
             print('Adjusting learning rate to %f' % new_lr)

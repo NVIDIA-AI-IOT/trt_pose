@@ -7,15 +7,18 @@
         "target_shape": [64, 64],
         "stdev": 0.023,
         "is_bmp": false,
-        "random_angle": 0.1,
-        "random_scale": 0.2,
+        "random_angle": 0.05,
+        "random_scale": 0.1,
         "random_translate": 0.1
     },
+    "stdev_schedule": {
+        "0": 0.023
+    },
     "color_jitter": {
-        "brightness": 0.3,
-        "contrast": 0.3,
-        "saturation": 0.3,
-        "hue": 0.05
+        "brightness": 0.0,
+        "contrast": 0.0,
+        "saturation": 0.0,
+        "hue": 0.0
     },
     "test_dataset": {
         "images_dir": "val2017",
@@ -51,20 +54,23 @@
         }
     },
     "optimizer": {
-        "name": "Adam",
+        "name": "SGD",
         "kwargs": {
-            "lr": 0.001
+            "lr": 0.1,
+            "momentum": 0.9,
+            "weight_decay": 1e-4
         }
     },
     "epochs": 200,
     "lr_schedule": {
-        "0": 0.001,
-        "75": 0.0001,
-        "150": 0.00001
+        "0": 0.1,
+        "50": 0.01,
+        "100": 0.001,
+        "150": 0.0001
     },
     "checkpoints": {
         "interval": 3,
-        "directory": "resnet50_256x256_coco_heavydist"
+        "directory": "resnet50_256x256_coco"
     },
-    "logfile": "resnet50_256x256_heavydist.log"
+    "logfile": "resnet50_256x256.log"
 }

@@ -261,7 +261,9 @@ class CocoDataset(torch.utils.data.Dataset):
                 'connections': self.connections,
                 'topology': self.topology,
                 'parts': self.parts,
-                'filenames': self.filenames
+                'filenames': self.filenames,
+                'cmap_mask': self.cmap_mask,
+                'paf_mask': self.paf_mask
             }, tensor_cache_file)
 
     def __len__(self):
