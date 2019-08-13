@@ -6,5 +6,10 @@ MODELS = {
     'resnet34_baseline': resnet34_baseline,
     'resnet50_baseline': resnet50_baseline,
     'resnet101_baseline': resnet101_baseline,
-    'resnet152_baseline': resnet152_baseline
+    'resnet152_baseline': resnet152_baseline,
+    'resnet18_baseline_att': resnet18_baseline_att,
+    'resnet34_baseline_att': resnet34_baseline_att,
+    'resnet50_baseline_att': resnet50_baseline_att,
+    'resnet101_baseline_att': resnet101_baseline_att,
+    'resnet152_baseline_att': resnet152_baseline_att
 }
