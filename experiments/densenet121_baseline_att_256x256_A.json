@@ -33,13 +33,13 @@
         "random_translate": [-0.0, 0.0]
     },
     "train_loader": {
-        "batch_size": 128,
+        "batch_size": 64,
         "shuffle": true,
         "num_workers": 8,
         "pin_memory": true
     },
     "test_loader": {
-        "batch_size": 128,
+        "batch_size": 64,
         "shuffle": true,
         "num_workers": 8,
         "pin_memory": true
@@ -66,6 +66,6 @@
         "150": 0.00001
     },
     "checkpoints": {
-        "interval": 3
+        "interval": 10
     }
 }
