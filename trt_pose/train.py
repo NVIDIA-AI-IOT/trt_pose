@@ -20,7 +20,6 @@ OPTIMIZERS = {
 
 EPS = 1e-6
 
-
 def set_lr(optimizer, lr):
     for p in optimizer.param_groups:
         p['lr'] = lr
@@ -52,6 +51,14 @@ if __name__ == '__main__':
     with open(args.config, 'r') as f:
         config = json.load(f)
         pprint.pprint(config)
+        
+    logfile_path = args.config + '.log'
+    
+    checkpoint_dir = args.config + '.checkpoints'
+    if not os.path.exists(checkpoint_dir):
+        print('Creating checkpoint directory % s' % checkpoint_dir)
+        os.mkdir(checkpoint_dir)
+    
         
     # LOAD DATASETS
     
@@ -112,7 +119,7 @@ if __name__ == '__main__':
             set_lr(optimizer, new_lr)
         
         if epoch % config['checkpoints']['interval'] == 0:
-            save_checkpoint(model, config['checkpoints']['directory'], epoch)
+            save_checkpoint(model, checkpoint_dir, epoch)
             
            
         
@@ -153,4 +160,4 @@ if __name__ == '__main__':
                 test_loss += float(loss)
         test_loss /= len(test_loader)
         
-        write_log_entry(config['logfile'], epoch, train_loss, test_loss)
+        write_log_entry(logfile_path, epoch, train_loss, test_loss)
