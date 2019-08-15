@@ -45,7 +45,7 @@
         "pin_memory": true
     },
     "model": {
-        "name": "resnet50_baseline_att",
+        "name": "densenet121_baseline_att",
         "kwargs": {
             "cmap_channels": 18,
             "paf_channels": 42,

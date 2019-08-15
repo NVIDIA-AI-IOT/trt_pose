@@ -1,4 +1,5 @@
 from .resnet import *
+from .densenet import *
 
 
 MODELS = {
@@ -11,5 +12,13 @@ MODELS = {
     'resnet34_baseline_att': resnet34_baseline_att,
     'resnet50_baseline_att': resnet50_baseline_att,
     'resnet101_baseline_att': resnet101_baseline_att,
-    'resnet152_baseline_att': resnet152_baseline_att
+    'resnet152_baseline_att': resnet152_baseline_att,
+    'densenet121_baseline': densenet121_baseline,
+    'densenet169_baseline': densenet169_baseline,
+    'densenet201_baseline': densenet201_baseline,
+    'densenet161_baseline': densenet161_baseline,
+    'densenet121_baseline_att': densenet121_baseline_att,
+    'densenet169_baseline_att': densenet169_baseline_att,
+    'densenet201_baseline_att': densenet201_baseline_att,
+    'densenet161_baseline_att': densenet161_baseline_att
 }
