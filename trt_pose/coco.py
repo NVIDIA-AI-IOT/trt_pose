@@ -103,8 +103,8 @@ def get_quad(angle, translation, scale):
 
     quad = np.dot(quad, R)
 
-    quad += np.array(translation)
-    quad *= scale
+    quad -= np.array(translation)
+    quad /= scale
     quad += 0.5
     
     return quad
@@ -160,9 +160,9 @@ class CocoDataset(torch.utils.data.Dataset):
                  min_area=0.0,
                  max_area=1.0,
                  max_part_count=100,
-                 random_angle=0.0,
-                 random_scale=0.0,
-                 random_translate=0.0,
+                 random_angle=(0.0, 0.0),
+                 random_scale=(1.0, 1.0),
+                 random_translate=(0.0, 0.0),
                  transforms=None):
 
         self.transforms=transforms
@@ -281,10 +281,10 @@ class CocoDataset(torch.utils.data.Dataset):
         peaks = self.peaks[idx]
         
         # affine transformation
-        shiftx = 2.0 * float(torch.rand(1)) * self.random_translate - self.random_translate
-        shifty = 2.0 * float(torch.rand(1)) * self.random_translate - self.random_translate
-        scale = 1.0 + 2.0 * float(torch.rand(1)) * self.random_scale - self.random_scale
-        angle = 2.0 * float(torch.rand(1)) * self.random_angle - self.random_angle
+        shiftx = float(torch.rand(1)) * (self.random_translate[1] - self.random_translate[0]) + self.random_translate[0]
+        shifty = float(torch.rand(1)) * (self.random_translate[1] - self.random_translate[0]) + self.random_translate[0]
+        scale = float(torch.rand(1)) * (self.random_scale[1] - self.random_scale[0]) + self.random_scale[0]
+        angle = float(torch.rand(1)) * (self.random_angle[1] - self.random_angle[0]) + self.random_angle[0]
         
         quad = get_quad(angle, (shiftx, shifty), scale)
         
