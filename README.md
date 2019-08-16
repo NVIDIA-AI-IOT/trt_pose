@@ -7,7 +7,7 @@ This project enables multi-instance pose estimation accelerated by NVIDIA Tensor
 - Evaluation scripts to assess the accuracy of a trained model 
 - A collection of models that may be easily optimized with TensorRT using [torch2trt](https://github.com/NVIDIA-AI-IOT/torch2trt)
 
-This project can be used for the pre-trained task of human pose estimation, or extended for something new.
+This project can be used easily for the task of human pose estimation, or extended for something new.
 
 If you run into any issues please [let us know](../../issues).
 
