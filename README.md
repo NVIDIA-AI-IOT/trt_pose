@@ -21,4 +21,4 @@ To try out these pre-trained models, please follow the human pose [notebooks](no
 | [densenet121_baseline_att_256x256_A](experiments/densenet121_baseline_att_256x256_A) |  |  |  |  |
 | [densenet169_baseline_att_256x256_A](experiments/densenet169_baseline_att_256x256_A) |  |  |  |  |
 
-For more information on how to train or evaluate a human pose model, please read the human_pose [documentation](docs/human_pose.md).
+For more information on how to train or evaluate a human pose model, please read the human pose [documentation](docs/human_pose.md).
