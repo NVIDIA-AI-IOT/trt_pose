@@ -1,5 +1,4 @@
 # TensorRT Pose Estimation
-----
 
 This project enables multi-instance pose estimation accelerated by NVIDIA TensorRT.  It is ideal for use in applications where low latency is necessary.  It includes
 
