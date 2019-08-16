@@ -1,24 +1,24 @@
-TODO
-----
+# TensorRT Pose Estimation
 
-### inference
+This project features multi-instance pose estimation accelerated by NVIDIA TensorRT.  It is ideal for use in applications where low latency is necessary.  It includes
 
-- [x] **FindPeaks** - peak detection in cmap
-    - [ ] enable NxN neighborhood non-max suppression (currently uses NSEW)
-- [x] **PafCostGraph** - generate part-part cost graph from peaks / PAF
-- [x] **Munkres** - optimal part-part assignment from cost graph via munkres algorithm
-- [x] **ConnectParts** - connect parts into objects by searching part-part assignment graphs
-- [x] **ParseObjects** - combine above steps to parse objects from cmap, paf and configuration
-- [x] **GaussNewton** - gauss newton optimization for multiple NxM matrices in batches (CPU impl)
-- [x] **GaussianFit** - fit gaussians to peaks in cmap via gauss newton optimization (CPU impl)
-- [ ] **GaussNewton** - gauss newton optimization for multiple NxM matrices in batches (CUDA impl)
-- [ ] **GaussianFit** - fit gaussians to peaks in cmap via gauss newton optimization (CUDA impl)
-- [x] **PoseModel** - takes tensorrt engine and config used, wraps execution
+- Training scripts to train on any keypoint task data in MSCOCO format
 
-# training
+- Evaluation scripts to assess the accuracy of a trained model 
+- A collection of models that may be easily optimized with TensorRT using [torch2trt](https://github.com/NVIDIA-AI-IOT/torch2trt)
 
-- [ ] **GeneratePaf** - generate part affinity field from objects
-- [ ] **GenerateCmap** - generate confidence map from objects
-- [ ] **CocoDataset** - wrapper for coco / generators to generate samples
-- [ ] **Model** - generate model from configuration, starts from pretrained image cls model, configurable num stages, feature extractor, stage model, etc.
-- [ ] **Train** - training script for selected dataset (really, coco)
+This project can be used easily for the task of human pose estimation, or extended for something new.
+
+If you run into any issues please [let us know](../../issues).
+
+## Human pose
+
+To try out these pre-trained models, please follow the human pose [notebooks](notebooks/human_pose).
+
+| Name | Accuracy | Jetson Nano | Jetson Xavier | Pre-trained Weights |
+|-------|------------|-------------|---------------|---------------------|
+| [resnet50_baseline_att_256x256_A](experiments/resnet50_baseline_att_256x256_A) |  |  |  |  |
+| [densenet121_baseline_att_256x256_A](experiments/densenet121_baseline_att_256x256_A) |  |  |  |  |
+| [densenet169_baseline_att_256x256_A](experiments/densenet169_baseline_att_256x256_A) |  |  |  |  |
+
+For more information on how to train or evaluate a human pose model, please read the human pose [documentation](docs/human_pose.md).
