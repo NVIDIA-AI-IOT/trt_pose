@@ -17,8 +17,8 @@ To try out these pre-trained models, please follow the human pose [notebooks](no
 
 | Name | Accuracy | Jetson Nano | Jetson Xavier | Pre-trained Weights |
 |-------|------------|-------------|---------------|---------------------|
-| [resnet18_baseline_att_224x224_A](experiments/resnet18_baseline_att_224x224_A) |  |  |  | [download (81MB)](https://drive.google.com/open?id=1XYDdCUdiF2xxx4rznmLb62SdOUZuoNbd) |
-| [densenet121_baseline_att_256x256_A](experiments/densenet121_baseline_att_256x256_A) |  |  |  | [download (84MB)](https://drive.google.com/open?id=199JXyPHxGh3uTy2Eezef9CFqgC8v76Od) |
-| [densenet169_baseline_att_256x256_A](experiments/densenet169_baseline_att_256x256_A) |  |  |  | [download (127MB)](https://drive.google.com/open?id=1BboOiLor9aRxegVOU35ml5r2--YCvhaU) |
+| [resnet18_baseline_att_224x224_A](experiments/resnet18_baseline_att_224x224_A.json) |  |  |  | [download (81MB)](https://drive.google.com/open?id=1XYDdCUdiF2xxx4rznmLb62SdOUZuoNbd) |
+| [densenet121_baseline_att_256x256_A](experiments/densenet121_baseline_att_256x256_A.json) |  |  |  | [download (84MB)](https://drive.google.com/open?id=199JXyPHxGh3uTy2Eezef9CFqgC8v76Od) |
+| [densenet169_baseline_att_256x256_A](experiments/densenet169_baseline_att_256x256_A.json) |  |  |  | [download (127MB)](https://drive.google.com/open?id=1BboOiLor9aRxegVOU35ml5r2--YCvhaU) |
 
 For more information on how to train or evaluate a human pose model, please read the human pose [documentation](docs/human_pose.md).
