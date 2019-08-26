@@ -77,6 +77,19 @@ def coco_annotations_to_tensors(coco_annotations,
     return counts, peaks, connections
 
 
+def coco_annotations_to_mask_bbox(coco_annotations, image_shape):
+    mask = np.ones(image_shape, dtype=np.uint8)
+    for ann in coco_annotations:
+        if 'num_keypoints' not in ann or ann['num_keypoints'] == 0:
+            bbox = ann['bbox']
+            x0 = round(bbox[0])
+            y0 = round(bbox[1])
+            x1 = round(x0 + bbox[2])
+            y1 = round(y0 + bbox[3])
+            mask[y0:y1, x0:x1] = 0
+    return mask
+            
+
 def convert_dir_to_bmp(output_dir, input_dir):
     files = glob.glob(os.path.join(input_dir, '*.jpg'))
     for f in files:
@@ -176,7 +189,7 @@ class CocoDataset(torch.utils.data.Dataset):
         self.random_translate = random_translate
         
         tensor_cache_file = annotations_file + '.cache'
-
+        
         if tensor_cache_file is not None and os.path.exists(tensor_cache_file):
             print('Cachefile found.  Loading from cache file...')
             cache = torch.load(tensor_cache_file)
@@ -186,8 +199,9 @@ class CocoDataset(torch.utils.data.Dataset):
             self.topology = cache['topology']
             self.parts = cache['parts']
             self.filenames = cache['filenames']
+            self.samples = cache['samples']
             return
-
+            
         with open(annotations_file, 'r') as f:
             data = json.load(f)
 
@@ -228,7 +242,7 @@ class CocoDataset(torch.utils.data.Dataset):
                 samples[img_id] = sample
             else:
                 samples[img_id]['anns'] += [ann]
-
+                
         # generate tensors
         self.topology = coco_category_to_topology(cat)
         self.parts = coco_category_to_parts(cat)
@@ -243,6 +257,8 @@ class CocoDataset(torch.utils.data.Dataset):
         self.peaks = torch.zeros((N, C, M, 2), dtype=torch.float32)
         self.connections = torch.zeros((N, K, 2, M), dtype=torch.int32)
         self.filenames = []
+        self.samples = []
+        
         for i, sample in tqdm.tqdm(enumerate(samples.values())):
             filename = sample['img']['file_name']
             self.filenames.append(filename)
@@ -252,6 +268,7 @@ class CocoDataset(torch.utils.data.Dataset):
             self.counts[i] = counts_i
             self.peaks[i] = peaks_i
             self.connections[i] = connections_i
+            self.samples += [sample]
 
         if tensor_cache_file is not None:
             print('Saving to intermediate tensors to cache file...')
@@ -262,8 +279,7 @@ class CocoDataset(torch.utils.data.Dataset):
                 'topology': self.topology,
                 'parts': self.parts,
                 'filenames': self.filenames,
-                'cmap_mask': self.cmap_mask,
-                'paf_mask': self.paf_mask
+                'samples': self.samples
             }, tensor_cache_file)
 
     def __len__(self):
@@ -277,6 +293,12 @@ class CocoDataset(torch.utils.data.Dataset):
             filename = os.path.splitext(self.filenames[idx])[0] + '.jpg'
 
         image = PIL.Image.open(os.path.join(self.images_dir, filename))
+        
+        im = self.samples[idx]['img']
+        
+        mask = coco_annotations_to_mask_bbox(self.samples[idx]['anns'], (im['height'], im['width']))
+        mask = PIL.Image.fromarray(mask)
+        
         counts = self.counts[idx]
         peaks = self.peaks[idx]
         
@@ -289,6 +311,7 @@ class CocoDataset(torch.utils.data.Dataset):
         quad = get_quad(angle, (shiftx, shifty), scale)
         
         image = transform_image(image, (self.image_shape[1], self.image_shape[0]), quad)
+        mask = transform_image(mask, (self.image_shape[1], self.image_shape[0]), quad)
         peaks = transform_peaks(counts, peaks, quad)
         
         counts = counts[None, ...]
@@ -308,7 +331,7 @@ class CocoDataset(torch.utils.data.Dataset):
         if self.transforms is not None:
             image = self.transforms(image)
             
-        return image, cmap[0], paf[0]
+        return image, cmap[0], paf[0], torch.from_numpy(np.array(mask))[None, ...]
 
     def get_part_type_counts(self):
         return torch.sum(self.counts, dim=0)
