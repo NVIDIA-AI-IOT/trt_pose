@@ -311,7 +311,7 @@ class CocoDataset(torch.utils.data.Dataset):
         quad = get_quad(angle, (shiftx, shifty), scale)
         
         image = transform_image(image, (self.image_shape[1], self.image_shape[0]), quad)
-        mask = transform_image(mask, (self.image_shape[1], self.image_shape[0]), quad)
+        mask = transform_image(mask, (self.target_shape[1], self.target_shape[0]), quad)
         peaks = transform_peaks(counts, peaks, quad)
         
         counts = counts[None, ...]

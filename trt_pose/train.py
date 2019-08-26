@@ -105,6 +105,12 @@ if __name__ == '__main__':
     optimizer = OPTIMIZERS[config['optimizer']['name']](model.parameters(), **config['optimizer']['kwargs'])
     model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
     
+    if 'mask_unlabeled' in config and config['mask_unlabeled']:
+        print('Masking unlabeled annotations')
+        mask_unlabeled = True
+    else:
+        mask_unlabeled = False
+        
     for epoch in range(config["epochs"]):
         
         if str(epoch) in config['stdev_schedule']:
@@ -125,20 +131,27 @@ if __name__ == '__main__':
         
         train_loss = 0.0
         model = model.train()
-        for image, cmap, paf in tqdm.tqdm(iter(train_loader)):
+        for image, cmap, paf, mask in tqdm.tqdm(iter(train_loader)):
             image = image.to(device)
             cmap = cmap.to(device)
             paf = paf.to(device)
             
+            if mask_unlabeled:
+                mask = mask.to(device).float()
+            else:
+                mask = torch.ones_like(mask).to(device).float()
+            
             optimizer.zero_grad()
             cmap_out, paf_out = model(image)
             
-                
-            loss = F.mse_loss(cmap_out, cmap) + F.mse_loss(paf_out, paf)
+            cmap_mse = torch.mean(mask * (cmap_out - cmap)**2)
+            paf_mse = torch.mean(mask * (paf_out - paf)**2)
+            
+            loss = cmap_mse + paf_mse
             
             with amp.scale_loss(loss, optimizer) as scaled_loss:
                 scaled_loss.backward()
-            
+#             loss.backward()
             optimizer.step()
             train_loss += float(loss)
             
@@ -146,16 +159,25 @@ if __name__ == '__main__':
         
         test_loss = 0.0
         model = model.eval()
-        for image, cmap, paf in tqdm.tqdm(iter(test_loader)):
+        for image, cmap, paf, mask in tqdm.tqdm(iter(test_loader)):
       
             with torch.no_grad():
                 image = image.to(device)
                 cmap = cmap.to(device)
                 paf = paf.to(device)
+                mask = mask.to(device).float()
 
+                if mask_unlabeled:
+                    mask = mask.to(device).float()
+                else:
+                    mask = torch.ones_like(mask).to(device).float()
+                
                 cmap_out, paf_out = model(image)
                 
-                loss = F.mse_loss(cmap_out, cmap) + F.mse_loss(paf_out, paf)
+                cmap_mse = torch.mean(mask * (cmap_out - cmap)**2)
+                paf_mse = torch.mean(mask * (paf_out - paf)**2)
+
+                loss = cmap_mse + paf_mse
 
                 test_loss += float(loss)
         test_loss /= len(test_loader)
