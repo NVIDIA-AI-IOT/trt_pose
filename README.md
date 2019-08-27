@@ -28,8 +28,8 @@ This task involves detecting human body pose using models trained on the MSCOCO 
 | Model | Jetson Nano | Jetson Xavier | Weights |
 |-------|-------------|---------------|---------|
 | resnet18_baseline_att_224x224_A |  |  | [download (81MB)](https://drive.google.com/open?id=1XYDdCUdiF2xxx4rznmLb62SdOUZuoNbd) |
-| densenet121_baseline_att_224x224_B |  |  | [download (84MB)](https://drive.google.com/open?id=1ZP6Wh9CpFQxiRJYO9ECyIVU-soy4aUoW) |
 | resnet50_baseline_att_256x256_A |  |  | [download (182MB)](https://drive.google.com/open?id=1eLgzGsh1yjuLG66r9BFmoOzp3nTdVHS2) |
+| resnet50_baseline_att_384x384_A |  |  | [download (182MB)](https://drive.google.com/open?id=1ck66N0Lqxqcg-7OImh_5YNwvnrb9yHym) |
+| densenet121_baseline_att_224x224_B |  |  | [download (84MB)](https://drive.google.com/open?id=1ZP6Wh9CpFQxiRJYO9ECyIVU-soy4aUoW) |
 | densenet121_baseline_att_256x256_B |  |  | [download (84MB)](https://drive.google.com/open?id=13FkJkx7evQ1WwP54UmdiDXWyFMY1OxDU) |
 | densenet121_baseline_att_320x320_A |  |  | [download (84MB)](https://drive.google.com/open?id=1SX-LWAfYNdcNKb42b31UmZwsjXmB3a9l) |
-| resnet50_baseline_att_384x384_A |  |  | [download (182MB)](https://drive.google.com/open?id=1ck66N0Lqxqcg-7OImh_5YNwvnrb9yHym) |
