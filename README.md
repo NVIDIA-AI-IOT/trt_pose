@@ -23,7 +23,7 @@ sudo python3 setup.py install
 
 ### Human Pose
 
-This task involves detecting human body pose using models trained on the MSCOCO dataset.  To get started, select one of the models below and follow the [live_demo.ipynb](tasks/human_pose/live_demo.ipynb) notebook to visualize human pose detection on a live camera feed.
+This task involves detecting human body pose using models trained on the MSCOCO dataset.  To get started, select one of the models below and follow the [live_demo.ipynb](tasks/human_pose/live_demo.ipynb) notebook to visualize the results on a live camera feed.  Place the downloaded weights in the [tasks/human_pose](tasks/human_pose) directory, and modify the notebook accordingly.
 
 | Model | Jetson Nano | Jetson Xavier | Weights |
 |-------|-------------|---------------|---------|
