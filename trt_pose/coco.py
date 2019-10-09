@@ -100,13 +100,34 @@ def convert_dir_to_bmp(output_dir, input_dir):
         img.save(new_path)
 
         
-def get_quad(angle, translation, scale):
-    quad = np.array([
-    [0.0, 0.0],
-    [0.0, 1.0],
-    [1.0, 1.0],
-    [1.0, 0.0],
-    ])
+def get_quad(angle, translation, scale, aspect_ratio=1.0):
+    if aspect_ratio > 1.0:
+        # width > height =>
+        # increase height region
+        quad = np.array([
+            [0.0, 0.5 - 0.5 * aspect_ratio],
+            [0.0, 0.5 + 0.5 * aspect_ratio],
+            [1.0, 0.5 + 0.5 * aspect_ratio],
+            [1.0, 0.5 - 0.5 * aspect_ratio],
+            
+        ])
+    elif aspect_ratio < 1.0:
+        # width < height
+        quad = np.array([
+            [0.5 - 0.5 / aspect_ratio, 0.0],
+            [0.5 - 0.5 / aspect_ratio, 1.0],
+            [0.5 + 0.5 / aspect_ratio, 1.0],
+            [0.5 + 0.5 / aspect_ratio, 0.0],
+            
+        ])
+    else:
+        quad = np.array([
+            [0.0, 0.0],
+            [0.0, 1.0],
+            [1.0, 1.0],
+            [1.0, 0.0],
+        ])
+        
     quad -= 0.5
 
     R = np.array([
@@ -176,8 +197,10 @@ class CocoDataset(torch.utils.data.Dataset):
                  random_angle=(0.0, 0.0),
                  random_scale=(1.0, 1.0),
                  random_translate=(0.0, 0.0),
-                 transforms=None):
+                 transforms=None,
+                 keep_aspect_ratio=False):
 
+        self.keep_aspect_ratio = keep_aspect_ratio
         self.transforms=transforms
         self.is_bmp = is_bmp
         self.images_dir = images_dir
@@ -308,7 +331,11 @@ class CocoDataset(torch.utils.data.Dataset):
         scale = float(torch.rand(1)) * (self.random_scale[1] - self.random_scale[0]) + self.random_scale[0]
         angle = float(torch.rand(1)) * (self.random_angle[1] - self.random_angle[0]) + self.random_angle[0]
         
-        quad = get_quad(angle, (shiftx, shifty), scale)
+        if self.keep_aspect_ratio:
+            ar = float(image.width) / float(image.height)
+            quad = get_quad(angle, (shiftx, shifty), scale, aspect_ratio=ar)
+        else:
+            quad = get_quad(angle, (shiftx, shifty), scale, aspect_ratio=1.0)
         
         image = transform_image(image, (self.image_shape[1], self.image_shape[0]), quad)
         mask = transform_image(mask, (self.target_shape[1], self.target_shape[0]), quad)
