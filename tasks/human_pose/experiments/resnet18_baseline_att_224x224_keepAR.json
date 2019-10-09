@@ -1,0 +1,73 @@
+{
+    "train_dataset": {
+        "images_dir": "train2017",
+        "annotations_file": "annotations/person_keypoints_train2017_modified.json",
+        "category_name": "person",
+        "image_shape": [224, 224],
+        "target_shape": [56, 56],
+        "stdev": 0.025,
+        "is_bmp": false,
+        "random_angle": [-0.2, 0.2],
+        "random_scale": [0.5, 2.0],
+        "random_translate": [-0.2, 0.2],
+        "keep_aspect_ratio": true
+    },
+    "stdev_schedule": {
+        "0": 0.025
+    },
+    "color_jitter": {
+        "brightness": 0.05,
+        "contrast": 0.05,
+        "saturation": 0.05,
+        "hue": 0.01
+    },
+    "test_dataset": {
+        "images_dir": "val2017",
+        "annotations_file": "annotations/person_keypoints_val2017_modified.json",
+        "category_name": "person",
+        "image_shape": [224, 224],
+        "target_shape": [56, 56],
+        "stdev": 0.025,
+        "is_bmp": false,
+        "random_angle": [-0.0, 0.0],
+        "random_scale": [1.0, 1.0],
+        "random_translate": [-0.0, 0.0],
+        "keep_aspect_ratio": true
+    },
+    "train_loader": {
+        "batch_size": 64,
+        "shuffle": true,
+        "num_workers": 8,
+        "pin_memory": true
+    },
+    "test_loader": {
+        "batch_size": 64,
+        "shuffle": true,
+        "num_workers": 8,
+        "pin_memory": true
+    },
+    "model": {
+        "name": "resnet18_baseline_att",
+        "kwargs": {
+            "cmap_channels": 18,
+            "paf_channels": 42,
+            "upsample_channels": 256,
+            "num_upsample": 3
+        }
+    },
+    "optimizer": {
+        "name": "Adam",
+        "kwargs": {
+            "lr": 1e-3
+        }
+    },
+    "epochs": 250,
+    "lr_schedule": {
+        "0": 0.001,
+        "75": 0.0001,
+        "150": 0.00001
+    },
+    "checkpoints": {
+        "interval": 3
+    }
+}
