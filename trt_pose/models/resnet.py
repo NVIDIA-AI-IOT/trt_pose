@@ -22,77 +22,77 @@ class ResNetBackbone(torch.nn.Module):
         x = self.resnet.layer4(x) # /32
 
         return x
-    
-    
-def _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, feature_channels, num_upsample):
+
+
+def _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, feature_channels, num_upsample, num_flat):
     model = torch.nn.Sequential(
         ResNetBackbone(resnet),
-        CmapPafHead(feature_channels, cmap_channels, paf_channels, upsample_channels, num_upsample=num_upsample)
+        CmapPafHead(feature_channels, cmap_channels, paf_channels, upsample_channels, num_upsample=num_upsample, num_flat=num_flat)
     )
     return model
     
     
-def resnet18_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet18_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet18(pretrained=pretrained)
-    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 512, num_upsample)
+    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 512, num_upsample, num_flat)
 
 
-def resnet34_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet34_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet34(pretrained=pretrained)
-    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 512, num_upsample)
+    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 512, num_upsample, num_flat)
 
 
-def resnet50_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet50_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet50(pretrained=pretrained)
-    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample)
+    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample, num_flat)
 
 
-def resnet101_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet101_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet101(pretrained=pretrained)
-    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample)
+    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample, num_flat)
 
 
-def resnet152_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet152_baseline(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet152(pretrained=pretrained)
-    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample)
+    return _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample, num_flat)
 
 
-def _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, feature_channels, num_upsample):
+def _resnet_pose(cmap_channels, paf_channels, upsample_channels, resnet, feature_channels, num_upsample, num_flat):
     model = torch.nn.Sequential(
         ResNetBackbone(resnet),
-        CmapPafHead(feature_channels, cmap_channels, paf_channels, upsample_channels, num_upsample=num_upsample)
+        CmapPafHead(feature_channels, cmap_channels, paf_channels, upsample_channels, num_upsample=num_upsample, num_flat=num_flat)
     )
     return model
   
     
-def _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, feature_channels, num_upsample):
+def _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, feature_channels, num_upsample, num_flat):
     model = torch.nn.Sequential(
         ResNetBackbone(resnet),
-        CmapPafHeadAttention(feature_channels, cmap_channels, paf_channels, upsample_channels, num_upsample=num_upsample)
+        CmapPafHeadAttention(feature_channels, cmap_channels, paf_channels, upsample_channels, num_upsample=num_upsample, num_flat=num_flat)
     )
     return model
 
     
-def resnet18_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet18_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet18(pretrained=pretrained)
-    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 512, num_upsample)
+    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 512, num_upsample, num_flat)
 
 
-def resnet34_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet34_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet34(pretrained=pretrained)
-    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 512, num_upsample)
+    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 512, num_upsample, num_flat)
 
 
-def resnet50_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet50_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet50(pretrained=pretrained)
-    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample)
+    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample, num_flat)
 
 
-def resnet101_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet101_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet101(pretrained=pretrained)
-    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample)
+    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample, num_flat)
 
 
-def resnet152_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3):
+def resnet152_baseline_att(cmap_channels, paf_channels, upsample_channels=256, pretrained=True, num_upsample=3, num_flat=0):
     resnet = torchvision.models.resnet152(pretrained=pretrained)
-    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample)
+    return _resnet_pose_att(cmap_channels, paf_channels, upsample_channels, resnet, 2048, num_upsample, num_flat)
