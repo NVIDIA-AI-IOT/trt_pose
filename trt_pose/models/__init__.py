@@ -1,6 +1,6 @@
 from .resnet import *
 from .densenet import *
-from .dla import *
+# from .dla import *
 
 MODELS = {
     'resnet18_baseline': resnet18_baseline,
@@ -21,8 +21,8 @@ MODELS = {
     'densenet169_baseline_att': densenet169_baseline_att,
     'densenet201_baseline_att': densenet201_baseline_att,
     'densenet161_baseline_att': densenet161_baseline_att,
-    'dla34up_pose': dla34up_pose,
-    'dla60up_pose': dla60up_pose,
-    'dla102up_pose': dla102up_pose,
-    'dla169up_pose': dla169up_pose,
+#     'dla34up_pose': dla34up_pose,
+#     'dla60up_pose': dla60up_pose,
+#     'dla102up_pose': dla102up_pose,
+#     'dla169up_pose': dla169up_pose,
 }
