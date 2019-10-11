@@ -11,7 +11,10 @@ import glob
 import torchvision.transforms.functional as FT
 import numpy as np
 from trt_pose.parse_objects import ParseObjects
-
+import pycocotools
+import pycocotools.coco
+import pycocotools.cocoeval
+import torchvision
 
 
         
@@ -375,9 +378,6 @@ class CocoDataset(torch.utils.data.Dataset):
 class CocoHumanPoseEval(object):
     
     def __init__(self, images_dir, annotation_file, image_shape, keep_aspect_ratio=False):
-        import pycocotools.coco
-        import pycocotools.cocoeval
-        import torchvision
         
         self.images_dir = images_dir
         self.annotation_file = annotation_file
@@ -464,6 +464,9 @@ class CocoHumanPoseEval(object):
                 print('%d / %d' % (n, len(self.imgIds)))
 
 
+        if len(results) == 0:
+            return
+        
         with open('trt_pose_results.json', 'w') as f:
             json.dump(results, f)
             
