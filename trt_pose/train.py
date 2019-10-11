@@ -10,7 +10,7 @@ import time
 import json
 import pprint
 import torch.nn.functional as F
-from .coco import CocoDataset
+from .coco import CocoDataset, CocoHumanPoseEval
 from .models import MODELS
 
 OPTIMIZERS = {
@@ -75,6 +75,8 @@ if __name__ == '__main__':
             torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
     
+    evaluator = CocoHumanPoseEval(**config['evaluation'])
+    
     train_dataset = CocoDataset(**train_dataset_kwargs)
     test_dataset = CocoDataset(**test_dataset_kwargs)
     
@@ -126,7 +128,7 @@ if __name__ == '__main__':
         
         if epoch % config['checkpoints']['interval'] == 0:
             save_checkpoint(model, checkpoint_dir, epoch)
-            
+        
            
         
         train_loss = 0.0
@@ -183,3 +185,6 @@ if __name__ == '__main__':
         test_loss /= len(test_loader)
         
         write_log_entry(logfile_path, epoch, train_loss, test_loss)
+        
+        
+        evaluator.evaluate(model, train_dataset.topology)
