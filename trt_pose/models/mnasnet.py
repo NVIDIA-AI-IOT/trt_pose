@@ -5,12 +5,12 @@ from .common import *
 
 class MnasnetBackbone(torch.nn.Module):
     
-    def __init__(self, densenet):
+    def __init__(self, backbone):
         super(MnasnetBackbone, self).__init__()
-        self.mnasnet = mnasnet
+        self.backbone = backbone
     
     def forward(self, x):
-        x = self.mnasnet.layers(x)
+        x = self.backbone.layers(x)
         return x
     
     
