@@ -1,5 +1,6 @@
 from .resnet import *
 from .densenet import *
+from .mnasnet import *
 # from .dla import *
 
 MODELS = {
@@ -25,4 +26,8 @@ MODELS = {
 #     'dla60up_pose': dla60up_pose,
 #     'dla102up_pose': dla102up_pose,
 #     'dla169up_pose': dla169up_pose,
+    'mnasnet0_5_baseline_att': mnasnet0_5_baseline_att,
+    'mnasnet0_75_baseline_att': mnasnet0_75_baseline_att,
+    'mnasnet1_0_baseline_att': mnasnet1_0_baseline_att,
+    'mnasnet1_3_baseline_att': mnasnet1_3_baseline_att,
 }
