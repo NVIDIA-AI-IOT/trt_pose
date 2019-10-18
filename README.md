@@ -13,7 +13,11 @@ If you run into any issues please [let us know](../../issues).
 
 ## Setup
 
+Assuming you have PyTorch and TensorRT installed on your system
+
 ```bash
+sudo pip3 install tqdm cython pycocotools
+sudo apt-get install python3-matplotlib
 git clone https://github.com/NVIDIA-AI-IOT/trt_pose
 cd trt_pose
 sudo python3 setup.py install
