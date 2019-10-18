@@ -13,7 +13,7 @@ If you run into any issues please [let us know](../../issues).
 
 ## Setup
 
-Assuming you have PyTorch and TensorRT installed on your system
+Assuming you have PyTorch, TensorRT and torchvision installed on your system
 
 ```bash
 sudo pip3 install tqdm cython pycocotools
