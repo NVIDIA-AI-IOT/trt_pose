@@ -10,14 +10,15 @@ This project can be used easily for the task of human pose estimation, or extend
 
 If you run into any issues please [let us know](../../issues).
 
+## Tasks
 
-## Human pose estimation
+### Human pose estimation
 
 <img src="https://user-images.githubusercontent.com/4212806/67125332-71a64580-f1a9-11e9-8ee1-e759a38de215.gif" height=256/>
 
 This task involves detecting human body pose using models trained on the MSCOCO dataset. 
 
-### Models
+#### Models
 
 Below are models pre-trained on the MSCOCO dataset.  The throughput in FPS is shown for each platform
 
@@ -32,7 +33,7 @@ Below are models pre-trained on the MSCOCO dataset.  The throughput in FPS is sh
 | densenet121_baseline_att_320x320_A |  |  | [download (84MB)](https://drive.google.com/open?id=1SX-LWAfYNdcNKb42b31UmZwsjXmB3a9l) |
 -->
 
-### Live demo
+#### Live demo
 
 To run the live Jupyter Notebook demo on real-time camera input, follow these steps
  
