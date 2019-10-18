@@ -15,17 +15,19 @@ If you run into any issues please [let us know](../../issues).
 
 <img src="https://user-images.githubusercontent.com/4212806/67125332-71a64580-f1a9-11e9-8ee1-e759a38de215.gif" height=256/>
 
-This task involves detecting human body pose using models trained on the MSCOCO dataset.  To get started, 
+This task involves detecting human body pose using models trained on the MSCOCO dataset. 
 
-### Live Demo
+### Live demo
 
+To run the live Jupyter Notebook demo on real-time camera input, follow these steps
+ 
 1. Place the downloaded weights in the [tasks/human_pose](tasks/human_pose) directory
 
 2. Open and follow the [live_demo.ipynb](tasks/human_pose/live_demo.ipynb) notebook
 
     > You may need to modify the notebook, depending on which model you use
 
-### Pre-trained Models
+### Models
 
 | Model | Jetson Nano | Jetson Xavier | Weights |
 |-------|-------------|---------------|---------|
