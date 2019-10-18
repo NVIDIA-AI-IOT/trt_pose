@@ -17,11 +17,15 @@ If you run into any issues please [let us know](../../issues).
 
 This task involves detecting human body pose using models trained on the MSCOCO dataset.  To get started, 
 
+### Live Demo
+
 1. Place the downloaded weights in the [tasks/human_pose](tasks/human_pose) directory
 
 2. Open and follow the [live_demo.ipynb](tasks/human_pose/live_demo.ipynb) notebook
 
     > You may need to modify the notebook, depending on which model you use
+
+### Pre-trained Models
 
 | Model | Jetson Nano | Jetson Xavier | Weights |
 |-------|-------------|---------------|---------|
