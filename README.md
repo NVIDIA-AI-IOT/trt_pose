@@ -17,9 +17,13 @@ If you run into any issues please [let us know](../../issues).
 
 <img src="https://user-images.githubusercontent.com/4212806/67125332-71a64580-f1a9-11e9-8ee1-e759a38de215.gif" height=256/>
 
-This task involves detecting human body pose using models trained on the MSCOCO dataset.  To get started, select one of the models below and follow the [live_demo.ipynb](tasks/human_pose/live_demo.ipynb) notebook to visualize the results on a live camera feed.  Place the downloaded weights in the [tasks/human_pose](tasks/human_pose) directory, and modify the notebook accordingly.
+This task involves detecting human body pose using models trained on the MSCOCO dataset.  To get started, 
 
-> More than 20FPS on Jetson Nano.  Concrete benchmarks coming soon :)
+1. Place the downloaded weights in the [tasks/human_pose](tasks/human_pose) directory
+
+2. Open and follow the [live_demo.ipynb](tasks/human_pose/live_demo.ipynb) notebook
+
+    > You may need to modify the notebook, depending on which model you use
 
 | Model | Jetson Nano | Jetson Xavier | Weights |
 |-------|-------------|---------------|---------|
