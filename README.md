@@ -19,6 +19,8 @@ This task involves detecting human body pose using models trained on the MSCOCO 
 
 ### Models
 
+Below are models pre-trained on the MSCOCO dataset.  The throughput in FPS is shown for each platform
+
 | Model | Jetson Nano | Jetson Xavier | Weights |
 |-------|-------------|---------------|---------|
 | resnet18_baseline_att_224x224_A | 22 | 251 | [download (81MB)](https://drive.google.com/open?id=1XYDdCUdiF2xxx4rznmLb62SdOUZuoNbd) |
