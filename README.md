@@ -24,7 +24,7 @@ Below are models pre-trained on the MSCOCO dataset.  The throughput in FPS is sh
 | Model | Jetson Nano | Jetson Xavier | Weights |
 |-------|-------------|---------------|---------|
 | resnet18_baseline_att_224x224_A | 22 | 251 | [download (81MB)](https://drive.google.com/open?id=1XYDdCUdiF2xxx4rznmLb62SdOUZuoNbd) |
-| densenet121_baseline_att_256x256_B |  | 101 | [download (84MB)](https://drive.google.com/open?id=13FkJkx7evQ1WwP54UmdiDXWyFMY1OxDU) |
+| densenet121_baseline_att_256x256_B | 12 | 101 | [download (84MB)](https://drive.google.com/open?id=13FkJkx7evQ1WwP54UmdiDXWyFMY1OxDU) |
 <!--
 | resnet50_baseline_att_256x256_A |  |  | [download (182MB)](https://drive.google.com/open?id=1eLgzGsh1yjuLG66r9BFmoOzp3nTdVHS2) |
 | resnet50_baseline_att_384x384_A |  |  | [download (182MB)](https://drive.google.com/open?id=1ck66N0Lqxqcg-7OImh_5YNwvnrb9yHym) |
