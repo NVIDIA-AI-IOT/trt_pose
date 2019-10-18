@@ -45,7 +45,9 @@ To run the live Jupyter Notebook demo on real-time camera input, follow these st
 
 ## Setup
 
-Assuming you have PyTorch, TensorRT and torchvision installed on your system
+To install trt_pose, call this command
+
+> We assume you have already installed PyTorch, torchvision, and TensorRT
 
 ```bash
 sudo pip3 install tqdm cython pycocotools
