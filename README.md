@@ -11,9 +11,7 @@ This project can be used easily for the task of human pose estimation, or extend
 If you run into any issues please [let us know](../../issues).
 
 
-## Tasks
-
-### Human Pose
+## Human Pose
 
 <img src="https://user-images.githubusercontent.com/4212806/67125332-71a64580-f1a9-11e9-8ee1-e759a38de215.gif" height=256/>
 
