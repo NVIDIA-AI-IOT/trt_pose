@@ -17,16 +17,6 @@ If you run into any issues please [let us know](../../issues).
 
 This task involves detecting human body pose using models trained on the MSCOCO dataset. 
 
-### Live demo
-
-To run the live Jupyter Notebook demo on real-time camera input, follow these steps
- 
-1. Place the downloaded weights in the [tasks/human_pose](tasks/human_pose) directory
-
-2. Open and follow the [live_demo.ipynb](tasks/human_pose/live_demo.ipynb) notebook
-
-    > You may need to modify the notebook, depending on which model you use
-
 ### Models
 
 | Model | Jetson Nano | Jetson Xavier | Weights |
@@ -40,6 +30,15 @@ To run the live Jupyter Notebook demo on real-time camera input, follow these st
 | densenet121_baseline_att_320x320_A |  |  | [download (84MB)](https://drive.google.com/open?id=1SX-LWAfYNdcNKb42b31UmZwsjXmB3a9l) |
 -->
 
+### Live demo
+
+To run the live Jupyter Notebook demo on real-time camera input, follow these steps
+ 
+1. Place the downloaded weights in the [tasks/human_pose](tasks/human_pose) directory
+
+2. Open and follow the [live_demo.ipynb](tasks/human_pose/live_demo.ipynb) notebook
+
+    > You may need to modify the notebook, depending on which model you use
 
 ## Setup
 
