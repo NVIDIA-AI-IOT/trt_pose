@@ -1,2 +1,0 @@
-Sarthak Garg 
-Mayur Nehete
