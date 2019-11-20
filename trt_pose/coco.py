@@ -350,10 +350,10 @@ class CocoDataset(torch.utils.data.Dataset):
         counts = counts[None, ...]
         peaks = peaks[None, ...]
 
-        stdev = int(self.stdev * self.target_shape[0])
+        stdev = float(self.stdev * self.target_shape[0])
 
         cmap = trt_pose.plugins.generate_cmap(counts, peaks,
-            self.target_shape[0], self.target_shape[1], stdev, stdev * 5)
+            self.target_shape[0], self.target_shape[1], stdev, int(stdev * 5))
 
         paf = trt_pose.plugins.generate_paf(
             self.connections[idx][None, ...], self.topology,

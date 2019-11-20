@@ -75,7 +75,8 @@ if __name__ == '__main__':
             torchvision.transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
     
-    evaluator = CocoHumanPoseEval(**config['evaluation'])
+    if 'evaluation' in config:
+        evaluator = CocoHumanPoseEval(**config['evaluation'])
     
     train_dataset = CocoDataset(**train_dataset_kwargs)
     test_dataset = CocoDataset(**test_dataset_kwargs)
@@ -187,4 +188,5 @@ if __name__ == '__main__':
         write_log_entry(logfile_path, epoch, train_loss, test_loss)
         
         
-        evaluator.evaluate(model, train_dataset.topology)
+        if 'evaluation' in config:
+            evaluator.evaluate(model, train_dataset.topology)
