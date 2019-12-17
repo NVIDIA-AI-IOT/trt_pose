@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 
 
 class UpsampleCBR(torch.nn.Sequential):
@@ -76,3 +77,34 @@ class CmapPafHeadAttention(torch.nn.Module):
         return self.cmap_conv(xc * ac), self.paf_conv(xp * ap)
     
     
+class BlockUp(nn.Module):
+    def __init__(self, num_inputs, num_outputs, kernel_size=3, stride=1, groups=1, activation=nn.ReLU(), upsample=False):
+        super().__init__()
+        layers = [
+            nn.ConvTranspose2d(num_inputs, num_outputs, kernel_size=4, stride=2, padding=1, bias=False, groups=1),
+            nn.BatchNorm2d(num_outputs),
+            nn.ReLU()
+        ]
+        self.layers = nn.Sequential(*layers)
+        
+        
+    def forward(self, x):
+        return self.layers(x)
+    
+    
+class Block(nn.Module):
+    def __init__(self, num_inputs, num_outputs, kernel_size=3, stride=1, groups=1, activation=nn.ReLU(), upsample=False):
+        super().__init__()
+        layers = [
+            nn.Conv2d(num_inputs, num_outputs, kernel_size=kernel_size, stride=stride, padding=kernel_size//2, bias=False, groups=groups),
+            nn.BatchNorm2d(num_outputs),
+            activation
+        ]
+        
+        if upsample:
+            layers += [nn.UpsamplingBilinear2d(scale_factor=2)]
+        
+        self.layers = nn.Sequential(*layers)
+        
+    def forward(self, x):
+        return self.layers(x)

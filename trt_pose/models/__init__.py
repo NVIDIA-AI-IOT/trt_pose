@@ -14,6 +14,7 @@ MODELS = {
     'resnet50_baseline_att': resnet50_baseline_att,
     'resnet101_baseline_att': resnet101_baseline_att,
     'resnet152_baseline_att': resnet152_baseline_att,
+    'resnet18_custom_v0': resnet18_custom_v0,
     'densenet121_baseline': densenet121_baseline,
     'densenet169_baseline': densenet169_baseline,
     'densenet201_baseline': densenet201_baseline,
