@@ -1,5 +1,26 @@
 import torch
+import torch.nn as nn
 
+
+
+class CBR(nn.Sequential):
+    
+    def __init__(self, num_inputs, num_outputs, kernel_size=3, stride=1, groups=1, bn=True, act=nn.ReLU()):
+        super(CBR, self).__init__()
+        self.add_module('conv', nn.Conv2d(num_inputs, num_outputs, kernel_size=kernel_size, stride=stride, padding=kernel_size//2, groups=groups))
+        if bn:
+            self.add_module('bn', nn.BatchNorm2d(num_outputs))
+        self.add_module('act', act)
+        
+        
+class GlobalAttention(nn.Sequential):
+    
+    def __init__(self, num_inputs, num_outputs, act=nn.Tanh()):
+        super(GlobalAttention, self).__init__()
+        self.add_module('pool', nn.AdaptiveAvgPool2d((1, 1)))
+        self.add_module('conv1', CBR(num_inputs, num_outputs, kernel_size=1, bn=False))
+        self.add_module('conv2', CBR(num_outputs, num_outputs, kernel_size=1, bn=False, act=act))
+        
 
 class UpsampleCBR(torch.nn.Sequential):
     def __init__(self, input_channels, output_channels, count=1, num_flat=0):
