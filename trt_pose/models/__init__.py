@@ -4,6 +4,7 @@ from .mnasnet import *
 # from .dla import *
 
 MODELS = {
+    'resnet18_multiscale_stride8': resnet18_multiscale_stride8,
     'resnet18_baseline': resnet18_baseline,
     'resnet34_baseline': resnet34_baseline,
     'resnet50_baseline': resnet50_baseline,

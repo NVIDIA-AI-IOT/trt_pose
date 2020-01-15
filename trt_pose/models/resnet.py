@@ -101,8 +101,11 @@ def resnet152_baseline_att(cmap_channels, paf_channels, upsample_channels=256, p
 
 class ResNet18MultiscaleStride8(nn.Module):
     
-    def __init__(self, num_cmap, num_paf, stride=8, num_expansion_channels=1024, num_mix_channels=128, num_mix_layers=1, pretrained_backbone=True):
+    def __init__(self, cmap_channels, paf_channels, stride=8, num_expansion_channels=1024, num_mix_channels=128, num_mix_layers=1, pretrained_backbone=True):
         super(ResNet18MultiscaleStride8, self).__init__()
+        
+        num_cmap = cmap_channels
+        num_paf = paf_channels
         
         self.backbone = torchvision.models.resnet18(pretrained=pretrained_backbone)
         
@@ -146,7 +149,7 @@ class ResNet18MultiscaleStride8(nn.Module):
         att = self.att4(x4) * self.att3(x3)
         
         x = torch.cat([self.up4(x4), self.up3(x3), x2], dim=1)
-        x = self.mix(x)
+        x = self.mix(x) * att
         
         cmap = self.cmap(x)
         paf = self.paf(x)
