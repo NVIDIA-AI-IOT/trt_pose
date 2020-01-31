@@ -114,16 +114,24 @@ class ResNet18MultiscaleStride8(nn.Module):
             nn.UpsamplingNearest2d(scale_factor=2),
             CBR(256, 128),
             nn.UpsamplingNearest2d(scale_factor=2),
+            CBR(128, 128),
+            nn.UpsamplingNearest2d(scale_factor=2),
         )
         self.up3 = nn.Sequential(
             CBR(256, 128),
+            nn.UpsamplingNearest2d(scale_factor=2),
+            CBR(128, 128),
+            nn.UpsamplingNearest2d(scale_factor=2),
+        )
+        self.up2 = nn.Sequential(
+            CBR(128, 128),
             nn.UpsamplingNearest2d(scale_factor=2),
         )
         self.att4 = GlobalAttention(512, 1024, act=nn.Tanh())
         self.att3 = GlobalAttention(256, 1024, act=nn.Tanh())
         
         mix = []
-        mix += [ CBR(128*3, num_mix_channels, kernel_size=1) ]
+        mix += [ CBR(128*3 + 64, num_mix_channels, kernel_size=1) ]
         for i in range(num_mix_layers):
             mix += [ torchvision.models.resnet.BasicBlock(num_mix_channels, num_mix_channels) ]
         mix += [ CBR(num_mix_channels, num_expansion_channels)]
@@ -148,7 +156,7 @@ class ResNet18MultiscaleStride8(nn.Module):
         
         att = self.att4(x4) * self.att3(x3)
         
-        x = torch.cat([self.up4(x4), self.up3(x3), x2], dim=1)
+        x = torch.cat([self.up4(x4), self.up3(x3), self.up2(x2), x1], dim=1)
         x = self.mix(x) * att
         
         cmap = self.cmap(x)
