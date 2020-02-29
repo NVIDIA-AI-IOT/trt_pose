@@ -53,13 +53,48 @@ std::vector<torch::Tensor> find_peaks_torch(torch::Tensor input,
   return {counts, peaks};
 }
 
+void refine_peaks_out_torch(torch::Tensor refined_peaks, torch::Tensor counts, torch::Tensor peaks, torch::Tensor cmap, int window_size)
+{
+  const int N = cmap.size(0);
+  const int C = cmap.size(1);
+  const int H = cmap.size(2);
+  const int W = cmap.size(3);
+  const int M = peaks.size(2);
+
+  refine_peaks_out_nchw(
+      (float *) refined_peaks.data_ptr(),
+      (const int*) counts.data_ptr(),
+      (const int*) peaks.data_ptr(),
+      (const float*) cmap.data_ptr(),
+      N,
+      C,
+      H,
+      W,
+      M,
+      window_size
+    );
+}
+
+torch::Tensor refine_peaks_torch(torch::Tensor counts, torch::Tensor peaks, torch::Tensor cmap, int window_size)
+{
+  auto options = torch::TensorOptions()
+      .dtype(torch::kFloat32)
+      .layout(torch::kStrided)
+      .device(torch::kCPU)
+      .requires_grad(false);
+    
+    auto refined_peaks = torch::zeros({peaks.size(0), peaks.size(1), peaks.size(2), peaks.size(3)}, options);
+    refine_peaks_out_torch(refined_peaks, counts, peaks, cmap, window_size);
+    return refined_peaks;
+}
+
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("find_peaks", &find_peaks_torch, "find_peaks");
   m.def("find_peaks_out", &find_peaks_out_torch, "find_peaks_out");
   m.def("paf_score_graph", &paf_score_graph, "paf_score_graph");
   m.def("paf_score_graph_out", &paf_score_graph_out, "paf_score_graph_out");
-  m.def("refine_peaks", &refine_peaks, "refine_peaks");
-  m.def("refine_peaks_out", &refine_peaks_out, "refine_peaks_out");
+  m.def("refine_peaks", &refine_peaks_torch, "refine_peaks");
+  m.def("refine_peaks_out", &refine_peaks_out_torch, "refine_peaks_out");
   m.def("munkres", &munkres, "munkres");
   m.def("connect_parts", &connect_parts, "connect_parts");
   m.def("assignment", &assignment, "assignment");
