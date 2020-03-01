@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include "paf_score_graph.hpp"
 #include "find_peaks.hpp"
 #include "refine_peaks.hpp"
 
@@ -67,12 +68,64 @@ void test_refined_peaks_out_hw()
   if (ABS(refined_peaks[1] - j_true) > tolerance) {
     throw std::runtime_error("j coordinate incorrect");
   }
+}
 
+void test_paf_score_graph_hw()
+{
+  const int M = 2;
+  const int H = 4;
+  const int W = 4;
+  const int counts_a = 2;
+  const int counts_b = 2;
+  const int num_integral_samples = 3;
+
+  float score_graph[M * M];
+
+  // test points
+  //
+  // _ _ _ b
+  // _ _ _ |
+  // a - b |
+  // _ _ _ a
+  
+  const float paf_i[H * W] = {
+    0., 0., 0., -1.,
+    0., 0., 0., -1.,
+    0., 0., 0., -1.,
+    0., 0., 0., -1.
+  };
+  const float paf_j[H * W] = {
+    0., 0., 0., 0.,
+    0., 0., 0., 0.,
+    1., 1., 1., 0.,
+    0., 0., 0., 0.
+  };
+  const float peaks_a[M * 2] = {
+    0.625, 0.125, // mid-left
+    0.875, 0.875  // bot-right
+  };
+  const float peaks_b[M * 2] = {
+    0.625, 0.625, // mid-mid
+    0.125, 0.875  // top-right
+  };
+  
+  paf_score_graph_out_hw(
+      score_graph,
+      paf_i,
+      paf_j,
+      counts_a,
+      counts_b,
+      peaks_a,
+      peaks_b,
+      H, W, M,
+      num_integral_samples
+      );
 }
 
 int main()
 {
   test_find_peaks_out_hw();
   test_refined_peaks_out_hw();
+  test_paf_score_graph_hw();
   return 0;
 }
