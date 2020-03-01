@@ -1,12 +1,24 @@
-#include <torch/extension.h>
-#include <vector>
-#include "utils/PairGraph.hpp"
+#pragma once
 
+#include <cstring>
 
-void _munkres(torch::TensorAccessor<float, 2> cost_graph, PairGraph &star_graph, int nrows, int ncols);
-void munkres_out(torch::Tensor cost_graph_out, torch::Tensor cost_graph, torch::Tensor topology, torch::Tensor counts);
-torch::Tensor munkres(torch::Tensor cost_graph, torch::Tensor topology, torch::Tensor counts);
+std::size_t assignment_out_workspace(const int M);
 
-// assignment NxKx2xM
-void assignment_out(torch::Tensor connections, torch::Tensor score_graph, torch::Tensor topology, torch::Tensor counts, float score_threshold);
-torch::Tensor assignment(torch::Tensor score_graph, torch::Tensor topology, torch::Tensor counts, float score_threshold);
+void assignment_out(int *connections,         // 2xM
+                    const float *score_graph, // MxM
+                    const int count_a, const int count_b, const int M,
+                    const float score_threshold, void *workspace);
+
+void assignement_out_k(int *connections,         // Kx2xM
+                       const int *topology,      // Kx4
+                       const float *score_graph, // KxMxM
+                       const int *counts,        // C
+                       const int K, const int M, const float score_threshold,
+                       void *workspace);
+
+void assignement_out_nk(int *connections,         // NxKx2xM
+                        const int *topology,      // Kx4
+                        const float *score_graph, // NxKxMxM
+                        const int *counts,        // NxC
+                        const int N, const int C, const int K, const int M,
+                        const float score_threshold, void *workspace);

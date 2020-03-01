@@ -2,6 +2,7 @@
 #include "paf_score_graph.hpp"
 #include "find_peaks.hpp"
 #include "refine_peaks.hpp"
+#include "munkres.hpp"
 
 #define ABS(x) ((x) > 0 ? (x) : (-x))
 
@@ -122,10 +123,45 @@ void test_paf_score_graph_hw()
       );
 }
 
+void test_assignment_out()
+{
+  const int M = 4;
+  const int count_a = 3;
+  const int count_b = 3;
+  const float score_threshold = 0.3;
+  
+  std::size_t workspace_size = assignment_out_workspace(M);
+  void *workspace = (void *) malloc(workspace_size);
+
+  int connections[2 * M];
+  const float score_graph[M * M] = {
+    1., 3., 0., 0.,
+    1., 2., 1., 0.,
+    4., 3., 4., 0.,
+    0., 0., 0., 0.,
+  };
+
+  assignment_out(connections, score_graph, count_a, count_b, M, score_threshold, workspace);
+
+  if (connections[0] != 1) {
+    throw std::runtime_error("connections[0] should be 1.");
+  }
+  if (connections[1] != 0) {
+    throw std::runtime_error("connections[0] should be 1.");
+  }
+  if (connections[2] != 2) {
+    throw std::runtime_error("connections[0] should be 1.");
+  }
+
+  free(workspace);
+}
+
+
 int main()
 {
   test_find_peaks_out_hw();
   test_refined_peaks_out_hw();
   test_paf_score_graph_hw();
+  test_assignment_out();
   return 0;
 }
