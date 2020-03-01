@@ -82,17 +82,53 @@ torch::Tensor refine_peaks_torch(torch::Tensor counts, torch::Tensor peaks,
   return refined_peaks;
 }
 
+void paf_score_graph_out_torch(torch::Tensor score_graph, torch::Tensor paf, torch::Tensor topology, torch::Tensor counts, torch::Tensor peaks, const int num_integral_samples)
+{
+  const int N = paf.size(0);
+  const int K = topology.size(0);
+  const int C = peaks.size(1);
+  const int H = paf.size(2);
+  const int W = paf.size(3);
+  const int M = score_graph.size(3);
+
+  paf_score_graph_out_nkhw(
+      (float*) score_graph.data_ptr(),
+      (const int*) topology.data_ptr(),
+      (const float*) paf.data_ptr(),
+      (const int*) counts.data_ptr(),
+      (const float *) peaks.data_ptr(),
+      N, K, C, H, W, M,
+      num_integral_samples
+      );
+}
+
+torch::Tensor paf_score_graph_torch(torch::Tensor paf, torch::Tensor topology, torch::Tensor counts, torch::Tensor peaks, const int num_integral_samples)
+{
+    auto options = torch::TensorOptions()
+        .dtype(torch::kFloat32)
+        .layout(torch::kStrided)
+        .device(torch::kCPU)
+        .requires_grad(false);
+    const int N = peaks.size(0);
+    const int K = topology.size(0);
+    const int M = peaks.size(2);
+
+    torch::Tensor score_graph = torch::zeros({N, K, M, M}, options);
+    paf_score_graph_out_torch(score_graph, paf, topology, counts, peaks, num_integral_samples);
+    return score_graph;
+}
+
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("find_peaks", &find_peaks_torch, "find_peaks");
   m.def("find_peaks_out", &find_peaks_out_torch, "find_peaks_out");
-  m.def("paf_score_graph", &paf_score_graph, "paf_score_graph");
-  m.def("paf_score_graph_out", &paf_score_graph_out, "paf_score_graph_out");
+  m.def("paf_score_graph", &paf_score_graph_torch, "paf_score_graph");
+  m.def("paf_score_graph_out", &paf_score_graph_out_torch, "paf_score_graph_out");
   m.def("refine_peaks", &refine_peaks_torch, "refine_peaks");
   m.def("refine_peaks_out", &refine_peaks_out_torch, "refine_peaks_out");
-  m.def("munkres", &munkres, "munkres");
+  //m.def("munkres", &munkres, "munkres");
   m.def("connect_parts", &connect_parts, "connect_parts");
-  m.def("assignment", &assignment, "assignment");
-  m.def("assignment_out", &assignment_out, "assignment_out");
+  //m.def("assignment", &assignment, "assignment");
+  //m.def("assignment_out", &assignment_out, "assignment_out");
   m.def("generate_cmap", &generate_cmap, "generate_cmap");
   m.def("generate_paf", &generate_paf, "generate_paf");
 }
