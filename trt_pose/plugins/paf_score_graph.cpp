@@ -4,13 +4,13 @@
 #define EPS 1e-5
 
 void paf_score_graph_out_hw(float *score_graph, // MxM
-                        const float *paf_i, // HxW
-                        const float *paf_j, // HxW
-                        const int counts_a, const int counts_b,
-                        const float *peaks_a, // Mx2
-                        const float *peaks_b, // Mx2
-                        const int H, const int W, const int M,
-                        const int num_integral_samples) {
+                            const float *paf_i, // HxW
+                            const float *paf_j, // HxW
+                            const int counts_a, const int counts_b,
+                            const float *peaks_a, // Mx2
+                            const float *peaks_b, // Mx2
+                            const int H, const int W, const int M,
+                            const int num_integral_samples) {
   for (int a = 0; a < counts_a; a++) {
     // compute point A
     float pa_i = peaks_a[a * 2] * H;
@@ -70,5 +70,48 @@ void paf_score_graph_out_hw(float *score_graph, // MxM
       integral /= num_integral_samples;
       score_graph[a * M + b] = integral;
     }
+  }
+}
+
+void paf_score_graph_out_khw(float *score_graph,  // KxMxM
+                             const int *topology, // Kx4
+                             const float *paf,    // 2KxHxW
+                             const int *counts,   // C
+                             const float *peaks,  // CxMx2
+                             const int K, const int C, const int H, const int W,
+                             const int M, const int num_integral_samples) {
+  for (int k = 0; k < K; k++) {
+    float *score_graph_k = &score_graph[k * M * M];
+    const int *tk = &topology[k * 4];
+    const int paf_i_idx = tk[0];
+    const int paf_j_idx = tk[1];
+    const int cmap_a_idx = tk[2];
+    const int cmap_b_idx = tk[3];
+    const float *paf_i = &paf[paf_i_idx * H * W];
+    const float *paf_j = &paf[paf_j_idx * H * W];
+
+    const int counts_a = counts[cmap_a_idx];
+    const int counts_b = counts[cmap_b_idx];
+    const float *peaks_a = &peaks[cmap_a_idx * M * 2];
+    const float *peaks_b = &peaks[cmap_b_idx * M * 2];
+
+    paf_score_graph_out_hw(score_graph_k, paf_i, paf_j, counts_a, counts_b,
+                           peaks_a, peaks_b, H, W, M, num_integral_samples);
+  }
+}
+
+void paf_score_graph_out_nkhw(float *score_graph,  // NxKxMxM
+                              const int *topology, // Kx4
+                              const float *paf,    // Nx2KxHxW
+                              const int *counts,   // NxC
+                              const float *peaks,  // NxCxMx2
+                              const int N, const int K, const int C,
+                              const int H, const int W, const int M,
+                              const int num_integral_samples) {
+  for (int n = 0; n < N; n++) {
+    paf_score_graph_out_khw(&score_graph[n * K * M * M], topology,
+                            &paf[n * 2 * K * H * W], &counts[n * C],
+                            &peaks[n * C * M * 2], K, C, H, W, M,
+                            num_integral_samples);
   }
 }
