@@ -1,3 +1,16 @@
+## TODO
+
+- [x] find_peaks plain cpp
+- [x] find_peaks torch binding
+- [x] refine_peaks plain cpp
+- [x] refine_peaks torch binding
+- [x] paf_score_graph plain cpp
+- [ ] paf_score_graph torch binding
+- [x] munkres plain cpp
+- [ ] munkres torch binding
+- [ ] connect parts plain cpp
+- [ ] connect parts torch binding
+
 ## Terminology
 
 * ``N`` - int - Batch size
