@@ -8,8 +8,9 @@
 - [x] paf_score_graph torch binding
 - [x] munkres plain cpp
 - [x] munkres torch binding
-- [ ] connect parts plain cpp
-- [ ] connect parts torch binding
+- [x] connect parts plain cpp
+- [x] connect parts torch binding
+- [ ] test full refactored pipeline
 
 ## Terminology
 

@@ -31,12 +31,11 @@ void paf_score_graph_out_hw(float *score_graph, // MxM
       float uab_j = pab_j / pab_norm;
 
       float integral = 0.;
-      float progress = 0.;
       float increment = 1.f / num_integral_samples;
 
       for (int t = 0; t < num_integral_samples; t++) {
         // compute integral point T
-        float progress = (float)t / (float)num_integral_samples;
+        float progress = (float)t / ((float)num_integral_samples - 1);
         float pt_i = pa_i + progress * pab_i;
         float pt_j = pa_j + progress * pab_j;
 
@@ -64,7 +63,6 @@ void paf_score_graph_out_hw(float *score_graph, // MxM
         // point
         float dot = pt_paf_i * uab_i + pt_paf_j * uab_j;
         integral += dot;
-        progress += increment;
       }
 
       integral /= num_integral_samples;

@@ -153,6 +153,43 @@ torch::Tensor assignment_torch(torch::Tensor score_graph,
   return connections;
 }
 
+void connect_parts_out_torch(torch::Tensor object_counts, torch::Tensor objects, torch::Tensor connections, torch::Tensor topology, torch::Tensor counts, int max_count)
+{
+  const int N = object_counts.size(0);
+  const int K = topology.size(0);
+  const int C = counts.size(1);
+  const int M = connections.size(3);
+  const int P = max_count;
+  void *workspace = malloc(connect_parts_out_workspace(C, M));
+  connect_parts_out_batch(
+      (int *) object_counts.data_ptr(),
+      (int *) objects.data_ptr(),
+      (const int *) connections.data_ptr(),
+      (const int *) topology.data_ptr(),
+      (const int *) counts.data_ptr(),
+      N, K, C, M, P, workspace);
+  free(workspace);
+}
+
+std::vector<torch::Tensor> connect_parts_torch(torch::Tensor connections, torch::Tensor topology, torch::Tensor counts, int max_count)
+{
+    auto options = torch::TensorOptions()
+        .dtype(torch::kInt32)
+        .layout(torch::kStrided)
+        .device(torch::kCPU)
+        .requires_grad(false);
+    
+    int N = counts.size(0);
+    int K = topology.size(0);
+    int C = counts.size(1);
+    int M = connections.size(3);
+    
+    auto objects = torch::full({N, max_count, C}, -1, options);
+    auto object_counts = torch::zeros({N}, options);
+    connect_parts_out_torch(object_counts, objects, connections, topology, counts, max_count);
+    return {object_counts, objects};
+}
+
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("find_peaks", &find_peaks_torch, "find_peaks");
   m.def("find_peaks_out", &find_peaks_out_torch, "find_peaks_out");
@@ -162,7 +199,8 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
   m.def("refine_peaks", &refine_peaks_torch, "refine_peaks");
   m.def("refine_peaks_out", &refine_peaks_out_torch, "refine_peaks_out");
   // m.def("munkres", &munkres, "munkres");
-  m.def("connect_parts", &connect_parts, "connect_parts");
+  m.def("connect_parts", &connect_parts_torch, "connect_parts");
+  m.def("connect_parts_out", &connect_parts_out_torch, "connect_parts_out");
   m.def("assignment", &assignment_torch, "assignment");
   m.def("assignment_out", &assignment_out_torch, "assignment_out");
   m.def("generate_cmap", &generate_cmap, "generate_cmap");
