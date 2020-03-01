@@ -9,16 +9,16 @@ void assignment_out(int *connections,         // 2xM
                     const int count_a, const int count_b, const int M,
                     const float score_threshold, void *workspace);
 
-void assignement_out_k(int *connections,         // Kx2xM
-                       const int *topology,      // Kx4
+void assignment_out_k(int *connections,         // Kx2xM
                        const float *score_graph, // KxMxM
+                       const int *topology,      // Kx4
                        const int *counts,        // C
                        const int K, const int M, const float score_threshold,
                        void *workspace);
 
-void assignement_out_nk(int *connections,         // NxKx2xM
-                        const int *topology,      // Kx4
+void assignment_out_nk(int *connections,         // NxKx2xM
                         const float *score_graph, // NxKxMxM
+                        const int *topology,      // Kx4
                         const int *counts,        // NxC
                         const int N, const int C, const int K, const int M,
                         const float score_threshold, void *workspace);

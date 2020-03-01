@@ -7,7 +7,7 @@
 - [x] paf_score_graph plain cpp
 - [x] paf_score_graph torch binding
 - [x] munkres plain cpp
-- [ ] munkres torch binding
+- [x] munkres torch binding
 - [ ] connect parts plain cpp
 - [ ] connect parts torch binding
 

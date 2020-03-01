@@ -224,12 +224,12 @@ void assignment_out(int *connections,         // 2xM
   }
 }
 
-void assignement_out_k(int *connections,         // Kx2xM
-                       const int *topology,      // Kx4
-                       const float *score_graph, // KxMxM
-                       const int *counts,        // C
-                       const int K, const int M, const float score_threshold,
-                       void *workspace) {
+void assignment_out_k(int *connections,         // Kx2xM
+                      const float *score_graph, // KxMxM
+                      const int *topology,      // Kx4
+                      const int *counts,        // C
+                      const int K, const int M, const float score_threshold,
+                      void *workspace) {
   for (int k = 0; k < K; k++) {
     const int *tk = &topology[k * 4];
     const int cmap_idx_a = tk[2];
@@ -241,15 +241,15 @@ void assignement_out_k(int *connections,         // Kx2xM
   }
 }
 
-void assignement_out_nk(int *connections,         // NxKx2xM
-                        const int *topology,      // Kx4
-                        const float *score_graph, // NxKxMxM
-                        const int *counts,        // NxC
-                        const int N, const int C, const int K, const int M,
-                        const float score_threshold, void *workspace) {
+void assignment_out_nk(int *connections,         // NxKx2xM
+                       const float *score_graph, // NxKxMxM
+                       const int *topology,      // Kx4
+                       const int *counts,        // NxC
+                       const int N, const int C, const int K, const int M,
+                       const float score_threshold, void *workspace) {
   for (int n = 0; n < N; n++) {
-    assignement_out_k(&connections[n * K * 2 * M], topology,
-                      &score_graph[n * K * M * M], &counts[n * C], K, M,
-                      score_threshold, workspace);
+    assignment_out_k(&connections[n * K * 2 * M], &score_graph[n * K * M * M],
+                     topology, &counts[n * C], K, M, score_threshold,
+                     workspace);
   }
 }
