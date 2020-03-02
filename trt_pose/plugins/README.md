@@ -10,7 +10,7 @@
 - [x] munkres torch binding
 - [x] connect parts plain cpp
 - [x] connect parts torch binding
-- [ ] test full refactored pipeline
+- [x] test full refactored pipeline
 
 ## Terminology
 
