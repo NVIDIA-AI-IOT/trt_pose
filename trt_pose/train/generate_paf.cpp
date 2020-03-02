@@ -2,6 +2,9 @@
 
 #define EPS 1e-5;
 
+namespace trt_pose {
+namespace train {
+
 torch::Tensor generate_paf(torch::Tensor connections, torch::Tensor topology, torch::Tensor counts, torch::Tensor peaks, int height, int width, float stdev)
 {
     auto options = torch::TensorOptions()
@@ -92,3 +95,6 @@ torch::Tensor generate_paf(torch::Tensor connections, torch::Tensor topology, to
     
     return paf;
 }
+
+} // namespace trt_pose::train
+} // namespace trt_pose

@@ -1,5 +1,8 @@
 #include "refine_peaks.hpp"
 
+namespace trt_pose {
+namespace parse {
+
 inline int reflect(int idx, int min, int max) {
   if (idx < min) {
     return -idx;
@@ -74,3 +77,6 @@ void refine_peaks_out_nchw(float *refined_peaks, // NxCxMx2
                          M, window_size);
   }
 }
+
+} // namespace parse
+} // namespace trt_pose

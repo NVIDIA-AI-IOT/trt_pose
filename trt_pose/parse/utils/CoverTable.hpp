@@ -3,6 +3,10 @@
 #include <memory>
 #include <vector>
 
+namespace trt_pose {
+namespace parse {
+namespace utils {
+
 class CoverTable
 {
 public:
@@ -66,3 +70,7 @@ private:
   std::vector<bool> rows;
   std::vector<bool> cols;
 };
+
+} // namespace utils
+} // namespace parse
+} // namespace trt_pose

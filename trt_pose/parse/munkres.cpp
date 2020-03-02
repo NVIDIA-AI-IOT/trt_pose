@@ -2,6 +2,11 @@
 #include "utils/CoverTable.hpp"
 #include "utils/PairGraph.hpp"
 
+namespace trt_pose {
+namespace parse {
+
+using namespace utils;
+
 void subMinRow(float *cost_graph, const int M, const int nrows,
                const int ncols) {
   for (int i = 0; i < nrows; i++) {
@@ -253,3 +258,6 @@ void assignment_out_nk(int *connections,         // NxKx2xM
                      workspace);
   }
 }
+
+} // namespace parse
+} // namespace trt_pose

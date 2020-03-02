@@ -1,5 +1,8 @@
 #pragma once
 
+namespace trt_pose {
+namespace parse {
+
 void refine_peaks_out_hw(float *refined_peaks, // Mx2
                          const int *counts,    // 1
                          const int *peaks,     // Mx2
@@ -19,3 +22,6 @@ void refine_peaks_out_nchw(float *refined_peaks, // NxCxMx2
                            const float *cmap, const int N, const int C,
                            const int H, const int W, const int M,
                            const int window_size);
+
+} // namespace parse
+} // namespace trt_pose

@@ -3,6 +3,10 @@
 #include <memory>
 #include <vector>
 
+namespace trt_pose {
+namespace parse {
+namespace utils {
+
 class PairGraph
 {
 public:
@@ -111,3 +115,7 @@ private:
   std::vector<int> rows;
   std::vector<int> cols;
 };
+
+} // namespace utils
+} // namespace parse
+} // namespace trt_pose
