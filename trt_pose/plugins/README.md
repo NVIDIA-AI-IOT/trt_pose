@@ -1,3 +1,17 @@
+## TODO
+
+- [x] find_peaks plain cpp
+- [x] find_peaks torch binding
+- [x] refine_peaks plain cpp
+- [x] refine_peaks torch binding
+- [x] paf_score_graph plain cpp
+- [x] paf_score_graph torch binding
+- [x] munkres plain cpp
+- [x] munkres torch binding
+- [x] connect parts plain cpp
+- [x] connect parts torch binding
+- [x] test full refactored pipeline
+
 ## Terminology
 
 * ``N`` - int - Batch size

@@ -1,7 +1,20 @@
-#include <torch/extension.h>
-#include <vector>
-#include <queue>
+#pragma once
+#include <cstring>
 
+std::size_t connect_parts_out_workspace(const int C, const int M);
 
-void connect_parts_out(torch::Tensor object_counts, torch::Tensor objects, torch::Tensor connections, torch::Tensor topology, torch::Tensor counts, int max_count);
-std::vector<torch::Tensor> connect_parts(torch::Tensor connections, torch::Tensor topology, torch::Tensor counts, int max_count);
+void connect_parts_out(int *object_counts,     // 1
+                       int *objects,           // PxC
+                       const int *connections, // Kx2xM
+                       const int *topology,    // Kx4
+                       const int *counts,      // C
+                       const int K, const int C, const int M, const int P,
+                       void *workspace);
+
+void connect_parts_out_batch(int *object_counts,     // N
+                             int *objects,           // NxPxC
+                             const int *connections, // NxKx2xM
+                             const int *topology,    // Kx4
+                             const int *counts,      // NxC
+                             const int N, const int K, const int C, const int M,
+                             const int P, void *workspace);

@@ -10,7 +10,7 @@ from torch.utils import cpp_extension
 
 setup(
     name='trt_pose',
-    version='0.0.0',
+    version='0.0.1',
     description='Pose detection accelerated by NVIDIA TensorRT',
     packages=find_packages(),
     ext_package='trt_pose',

@@ -1,78 +1,76 @@
 #include "refine_peaks.hpp"
 
-
-void refine_peaks_out(torch::Tensor refined_peaks, torch::Tensor counts, torch::Tensor peaks, torch::Tensor cmap, int window_size)
-{
-    auto refined_peaks_a = refined_peaks.accessor<float, 4>();
-    auto counts_a = counts.accessor<int, 2>();
-    auto peaks_a = peaks.accessor<int, 4>();
-    auto cmap_a = cmap.accessor<float, 4>();
-    
-    int w = window_size / 2;
-    int width = cmap.size(3);
-    int height = cmap.size(2);
-    
-    for (int b = 0; b < cmap.size(0); b++)
-    {
-        for (int c = 0; c < cmap.size(1); c++)
-        {
-            int count = counts_a[b][c];
-            auto refined_peaks_a_bc = refined_peaks_a[b][c];
-            auto peaks_a_bc = peaks_a[b][c];
-            auto cmap_a_bc = cmap_a[b][c];
-            
-            for (int p = 0; p < count; p++)
-            {
-                auto refined_peak = refined_peaks_a_bc[p];
-                auto peak = peaks_a_bc[p];
-                
-                int i = peak[0];
-                int j = peak[1];                
-                float weight_sum = 0.0f;
-                
-                for (int ii = i - w; ii < i + w + 1; ii++)
-                {
-                    int ii_idx = ii;
-                    
-                    // reflect index at border
-                    if (ii < 0) ii_idx = -ii;
-                    else if (ii >= height) ii_idx = height - (ii - height) - 2;
-                        
-                    for (int jj = j - w; jj < j + w + 1; jj++)
-                    {
-                        int jj_idx = jj;
-
-                        // reflect index at border
-                        if (jj < 0) jj_idx = -jj;
-                        else if (jj >= width) jj_idx = width - (jj - width) - 2;
-                        
-                        float weight = cmap_a_bc[ii_idx][jj_idx];
-                        refined_peak[0] += weight * ii;
-                        refined_peak[1] += weight * jj;
-                        weight_sum += weight;
-                    }
-                }
-                
-                refined_peak[0] /= weight_sum;
-                refined_peak[1] /= weight_sum;
-                refined_peak[0] += 0.5;
-                refined_peak[1] += 0.5;
-                refined_peak[0] /= height;
-                refined_peak[1] /= width;
-            }
-        }
-    }
+inline int reflect(int idx, int min, int max) {
+  if (idx < min) {
+    return -idx;
+  } else if (idx >= max) {
+    return max - (idx - max) - 2;
+  } else {
+    return idx;
+  }
 }
 
-torch::Tensor refine_peaks(torch::Tensor counts, torch::Tensor peaks, torch::Tensor cmap, int window_size)
-{
-    auto options = torch::TensorOptions()
-        .dtype(torch::kFloat32)
-        .layout(torch::kStrided)
-        .device(torch::kCPU)
-        .requires_grad(false);
-    
-    auto refined_peaks = torch::zeros({peaks.size(0), peaks.size(1), peaks.size(2), peaks.size(3)}, options);
-    refine_peaks_out(refined_peaks, counts, peaks, cmap, window_size);
-    return refined_peaks;
+void refine_peaks_out_hw(float *refined_peaks, // Mx2
+                         const int *counts,    // 1
+                         const int *peaks,     // Mx2
+                         const float *cmap,    // HxW
+                         const int H, const int W, const int M,
+                         const int window_size) {
+  int count = *counts;
+  int win = window_size / 2;
+
+  for (int m = 0; m < count; m++) {
+    float *refined_peak = &refined_peaks[m * 2];
+    refined_peak[0] = 0.;
+    refined_peak[1] = 0.;
+    const int *peak = &peaks[m * 2];
+
+    int i = peak[0];
+    int j = peak[1];
+    float weight_sum = 0.;
+
+    for (int ii = i - win; ii < i + win + 1; ii++) {
+      int ii_idx = reflect(ii, 0, H);
+      for (int jj = j - win; jj < j + win + 1; jj++) {
+        int jj_idx = reflect(jj, 0, W);
+
+        float weight = cmap[ii_idx * W + jj_idx];
+        refined_peak[0] += weight * ii;
+        refined_peak[1] += weight * jj;
+        weight_sum += weight;
+      }
+    }
+
+    refined_peak[0] /= weight_sum;
+    refined_peak[1] /= weight_sum;
+    refined_peak[0] += 0.5; // center pixel
+    refined_peak[1] += 0.5; // center pixel
+    refined_peak[0] /= H;   // normalize coordinates
+    refined_peak[1] /= W;   // normalize coordinates
+  }
+}
+
+void refine_peaks_out_chw(float *refined_peaks, // CxMx2
+                          const int *counts,    // C
+                          const int *peaks,     // CxMx2
+                          const float *cmap, const int C, const int H,
+                          const int W, const int M, const int window_size) {
+  for (int c = 0; c < C; c++) {
+    refine_peaks_out_hw(&refined_peaks[c * M * 2], &counts[c],
+                        &peaks[c * M * 2], &cmap[c * H * W], H, W, M,
+                        window_size);
+  }
+}
+
+void refine_peaks_out_nchw(float *refined_peaks, // NxCxMx2
+                           const int *counts,    // NxC
+                           const int *peaks,     // NxCxMx2
+                           const float *cmap, const int N, const int C,
+                           const int H, const int W, const int M,
+                           const int window_size) {
+  for (int n = 0; n < N; n++) {
+    refine_peaks_out_chw(&refined_peaks[n * C * M * 2], &counts[n * C],
+                         &peaks[n * C * M * 2], &cmap[n * C * H * W], C, H, W,
+                         M, window_size);
+  }
 }

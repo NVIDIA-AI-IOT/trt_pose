@@ -1,78 +1,77 @@
 #include "find_peaks.hpp"
 
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-void find_peaks_out(torch::Tensor counts, torch::Tensor peaks, torch::Tensor input, float threshold, int window_size, int max_count)
-{
-    auto counts_a = counts.accessor<int, 2>();
-    auto peaks_a = peaks.accessor<int, 4>();
-    auto input_a = input.accessor<float, 4>();
-    
-    int w = window_size / 2;
-    int width = input.size(3);
-    int height = input.size(2);
-    
-    for (int b = 0; b < input.size(0); b++)
-    {
-        for (int c = 0; c < input.size(1); c++)
-        {
-            int count = 0;
-            auto peaks_a_bc = peaks_a[b][c];
-            auto input_a_bc = input_a[b][c];
-            
-            for (int i = 0; i < height && count < max_count; i++)
-            {
-                for (int j = 0; j < width && count < max_count; j++)
-                {
-                    float value = input_a_bc[i][j];
-                    
-                    if (value < threshold)
-                        continue;
-                    
-                    int ii_min = i - w;
-                    int jj_min = j - w;
-                    int ii_max = i + w + 1;
-                    int jj_max = j + w + 1;
-                    
-                    if (ii_min < 0) ii_min = 0;
-                    if (ii_max > height) ii_max = height;
-                    if (jj_min < 0) jj_min = 0;
-                    if (jj_max > width) jj_max = width;
-                    
-                    // get max
-                    bool is_peak = true;
-                    for (int ii = ii_min; ii < ii_max; ii++)
-                    {
-                        for (int jj = jj_min; jj < jj_max; jj++)
-                        {
-                            if (input_a_bc[ii][jj] > value) {
-                                is_peak = false;
-                            }
-                        }
-                    }
-                    
-                    if (is_peak) {
-                        peaks_a_bc[count][0] = i;
-                        peaks_a_bc[count][1] = j;
-                        count++;
-                    }
-                }
-            }
-            
-            counts_a[b][c] = count;
+void find_peaks_out_hw(int *counts,        // 1
+                       int *peaks,         // Mx2
+                       const float *input, // HxW
+                       const int H, const int W, const int M,
+                       const float threshold, const int window_size) {
+  int win = window_size / 2;
+  int count = 0;
+
+  for (int i = 0; i < H && count < M; i++) {
+    for (int j = 0; j < W && count < M; j++) {
+      float val = input[i * W + j];
+
+      // skip if below threshold
+      if (val < threshold)
+        continue;
+
+      // compute window bounds
+      int ii_min = MAX(i - win, 0);
+      int jj_min = MAX(j - win, 0);
+      int ii_max = MIN(i + win + 1, H);
+      int jj_max = MIN(j + win + 1, W);
+
+      // search for larger value in window
+      bool is_peak = true;
+      for (int ii = ii_min; ii < ii_max; ii++) {
+        for (int jj = jj_min; jj < jj_max; jj++) {
+          if (input[ii * W + jj] > val) {
+            is_peak = false;
+          }
         }
+      }
+
+      // add peak
+      if (is_peak) {
+        peaks[count * 2] = i;
+        peaks[count * 2 + 1] = j;
+        count++;
+      }
     }
+  }
+
+  *counts = count;
 }
 
-std::vector<torch::Tensor> find_peaks(torch::Tensor input, float threshold, int window_size, int max_count)
-{
-    auto options = torch::TensorOptions()
-        .dtype(torch::kInt32)
-        .layout(torch::kStrided)
-        .device(torch::kCPU)
-        .requires_grad(false);
-    
-    auto counts = torch::zeros({input.size(0), input.size(1)}, options);
-    auto peaks = torch::zeros({input.size(0), input.size(1), max_count, 2}, options); // valid, i, j
-    find_peaks_out(counts, peaks, input, threshold, window_size, max_count);
-    return {counts, peaks};
+void find_peaks_out_chw(int *counts,        // C
+                        int *peaks,         // CxMx2
+                        const float *input, // CxHxW
+                        const int C, const int H, const int W, const int M,
+                        const float threshold, const int window_size) {
+  for (int c = 0; c < C; c++) {
+    int *counts_c = &counts[c];
+    int *peaks_c = &peaks[c * M * 2];
+    const float *input_c = &input[c * H * W];
+    find_peaks_out_hw(counts_c, peaks_c, input_c, H, W, M, threshold,
+                      window_size);
+  }
+}
+
+void find_peaks_out_nchw(int *counts,        // C
+                         int *peaks,         // CxMx2
+                         const float *input, // CxHxW
+                         const int N, const int C, const int H, const int W,
+                         const int M, const float threshold,
+                         const int window_size) {
+  for (int n = 0; n < N; n++) {
+    int *counts_n = &counts[n * C];
+    int *peaks_n = &peaks[n * C * M * 2];
+    const float *input_n = &input[n * C * H * W];
+    find_peaks_out_chw(counts_n, peaks_n, input_n, C, H, W, M, threshold,
+                       window_size);
+  }
 }
