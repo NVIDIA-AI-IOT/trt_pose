@@ -6,6 +6,9 @@
 
 #define ABS(x) ((x) > 0 ? (x) : (-x))
 
+using namespace trt_pose;
+using namespace trt_pose::parse;
+
 void test_find_peaks_out_hw()
 {
   const int H = 4;

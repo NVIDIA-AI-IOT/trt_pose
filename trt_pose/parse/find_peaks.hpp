@@ -1,5 +1,8 @@
 #pragma once
 
+namespace trt_pose {
+namespace parse {
+
 void find_peaks_out_hw(int *counts,        // 1
                        int *peaks,         // Mx2
                        const float *input, // HxW
@@ -18,3 +21,6 @@ void find_peaks_out_nchw(int *counts,        // NxC
                          const int N, const int C, const int H, const int W,
                          const int M, const float threshold,
                          const int window_size);
+
+} // namespace parse
+} // namespace trt_pose

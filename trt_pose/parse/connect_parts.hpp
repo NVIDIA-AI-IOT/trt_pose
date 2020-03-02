@@ -1,6 +1,9 @@
 #pragma once
 #include <cstring>
 
+namespace trt_pose {
+namespace parse {
+
 std::size_t connect_parts_out_workspace(const int C, const int M);
 
 void connect_parts_out(int *object_counts,     // 1
@@ -18,3 +21,6 @@ void connect_parts_out_batch(int *object_counts,     // N
                              const int *counts,      // NxC
                              const int N, const int K, const int C, const int M,
                              const int P, void *workspace);
+
+} // namespace parse
+} // namespace trt_pose

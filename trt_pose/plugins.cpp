@@ -1,12 +1,15 @@
-#include "connect_parts.hpp"
-#include "find_peaks.hpp"
-#include "generate_cmap.hpp"
-#include "generate_paf.hpp"
-#include "munkres.hpp"
-#include "paf_score_graph.hpp"
-#include "refine_peaks.hpp"
+#include "parse/connect_parts.hpp"
+#include "parse/find_peaks.hpp"
+#include "parse/munkres.hpp"
+#include "parse/paf_score_graph.hpp"
+#include "parse/refine_peaks.hpp"
+#include "train/generate_cmap.hpp"
+#include "train/generate_paf.hpp"
 #include <torch/extension.h>
 #include <vector>
+
+using namespace trt_pose::parse;
+using namespace trt_pose::train;
 
 void find_peaks_out_torch(torch::Tensor counts, torch::Tensor peaks,
                           torch::Tensor input, const float threshold,

@@ -1,5 +1,8 @@
 #pragma once
 
+namespace trt_pose {
+namespace parse {
+
 void paf_score_graph_out_hw(float *score_graph, // MxM
                             const float *paf_i, // HxW
                             const float *paf_j, // HxW
@@ -25,3 +28,6 @@ void paf_score_graph_out_nkhw(float *score_graph,  // NxKxMxM
                               const int N, const int K, const int C,
                               const int H, const int W, const int M,
                               const int num_integral_samples);
+
+} // namespace parse
+} // namespace trt_pose

@@ -1,6 +1,9 @@
 #include "connect_parts.hpp"
 #include <queue>
 
+namespace trt_pose {
+namespace parse {
+
 std::size_t connect_parts_out_workspace(const int C, const int M) {
   return sizeof(int) * C * M;
 }
@@ -97,3 +100,6 @@ void connect_parts_out_batch(int *object_counts,     // N
                       C, M, P, workspace);
   }
 }
+
+} // namespace parse
+} // namespace trt_pose

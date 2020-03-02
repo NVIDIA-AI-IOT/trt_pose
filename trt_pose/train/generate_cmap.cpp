@@ -1,5 +1,7 @@
 #include "generate_cmap.hpp"
 
+namespace trt_pose {
+namespace train {
 
 torch::Tensor generate_cmap(torch::Tensor counts, torch::Tensor peaks, int height, int width, float stdev, int window)
 {
@@ -63,3 +65,6 @@ torch::Tensor generate_cmap(torch::Tensor counts, torch::Tensor peaks, int heigh
     
     return cmap;
 }
+
+} // namespace trt_pose::train
+} // namespace trt_pose
