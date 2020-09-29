@@ -6,7 +6,7 @@ trt_pose is aimed at enabling real-time pose estimation on NVIDIA Jetson.  You m
 
 - Pre-trained models for human pose estimation capable of running in real time on Jetson Nano.  This makes it easy to detect features like ``left_eye``, ``left_elbow``, ``right_ankle``, etc.
 
-- Training scripts to train on any keypoint task data in [MSCOCO](https://cocodataset.org/#home) format.  This means you can experiment with train trt_pose for keypoint detection tasks other than human pose.
+- Training scripts to train on any keypoint task data in [MSCOCO](https://cocodataset.org/#home) format.  This means you can experiment with training trt_pose for keypoint detection tasks other than human pose.
 
 To get started, follow the instructions below.  If you run into any issues please [let us know](../../issues).
 
