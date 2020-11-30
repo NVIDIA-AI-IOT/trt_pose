@@ -1,4 +1,4 @@
-# Hand Pose Detection And Classification
+# Hand Pose Estimation And Classification
 
 This project is an extention of TRT Pose for Hand Pose Detection. The project includes 
 
