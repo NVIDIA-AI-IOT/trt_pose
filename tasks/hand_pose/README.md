@@ -28,6 +28,12 @@ Follow the following instruction from https://github.com/NVIDIA-AI-IOT/trt_pose.
     A) Hand Pose demo 
 
     B) Hand gesture recoginition (hand pose classification) 
+    
+        To make your own hand gesture classification from the hand pose estimation, follow the following steps 
+        
+        - Create your own dataset using the gesture_data_collection.ipynb or gesture_data_collection_with_pose.ipynb. This will allow you to create the type of gestures you want to classify. (eg. tumbs up, fist,etc). This notebook will automatically create a dataset with images and labels that is ready to be trained for gesture classification.
+        - Train using the train_gesture_classification.ipynb notebook file. It uses an SVM from scikit-learn. you can experiment your other types of models to train. You can also infer in this training script. 
+        
 
     C) Cursor control application
 
