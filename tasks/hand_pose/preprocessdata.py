@@ -45,12 +45,14 @@ class preprocessdata:
                 joints_t.append([round(float(picked_peaks[1]) * width), round(float(picked_peaks[0]) * height)])
         joints_pt = joints_t[:self.num_parts]  
         rest_of_joints_t = joints_t[self.num_parts:]
+        """
         #when it does not predict a particular joint in the same association it will try to find it in a different association 
         for i in range(len(rest_of_joints_t)):
             l = i%self.num_parts
             if joints_pt[l] == [0,0]:
                 joints_pt[l] = rest_of_joints_t[i]
         #if nothing is predicted 
+        """
         if count == 0:
             joints_pt = [[0,0]]*self.num_parts
         return joints_pt
@@ -68,17 +70,17 @@ class preprocessdata:
         thickness = 2
         fontScale = 0.5
         if self.prev_queue == [1]*7:
-            self.text = 'OK'
-        elif self.prev_queue == [2]*7:
             self.text = 'fist'
+        elif self.prev_queue == [2]*7:
+            self.text = 'pan'
         elif self.prev_queue == [3]*7:
-            self.text = 'pan two'
-        elif self.prev_queue == [4]*7:
-            self.text = 'pan one'
-        elif self.prev_queue == [5]*7:
-            self.text = 'tumbs up'
-        elif self.prev_queue == [6]*7:
             self.text = 'stop'
+        elif self.prev_queue == [4]*7:
+            self.text = 'peace'
+        elif self.prev_queue == [5]*7:
+            self.text = 'fine'
+        elif self.prev_queue == [6]*7:
+            self.text = 'no hand'
         elif self.prev_queue == [7]*7:
             self.text = 'no hand'
         image = cv2.putText(image, self.text, org, font,  
