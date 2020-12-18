@@ -16,7 +16,7 @@ To get started with trt_pose, follow these steps.
 
 ### Step 1 - Install Dependencies
 
-1. Install PyTorch and Torchvision.  To do this on NVIDIA Jetson, we recommend following [this guide](https://forums.developer.nvidia.com/t/pytorch-for-jetson-version-1-6-0-now-available)
+1. Install PyTorch and Torchvision.  To do this on NVIDIA Jetson, we recommend following [this guide](https://forums.developer.nvidia.com/t/72048)
 
 2. Install [torch2trt](https://github.com/NVIDIA-AI-IOT/torch2trt)
 
