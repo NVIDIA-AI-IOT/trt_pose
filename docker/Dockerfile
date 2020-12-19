@@ -35,6 +35,7 @@ ENV SHELL /bin/bash
 
 WORKDIR trt_pose
 
+ARG JUPYTER_PASSWORD=jetson
 
 #
 # install pre-requisite packages
@@ -84,12 +85,30 @@ RUN cd && \
     jupyter labextension install js && \
     jupyter lab build
 
+# ====================
+# SET JUPYTER PASSWORD
+# ====================
+ENV JUPYTER_PASSWORD=${JUPYTER_PASSWORD}
+RUN jupyter lab --generate-config -y
+RUN python3 -c "from notebook.auth.security import set_password; set_password('${JUPYTER_PASSWORD}', '/root/.jupyter/jupyter_notebook_config.json')"    
+
 # =================
 # INSTALL torch2trt
 # =================
-ENV TORCH2TRT_REPO_DIR=/opt/torch2trt
-COPY . ${TORCH2TRT_REPO_DIR}
-RUN cd ${TORCH2TRT_REPO_DIR} && python3 setup.py install
+ENV TORCH2TRT_REPO_DIR=/opt/
+RUN cd ${TORCH2TRT_REPO_DIR} && \
+    git clone https://github.com/NVIDIA-AI-IOT/torch2trt && \
+    cd torch2trt && \
+    python3 setup.py install
+
+# ==============
+# INSTALL jetcam
+# ==============
+ENV JETCAM_REPO_DIR=/opt/
+RUN cd ${JETCAM_REPO_DIR} && \
+    git clone https://github.com/NVIDIA-AI-IOT/jetcam && \
+    cd jetcam && \
+    python3 setup.py install
 
 # ================
 # INSTALL trt_pose
@@ -97,3 +116,13 @@ RUN cd ${TORCH2TRT_REPO_DIR} && python3 setup.py install
 ENV TRTPOSE_REPO_DIR=/opt/trt_pose
 COPY . ${TRTPOSE_REPO_DIR}
 RUN cd ${TRTPOSE_REPO_DIR} && python3 setup.py install
+
+# ================
+# Pre-cache models 
+# ================
+RUN python3 -c "import torchvision; \
+                model = torchvision.models.resnet18(pretrained=True); \
+                model = torchvision.models.resnet34(pretrained=True); \
+                model = torchvision.models.resnet50(pretrained=True); \
+                model = torchvision.models.resnet101(pretrained=True); \
+                model = torchvision.models.resnet152(pretrained=True)"
