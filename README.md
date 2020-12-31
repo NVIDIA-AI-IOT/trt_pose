@@ -1,5 +1,7 @@
 # trt_pose
 
+> Want to detect hand poses?  Check out the new [trt_pose_hand](http://github.com/NVIDIA-AI-IOT/trt_pose_hand) project for real-time hand pose and gesture recognition!
+
 <img src="https://user-images.githubusercontent.com/4212806/67125332-71a64580-f1a9-11e9-8ee1-e759a38de215.gif" height=256/>
 
 trt_pose is aimed at enabling real-time pose estimation on NVIDIA Jetson.  You may find it useful for other NVIDIA platforms as well.  Currently the project includes
@@ -62,6 +64,7 @@ To run the live Jupyter Notebook demo on real-time camera input, follow these st
 
 ## See also
 
+- [trt_pose_hand](http://github.com/NVIDIA-AI-IOT/trt_pose_hand) - Real-time hand pose estimation based on trt_pose
 - [torch2trt](http://github.com/NVIDIA-AI-IOT/torch2trt) - An easy to use PyTorch to TensorRT converter
 
 - [JetBot](http://github.com/NVIDIA-AI-IOT/jetbot) - An educational AI robot based on NVIDIA Jetson Nano
