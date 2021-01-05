@@ -69,7 +69,7 @@ RUN python3 -m pip install git+https://github.com/ipython/traitlets@dead2b8cdde5
 
 # Install jupyter lab
 RUN echo -e "\e[48;5;172m Install Jupyter Lab \e[0m"
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get install -y nodejs libffi-dev 
 RUN pip3 install jupyter jupyterlab
 RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
