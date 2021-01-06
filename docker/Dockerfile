@@ -126,3 +126,12 @@ RUN python3 -c "import torchvision; \
                 model = torchvision.models.resnet50(pretrained=True); \
                 model = torchvision.models.resnet101(pretrained=True); \
                 model = torchvision.models.resnet152(pretrained=True)"
+
+#
+# install other packages
+#
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+            vim \
+    && rm -rf /var/lib/apt/lists/*
+
