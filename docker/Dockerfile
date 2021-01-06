@@ -36,6 +36,7 @@ ENV SHELL /bin/bash
 WORKDIR trt_pose
 
 ARG JUPYTER_PASSWORD=jetson
+ENV JUPYTER_PASSWORD=${JUPYTER_PASSWORD}
 
 #
 # install pre-requisite packages
@@ -58,6 +59,32 @@ RUN apt-get update && \
             python3-matplotlib \
     && rm -rf /var/lib/apt/lists/*
 
+
+# =======================================
+# INSTALL OPENCV (with GStreamer support)
+# =======================================
+RUN echo -e "\e[48;5;20m Install OpenCV \e[0m"
+COPY jetson-ota-public.asc /etc/apt/trusted.gpg.d/jetson-ota-public.asc
+RUN echo "deb https://repo.download.nvidia.com/jetson/common r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+            libopencv-python \
+    && rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# =================
+# INSTALL GSTREAMER
+# =================
+RUN apt-get update && \
+    apt-get install -y \
+    libwayland-egl1 \
+    gstreamer1.0-plugins-bad \
+    libgstreamer-plugins-bad1.0-0 \
+    gstreamer1.0-plugins-good \
+    python3-gst-1.0
+
+
 # =======================
 # INSTALL JUPYTER RELATED
 # =======================
@@ -69,10 +96,12 @@ RUN python3 -m pip install git+https://github.com/ipython/traitlets@dead2b8cdde5
 
 # Install jupyter lab
 RUN echo -e "\e[48;5;172m Install Jupyter Lab \e[0m"
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get install -y nodejs libffi-dev 
-RUN pip3 install jupyter jupyterlab
-RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager
+RUN pip3 install jupyter jupyterlab==2.2.6 --verbose && \
+    jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
+    jupyter lab --generate-config && \
+    python3 -c "from notebook.auth.security import set_password; set_password('${JUPYTER_PASSWORD}', '/root/.jupyter/jupyter_notebook_config.json')"    
 
 # Install jupyter_clickable_image_widget
 RUN echo "\e[42m Install jupyter_clickable_image_widget \e[0m"
@@ -84,13 +113,6 @@ RUN cd && \
     pip3 install -e . && \
     jupyter labextension install js && \
     jupyter lab build
-
-# ====================
-# SET JUPYTER PASSWORD
-# ====================
-ENV JUPYTER_PASSWORD=${JUPYTER_PASSWORD}
-RUN jupyter lab --generate-config -y
-RUN python3 -c "from notebook.auth.security import set_password; set_password('${JUPYTER_PASSWORD}', '/root/.jupyter/jupyter_notebook_config.json')"    
 
 # =================
 # INSTALL torch2trt
