@@ -10,7 +10,7 @@
         "random_angle": [-0.2, 0.2],
         "random_scale": [0.5, 2.0],
         "random_translate": [-0.2, 0.2],
-        "keep_aspect_ratio": false
+        "keep_aspect_ratio": true
     },
     "stdev_schedule": {
         "0": 0.025
@@ -32,7 +32,7 @@
         "random_angle": [-0.0, 0.0],
         "random_scale": [1.0, 1.0],
         "random_translate": [-0.0, 0.0],
-        "keep_aspect_ratio": false
+        "keep_aspect_ratio": true
     },
     "train_loader": {
         "batch_size": 64,
@@ -75,6 +75,6 @@
         "images_dir": "val2017",
         "annotation_file": "annotations/person_keypoints_val2017.json",
         "image_shape": [224, 224],
-        "keep_aspect_ratio": false
+        "keep_aspect_ratio": true
     }
 }
