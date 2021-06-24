@@ -73,6 +73,8 @@ To run the live Jupyter Notebook demo on real-time camera input, follow these st
 
 ## References
 
-Cao, Zhe, et al. "Realtime multi-person 2d pose estimation using part affinity fields." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2017.
+The trt_pose model architectures listed above are inspired by the following works, but are not a direct replica.  Please review the open-source code and configuration files for architecture details.  If you have any questions feel free to reach out.
 
-Xiao, Bin, Haiping Wu, and Yichen Wei. "Simple baselines for human pose estimation and tracking." Proceedings of the European Conference on Computer Vision (ECCV). 2018.
+*  _Cao, Zhe, et al. "Realtime multi-person 2d pose estimation using part affinity fields." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2017._
+
+*  _Xiao, Bin, Haiping Wu, and Yichen Wei. "Simple baselines for human pose estimation and tracking." Proceedings of the European Conference on Computer Vision (ECCV). 2018._
