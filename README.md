@@ -73,7 +73,7 @@ To run the live Jupyter Notebook demo on real-time camera input, follow these st
 
 ## References
 
-The trt_pose model architectures listed above are inspired by the following works, but are not a direct replica.  Please review the open-source code and configuration files for architecture details.  If you have any questions feel free to reach out.
+The trt_pose model architectures listed above are inspired by the following works, but are not a direct replica.  Please review the open-source code and configuration files in this repository for architecture details.  If you have any questions feel free to reach out.
 
 *  _Cao, Zhe, et al. "Realtime multi-person 2d pose estimation using part affinity fields." Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2017._
 
